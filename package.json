@@ -1,0 +1,35 @@
+{
+  "name": "ips-evaluation-frontend",
+  "version": "0.1.0",
+  "description": "Indoor positioning systems evaluation frontend",
+  "main": "src/main.js",
+  "scripts": {
+    "watch": "NODE_ENV=development node --max_old_space_size=4096 ./node_modules/.bin/webpack-dev-server --debug --devtool source-map"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.artcom.de:cologne/ips-evaluation-frontend.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^15.6.1",
+    "react-autobind": "^1.0.6",
+    "react-dom": "^15.6.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^6.4.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
+    "eslint": "^3.19.0",
+    "eslint-config-artcom": "^0.5.1",
+    "eslint-config-artcom-react": "^0.3.2",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-react": "^6.10.3",
+    "json-loader": "^0.5.7",
+    "webpack": "^2.7.0",
+    "webpack-dev-server": "^2.7.1"
+  }
+}
