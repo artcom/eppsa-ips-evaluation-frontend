@@ -22,6 +22,9 @@ module.exports = [
       path: publicPath,
       filename: "[name].js"
     },
+    node: {
+      fs: "empty"
+    },
     module: {
       rules: [
         {
@@ -48,7 +51,7 @@ module.exports = [
     devServer: {
       contentBase: publicPath,
       disableHostCheck: true,
-      host: "0.0.0.0",
+      host: "0.0.0.0"
     }
   }
 })
