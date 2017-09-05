@@ -9,20 +9,19 @@ export default class Experiments extends React.Component {
     super(props)
     autoBind(this)
     this.state = {
-      loaded: false
+      experiments: []
     }
-    this.experiments = []
   }
   
   async componentDidMount() {
-    this.experiments = await getExperiments({ backend: this.props.backend })
-    this.setState({ loaded: true })
+    const experiments = await getExperiments({ backend: this.props.backend })
+    this.setState({ experiments })
   }
   
   render() {
     return(<div>
       {
-        this.state.loaded && this.experiments.map((experiment, i) =>
+        this.state.experiments.map((experiment, i) =>
           <Experiment experimentName={ experiment.name } key={ i } />
         )
       }
