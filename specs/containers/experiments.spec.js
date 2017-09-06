@@ -5,6 +5,7 @@ import { expect } from "chai"
 import proxyquire from "proxyquire"
 import sinon from "sinon"
 import { mount, shallow } from "enzyme"
+import { backend } from "../../src/constants"
 import Experiment from "../../src/setUp/components/experiment"
 import Experiments from "../../src/setUp/containers/experiments"
 const getExperiments = require("../../src/setUp/actions/getExperiments")
@@ -40,8 +41,8 @@ describe("Experiments container", () => {
 
   it("renders experiments that are present in state", () => {
     const experiments = [{ name: "experiment1" }, { name: "experiment2" }]
-    const wrapper = mount(<Experiments backend="192.168.56.77:8080" />)
-    expect(wrapper.props().backend).to.equal("192.168.56.77:8080")
+    const wrapper = mount(<Experiments backend={ backend } />)
+    expect(wrapper.props().backend).to.equal(backend)
     wrapper.setState({ experiments })
     expect(wrapper.find(Experiment))
       .to.have.length(2)
@@ -50,10 +51,10 @@ describe("Experiments container", () => {
   })
 
   it("stores experiments retrieved from the backend in state", done => {
-    const wrapper = mount(<Experiments backend="192.168.56.77:8080" />)
+    const wrapper = mount(<Experiments backend={ backend } />)
     expect(wrapper.state("experiments")).to.deep.equal([])
     sinon.assert.calledOnce(global.getMockExperiments)
-    sinon.assert.calledWith(global.getMockExperiments, { backend: "192.168.56.77:8080" })
+    sinon.assert.calledWith(global.getMockExperiments, { backend })
     setImmediate(() => {
       const experiments = JSON.stringify(wrapper.state("experiments"))
       const expectedExperiments = JSON.stringify([
