@@ -3,6 +3,7 @@ import React from "react"
 import autoBind from "react-autobind"
 import Button from "../components/button"
 import Experiment from "../components/experiment"
+import Form from "../components/form"
 import Title from "../components/title"
 import { getExperiments } from "../actions/getExperiments"
 
@@ -12,7 +13,8 @@ export default class Experiments extends React.Component {
     super(props)
     autoBind(this)
     this.state = {
-      experiments: []
+      experiments: [],
+      showExperimentForm: false
     }
   }
 
@@ -29,7 +31,14 @@ export default class Experiments extends React.Component {
           <Experiment key={ i }>{ experiment.name }</Experiment>
         )
       }
-      <Button>Create Experiment</Button>
+      {
+        this.state.showExperimentForm && <Form />
+      }
+      <Button onClick={ this.onClick }>Create Experiment</Button>
     </div>
+  }
+
+  onClick() {
+    this.setState({ showExperimentForm: true })
   }
 }
