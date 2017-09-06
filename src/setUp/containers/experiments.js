@@ -1,3 +1,4 @@
+/* eslint-disable react/no-did-mount-set-state */
 import React from "react"
 import autoBind from "react-autobind"
 import Experiment from "../components/experiment"
@@ -13,9 +14,9 @@ export default class Experiments extends React.Component {
     }
   }
 
-  componentDidMount() {
-    getExperiments({ backend: this.props.backend })
-      .then(experiments => this.setState({ experiments }))
+  async componentDidMount() {
+    const experiments = await getExperiments({ backend: this.props.backend })
+    this.setState({ experiments })
   }
 
   render() {
