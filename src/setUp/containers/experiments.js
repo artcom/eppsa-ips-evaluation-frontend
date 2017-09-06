@@ -1,6 +1,7 @@
 /* eslint-disable react/no-did-mount-set-state */
 import React from "react"
 import autoBind from "react-autobind"
+import Button from "../components/button"
 import Experiment from "../components/experiment"
 import Title from "../components/title"
 import { getExperiments } from "../actions/getExperiments"
@@ -28,6 +29,7 @@ export default class Experiments extends React.Component {
           <Experiment key={ i }>{ experiment.name }</Experiment>
         )
       }
+      <Button>Create Experiment</Button>
     </div>
   }
 }

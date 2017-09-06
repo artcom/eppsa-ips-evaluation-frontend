@@ -6,8 +6,10 @@ import proxyquire from "proxyquire"
 import sinon from "sinon"
 import { mount, shallow } from "enzyme"
 import { backend } from "../../src/constants"
+import Button from "../../src/setUp/components/button"
 import Experiment from "../../src/setUp/components/experiment"
 import Experiments from "../../src/setUp/containers/experiments"
+import Title from "../../src/setUp/components/title"
 const getExperiments = require("../../src/setUp/actions/getExperiments")
 
 
@@ -27,8 +29,8 @@ describe("Experiments container", () => {
 
   it("contains a title", () => {
     const wrapper = shallow(<Experiments />)
-    expect(wrapper.childAt(0).type().displayName).to.equal("styled.div")
-    expect(wrapper.childAt(0).childAt(0).text()).to.equal("Experiments:")
+    expect(wrapper.find(Title)).to.have.length(1)
+    expect(wrapper.find(Title).childAt(0).text()).to.equal("Experiments:")
   })
 
   it("calls componentDidMount and getExperiments", () => {
@@ -64,5 +66,11 @@ describe("Experiments container", () => {
       expect(experiments).to.equal(expectedExperiments)
       done()
     })
+  })
+
+  it("contains a create experiment button", () => {
+    const wrapper = shallow(<Experiments />)
+    expect(wrapper.find(Button)).to.have.length(1)
+    expect(wrapper.find(Button).childAt(0).text()).to.equal("Create Experiment")
   })
 })
