@@ -14,13 +14,14 @@ export default class Experiments extends React.Component {
     autoBind(this)
     this.state = {
       experiments: [],
+      loaded: false,
       showExperimentForm: false
     }
   }
 
   async componentDidMount() {
     const experiments = await getExperiments({ backend: this.props.backend })
-    this.setState({ experiments })
+    this.setState({ experiments, loaded: true })
   }
 
   render() {
@@ -34,7 +35,9 @@ export default class Experiments extends React.Component {
       {
         this.state.showExperimentForm && <Form />
       }
-      <Button onClick={ this.onClick }>Create Experiment</Button>
+      {
+        this.state.loaded && <Button onClick={ this.onClick }>Create Experiment</Button>
+      }
     </div>
   }
 

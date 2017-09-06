@@ -21,10 +21,29 @@ describe("Experiments", () => {
       expect(wrapper.find(Title).childAt(0).text()).to.equal("Experiments:")
     })
 
-    it("contains a create experiment button", () => {
+    it("no create experiment button when loaded state is false", () => {
       const wrapper = shallow(<Experiments />)
+      expect(wrapper.state("loaded")).to.equal(false)
+      expect(wrapper.find(Button)).to.have.length(0)
+    })
+
+    it("a create experiment button when loaded state is true", () => {
+      const wrapper = shallow(<Experiments />)
+      wrapper.setState({ loaded: true })
       expect(wrapper.find(Button)).to.have.length(1)
       expect(wrapper.find(Button).childAt(0).text()).to.equal("Create Experiment")
+    })
+
+    it("no experiment form when showExperimentForm state is false", () => {
+      const wrapper = shallow(<Experiments />)
+      expect(wrapper.state("showExperimentForm")).to.equal(false)
+      expect(wrapper.find(Form)).to.have.length(0)
+    })
+
+    it("an experiment form when showExperimentForm state is true", () => {
+      const wrapper = shallow(<Experiments />)
+      wrapper.setState({ showExperimentForm: true })
+      expect(wrapper.find(Form)).to.have.length(1)
     })
   })
 
@@ -76,6 +95,15 @@ describe("Experiments", () => {
         done()
       })
     })
+
+    it("sets loaded state to true when experiments have been retrieved from the backend", done => {
+      const wrapper = mount(<Experiments backend={ backend } />)
+      expect(wrapper.state("loaded")).to.equal(false)
+      setImmediate(() => {
+        expect(wrapper.state("loaded")).to.equal(true)
+        done()
+      })
+    })
   })
 
   describe("for creation", () => {
@@ -92,9 +120,20 @@ describe("Experiments", () => {
       global.getMockExperiments.restore()
     })
 
+    it("sets showExperimentForm state to true when create experiment button is pushed", done => {
+      const wrapper = mount(<Experiments backend={ backend } />)
+      expect(wrapper.state("showExperimentForm")).to.equal(false)
+      setImmediate(() => {
+        wrapper.find(Button).simulate("click")
+        expect(wrapper.state("showExperimentForm")).to.equal(true)
+        done()
+      })
+    })
+
     it("displays an experiment form when create experiment button is pushed", done => {
       const wrapper = mount(<Experiments backend={ backend } />)
       setImmediate(() => {
+        expect(wrapper.find(Form)).to.have.length(0)
         wrapper.find(Button).simulate("click")
         expect(wrapper.find(Form)).to.have.length(1)
         done()
