@@ -5,6 +5,7 @@ import { expect } from "chai"
 import proxyquire from "proxyquire"
 import sinon from "sinon"
 import { mount, shallow } from "enzyme"
+import Experiment from "../../src/setUp/components/experiment"
 import Experiments from "../../src/setUp/containers/experiments"
 const getExperiments = require("../../src/setUp/actions/getExperiments")
 
@@ -42,11 +43,13 @@ describe("Experiments container", () => {
     const wrapper = mount(<Experiments backend="192.168.56.77:8080" />)
     expect(wrapper.props().backend).to.equal("192.168.56.77:8080")
     wrapper.setState({ experiments })
-    expect(wrapper.children().map(child => child.text()))
+    expect(wrapper.find(Experiment))
+      .to.have.length(2)
+    expect(wrapper.find(Experiment).map(experiment => experiment.text()))
       .to.deep.equal(["experiment1", "experiment2"])
   })
 
-  it("stores experiments fetched from the backend in state", done => {
+  it("stores experiments retrieved from the backend in state", done => {
     const wrapper = mount(<Experiments backend="192.168.56.77:8080" />)
     expect(wrapper.state("experiments")).to.deep.equal([])
     sinon.assert.calledOnce(global.getMockExperiments)

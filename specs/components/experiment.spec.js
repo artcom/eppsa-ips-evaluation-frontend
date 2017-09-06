@@ -6,13 +6,8 @@ import Experiment from "../../src/setUp/components/experiment"
 
 
 describe("Experiment component", () => {
-  it("contains an experiment div", () => {
+  it("is a div", () => {
     expect(shallow(<Experiment />)
-      .find("div").length).to.equal(1)
-  })
-
-  it("contains an experiment div with the expected text", () => {
-    expect(shallow(<Experiment>fake-experiment</Experiment>)
-      .find("div").text()).to.equal("fake-experiment")
+      .type()).to.equal("div")
   })
 })

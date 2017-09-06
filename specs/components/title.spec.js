@@ -6,13 +6,8 @@ import Title from "../../src/setUp/components/title"
 
 
 describe("Title component", () => {
-  it("contains a title div", () => {
+  it("is a div", () => {
     expect(shallow(<Title />)
-      .find("div").length).to.equal(1)
-  })
-
-  it("contains a title div with the expected text", () => {
-    expect(shallow(<Title>Title: </Title>)
-      .find("div").text()).to.equal("Title: ")
+      .type()).to.equal("div")
   })
 })
