@@ -2,6 +2,7 @@
 import React from "react"
 import autoBind from "react-autobind"
 import Experiment from "../components/experiment"
+import Title from "../components/title"
 import { getExperiments } from "../actions/getExperiments"
 
 
@@ -21,9 +22,10 @@ export default class Experiments extends React.Component {
 
   render() {
     return <div>
+      <Title>Experiments:</Title>
       {
         this.state.experiments.map((experiment, i) =>
-          <Experiment experimentName={ experiment.name } key={ i } />
+          <Experiment key={ i }>{ experiment.name }</Experiment>
         )
       }
     </div>

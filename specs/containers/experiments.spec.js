@@ -4,7 +4,7 @@ import { describe, it, beforeEach, afterEach } from "mocha"
 import { expect } from "chai"
 import proxyquire from "proxyquire"
 import sinon from "sinon"
-import { mount } from "enzyme"
+import { mount, shallow } from "enzyme"
 import Experiments from "../../src/setUp/containers/experiments"
 const getExperiments = require("../../src/setUp/actions/getExperiments")
 
@@ -21,6 +21,12 @@ describe("Experiments container", () => {
 
   afterEach(() => {
     global.getMockExperiments.restore()
+  })
+
+  it("contains a title", () => {
+    const wrapper = shallow(<Experiments />)
+    expect(wrapper.childAt(0).type().displayName).to.equal("styled.div")
+    expect(wrapper.childAt(0).childAt(0).text()).to.equal("Experiments:")
   })
 
   it("calls componentDidMount and getExperiments", () => {
