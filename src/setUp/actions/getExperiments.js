@@ -1,7 +1,7 @@
 import rest from "restling"
 
 
-export default async function({ backend }) {
+export async function getExperiments({ backend }) {
   const response = await rest.get(
     `http://${backend}/experiments`
   )
