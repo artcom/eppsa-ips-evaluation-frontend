@@ -46,7 +46,9 @@ export default class Experiments extends React.Component {
     this.setState({ showExperimentForm: true })
   }
 
-  onSubmitted() {
+  async onSubmitted() {
     this.setState({ showExperimentForm: false })
+    const experiments = await getExperiments({ backend: this.props.backend })
+    this.setState({ experiments })
   }
 }

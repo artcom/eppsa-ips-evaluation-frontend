@@ -69,17 +69,21 @@ describe("ExperimentForm component", () => {
       expect(wrapper.state("name")).to.equal("new-experiment")
     })
 
-    it("calls setExperiment and onSubmitted with the expected name when form is submitted", () => {
-      const onSubmitted = sinon.spy()
-      const wrapper = mount(<ExperimentForm onSubmitted={ onSubmitted } />)
-      wrapper.setState({ name: "new-experiment" })
-      wrapper.simulate("submit")
-      sinon.assert.calledOnce(global.setMockExperiment)
-      sinon.assert.calledWith(
-        global.setMockExperiment,
-        { backend, experimentName: "new-experiment" }
-      )
-      sinon.assert.calledOnce(onSubmitted)
-    })
+    it("calls setExperiment and onSubmitted with the expected name when form is submitted",
+      done => {
+        const onSubmitted = sinon.spy()
+        const wrapper = mount(<ExperimentForm onSubmitted={ onSubmitted } />)
+        wrapper.setState({ name: "new-experiment" })
+        wrapper.simulate("submit")
+        sinon.assert.calledOnce(global.setMockExperiment)
+        sinon.assert.calledWith(
+          global.setMockExperiment,
+          { backend, experimentName: "new-experiment" }
+        )
+        setImmediate(() => {
+          sinon.assert.calledOnce(onSubmitted)
+          done()
+        })
+      })
   })
 })

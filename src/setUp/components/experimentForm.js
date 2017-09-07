@@ -31,8 +31,8 @@ export default class ExperimentForm extends React.Component {
     this.setState({ name: event.target.value })
   }
 
-  onSubmit(event) {
-    setExperiment({ backend, experimentName: this.state.name })
+  async onSubmit(event) {
+    await setExperiment({ backend, experimentName: this.state.name })
     this.props.onSubmitted()
     event.preventDefault()
   }

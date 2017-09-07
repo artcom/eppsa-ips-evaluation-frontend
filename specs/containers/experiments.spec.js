@@ -163,9 +163,50 @@ describe("Experiments", () => {
         experimentNameInputField.simulate("change", { target: { value: "new-experiment" } })
         wrapper.find(ExperimentForm).simulate("submit")
         sinon.assert.calledOnce(global.setMockExperiment)
-        expect(wrapper.state("showExperimentForm")).to.equal(false)
+        setImmediate(() => {
+          expect(wrapper.state("showExperimentForm")).to.equal(false)
+          expect(wrapper.find(ExperimentForm)).to.have.length(0)
+          done()
+        })
+      })
+    })
+
+    it("reloads experiments when onSubmitted is called", done => {
+      const wrapper = mount(<Experiments backend={ backend } />)
+      setImmediate(() => {
         expect(wrapper.find(ExperimentForm)).to.have.length(0)
-        done()
+        wrapper.find(Button).simulate("click")
+        expect(wrapper.find(ExperimentForm)).to.have.length(1)
+        const experimentNameInputField = wrapper
+          .find(ExperimentForm)
+          .find(InputLabel)
+          .filterWhere(field => field.text() === "name")
+          .find(InputField)
+        experimentNameInputField.simulate("change", { target: { value: "new-experiment" } })
+        global.getMockExperiments.restore()
+        global.getMockExperiments = sinon.stub(getExperiments, "getExperiments")
+          .resolves([
+            { name: "fake-experiment1" },
+            { name: "fake-experiment2" },
+            { name: "new-experiment" }
+          ])
+        proxyquire(
+          "../../src/setUp/containers/experiments",
+          { getExperiments: { getExperiments: global.getMockExperiments } }
+        )
+        wrapper.find(ExperimentForm).simulate("submit")
+        sinon.assert.calledOnce(global.setMockExperiment)
+        setImmediate(() => {
+          sinon.assert.calledOnce(global.getMockExperiments)
+          const experiments = JSON.stringify(wrapper.state("experiments"))
+          const expectedExperiments = JSON.stringify([
+            { name: "fake-experiment1" },
+            { name: "fake-experiment2" },
+            { name: "new-experiment" }
+          ])
+          expect(experiments).to.equal(expectedExperiments)
+          done()
+        })
       })
     })
   })
