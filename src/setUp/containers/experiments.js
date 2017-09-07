@@ -55,5 +55,7 @@ export default class Experiments extends React.Component {
 
   async onDelete(experimentName) {
     await deleteExperiment({ backend: this.props.backend, experimentName })
+    const experiments = await getExperiments({ backend: this.props.backend })
+    this.setState({ experiments })
   }
 }

@@ -266,5 +266,34 @@ describe("Experiments", () => {
         done()
       })
     })
+
+    it("reloads experiments when an experiment is deleted", done => {
+      const experiments = mount(<Experiments backend={ backend } />)
+      expect(experiments.props().backend).to.equal(backend)
+      setImmediate(() => {
+        expect(experiments.find(Experiment))
+          .to.have.length(2)
+        const experiment1 = experiments
+          .find(Experiment)
+          .filterWhere(experiment => experiment.find(Name).text() === "fake-experiment1")
+        const experiment1DeleteButton = experiment1
+          .find(Button)
+          .filterWhere(button => button.text() === "Delete")
+        global.getMockExperiments.restore()
+        global.getMockExperiments = sinon.stub(getExperiments, "getExperiments")
+          .resolves([{ name: "fake-experiment2" }])
+        proxyquire(
+          "../../src/setUp/containers/experiments",
+          { getExperiments: { getExperiments: global.getMockExperiments } }
+        )
+        experiment1DeleteButton.simulate("click")
+        setImmediate(() => {
+          const storedExperiments = JSON.stringify(experiments.state("experiments"))
+          const expectedExperiments = JSON.stringify([{ name: "fake-experiment2" }])
+          expect(storedExperiments).to.equal(expectedExperiments)
+          done()
+        })
+      })
+    })
   })
 })
