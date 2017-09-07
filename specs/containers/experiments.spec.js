@@ -10,8 +10,10 @@ import Button from "../../src/setUp/components/button"
 import Experiment from "../../src/setUp/components/experiment"
 import Experiments from "../../src/setUp/containers/experiments"
 import ExperimentForm from "../../src/setUp/components/experimentForm"
+import { InputField, InputLabel } from "../../src/setUp/components/input"
 import Title from "../../src/setUp/components/title"
 const getExperiments = require("../../src/setUp/actions/getExperiments")
+const setExperiment = require("../../src/setUp/actions/setExperiment")
 
 describe("Experiments", () => {
   describe("contains", () => {
@@ -114,10 +116,17 @@ describe("Experiments", () => {
         "../../src/setUp/containers/experiments",
         { getExperiments: { getExperiments: global.getMockExperiments } }
       )
+      global.setMockExperiment = sinon.stub(setExperiment, "setExperiment")
+        .resolves("new-experiment")
+      proxyquire(
+        "../../src/setUp/components/experimentForm",
+        { setExperiment: { setExperiment: global.setMockExperiment } }
+      )
     })
 
     afterEach(() => {
       global.getMockExperiments.restore()
+      global.setMockExperiment.restore()
     })
 
     it("sets showExperimentForm state to true when create experiment button is pushed", done => {
@@ -136,6 +145,26 @@ describe("Experiments", () => {
         expect(wrapper.find(ExperimentForm)).to.have.length(0)
         wrapper.find(Button).simulate("click")
         expect(wrapper.find(ExperimentForm)).to.have.length(1)
+        done()
+      })
+    })
+
+    it("hides experiment form when onSubmitted is called", done => {
+      const wrapper = mount(<Experiments backend={ backend } />)
+      setImmediate(() => {
+        expect(wrapper.find(ExperimentForm)).to.have.length(0)
+        wrapper.find(Button).simulate("click")
+        expect(wrapper.find(ExperimentForm)).to.have.length(1)
+        const experimentNameInputField = wrapper
+          .find(ExperimentForm)
+          .find(InputLabel)
+          .filterWhere(field => field.text() === "name")
+          .find(InputField)
+        experimentNameInputField.simulate("change", { target: { value: "new-experiment" } })
+        wrapper.find(ExperimentForm).simulate("submit")
+        sinon.assert.calledOnce(global.setMockExperiment)
+        expect(wrapper.state("showExperimentForm")).to.equal(false)
+        expect(wrapper.find(ExperimentForm)).to.have.length(0)
         done()
       })
     })

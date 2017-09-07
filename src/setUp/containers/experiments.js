@@ -34,15 +34,19 @@ export default class Experiments extends React.Component {
         )
       }
       {
-        this.state.showExperimentForm && <Form fields={ fields } />
+        this.state.showExperimentForm && <Form fields={ fields } onSubmitted={ this.onSubmitted } />
       }
       {
-        this.state.loaded && <Button onClick={ this.onClick }>Create Experiment</Button>
+        this.state.loaded && <Button onClick={ this.onCreateExperiment }>Create Experiment</Button>
       }
     </div>
   }
 
-  onClick() {
+  onCreateExperiment() {
     this.setState({ showExperimentForm: true })
+  }
+
+  onSubmitted() {
+    this.setState({ showExperimentForm: false })
   }
 }
