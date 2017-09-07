@@ -30,7 +30,7 @@ export default class Experiments extends React.Component {
       <Title>Experiments:</Title>
       {
         this.state.experiments.map((experiment, i) =>
-          <Experiment key={ i }>{ experiment.name }</Experiment>
+          <Experiment key={ i } name={ experiment.name } />
         )
       }
       {
