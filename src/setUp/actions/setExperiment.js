@@ -1,13 +1,13 @@
 import rest from "restling"
 
 
-export default async function setExperiment({ backend, experimentName }) {
+export async function setExperiment({ backend, experimentName }) {
   try {
-    await rest.post(
+    return await rest.post(
       `http://${backend}/experiments`,
       { data: { name: experimentName } }
     )
-  } catch(error) {
-    console.error(error)
+  } catch (error) {
+    return error
   }
 }

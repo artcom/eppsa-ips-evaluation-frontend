@@ -17,11 +17,12 @@ export const InputField = styled.input`
 
 
 export default function Input({ field }) {
+  const { name, type, value, onChange } = field
   return (
     <Container>
       <InputLabel>
-        { field.name }
-        <InputField type={ field.type } />
+        { name }
+        <InputField type={ type } value={ value } onChange={ onChange } />
       </InputLabel>
     </Container>
   )
