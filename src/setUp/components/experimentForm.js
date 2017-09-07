@@ -7,7 +7,7 @@ const StyledForm = styled.form`
   padding: 1em;
 `
 
-export default function Form({ fields }) {
+export default function ExperimentForm({ fields }) {
   return (
     <StyledForm>
       {

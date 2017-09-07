@@ -9,7 +9,7 @@ import { backend } from "../../src/constants"
 import Button from "../../src/setUp/components/button"
 import Experiment from "../../src/setUp/components/experiment"
 import Experiments from "../../src/setUp/containers/experiments"
-import Form from "../../src/setUp/components/form"
+import ExperimentForm from "../../src/setUp/components/experimentForm"
 import Title from "../../src/setUp/components/title"
 const getExperiments = require("../../src/setUp/actions/getExperiments")
 
@@ -37,13 +37,13 @@ describe("Experiments", () => {
     it("no experiment form when showExperimentForm state is false", () => {
       const wrapper = shallow(<Experiments />)
       expect(wrapper.state("showExperimentForm")).to.equal(false)
-      expect(wrapper.find(Form)).to.have.length(0)
+      expect(wrapper.find(ExperimentForm)).to.have.length(0)
     })
 
     it("an experiment form when showExperimentForm state is true", () => {
       const wrapper = shallow(<Experiments />)
       wrapper.setState({ showExperimentForm: true })
-      expect(wrapper.find(Form)).to.have.length(1)
+      expect(wrapper.find(ExperimentForm)).to.have.length(1)
     })
   })
 
@@ -133,9 +133,9 @@ describe("Experiments", () => {
     it("displays an experiment form when create experiment button is pushed", done => {
       const wrapper = mount(<Experiments backend={ backend } />)
       setImmediate(() => {
-        expect(wrapper.find(Form)).to.have.length(0)
+        expect(wrapper.find(ExperimentForm)).to.have.length(0)
         wrapper.find(Button).simulate("click")
-        expect(wrapper.find(Form)).to.have.length(1)
+        expect(wrapper.find(ExperimentForm)).to.have.length(1)
         done()
       })
     })
