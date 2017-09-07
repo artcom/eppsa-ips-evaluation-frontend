@@ -25,6 +25,7 @@ export default class Experiments extends React.Component {
   }
 
   render() {
+    const fields = [{ name: "name", type: "text" }]
     return <div>
       <Title>Experiments:</Title>
       {
@@ -33,7 +34,7 @@ export default class Experiments extends React.Component {
         )
       }
       {
-        this.state.showExperimentForm && <Form />
+        this.state.showExperimentForm && <Form fields={ fields } />
       }
       {
         this.state.loaded && <Button onClick={ this.onClick }>Create Experiment</Button>

@@ -15,6 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "jsdom": "^11.2.0",
+    "lodash": "^4.17.4",
     "react": "^15.6.1",
     "react-addons-test-utils": "^15.6.0",
     "react-autobind": "^1.0.6",

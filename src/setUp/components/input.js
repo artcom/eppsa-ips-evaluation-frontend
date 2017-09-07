@@ -16,11 +16,11 @@ export const InputField = styled.input`
 `
 
 
-export default function Input() {
+export default function Input({ field }) {
   return (
     <Container>
-      <InputName />
-      <InputField />
+      <InputName>{ field.name }</InputName>
+      <InputField type={ field.type } />
     </Container>
   )
 }
