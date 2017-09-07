@@ -7,17 +7,20 @@ import Input, { InputName, InputField } from "../../src/setUp/components/input"
 
 describe("Input component", () => {
   it("is a styled.div", () => {
-    expect(shallow(<Input />)
+    const field = { name: "name", type: "text" }
+    expect(shallow(<Input field={ field } />)
       .type().displayName).to.equal("styled.div")
   })
 
   it("contains an input name", () => {
-    expect(shallow(<Input />)
+    const field = { name: "name", type: "text" }
+    expect(shallow(<Input field={ field } />)
       .find(InputName)).to.have.length(1)
   })
 
   it("contains an input field", () => {
-    expect(shallow(<Input />)
+    const field = { name: "name", type: "text" }
+    expect(shallow(<Input field={ field } />)
       .find(InputField)).to.have.length(1)
   })
 })
