@@ -3,7 +3,7 @@ import { describe, it } from "mocha"
 import { expect } from "chai"
 import { shallow, mount } from "enzyme"
 import ExperimentForm from "../../src/setUp/components/experimentForm"
-import Input, { InputField } from "../../src/setUp/components/input"
+import Input, { InputField, InputLabel } from "../../src/setUp/components/input"
 
 
 describe("ExperimentForm component", () => {
@@ -21,20 +21,18 @@ describe("ExperimentForm component", () => {
       .to.equal("Create")
   })
 
-  it("contains an input field corresponding to fields props", () => {
-    const fields = [{ name: "name", type: "text" }]
-    expect(shallow(<ExperimentForm fields={ fields } />).find(Input)).to.have.length(1)
+  it("contains an input field", () => {
+    expect(shallow(<ExperimentForm />).find(Input)).to.have.length(1)
   })
 
-  it("generates fields with a name and an input", () => {
-    const fields = [{ name: "name", type: "text" }]
-    const wrapper = mount(<ExperimentForm fields={ fields } />)
+  it("input text field for experiment name with a label", () => {
+    const wrapper = mount(<ExperimentForm />)
     expect(wrapper.find(Input).childAt(0).type().displayName)
-      .to.equal("styled.div")
+      .to.equal("styled.label")
     expect(wrapper.find(Input).childAt(0).text()).to.equal("name")
-    expect(wrapper.find(Input).childAt(1).type().displayName)
+    expect(wrapper.find(InputLabel).childAt(0).type().displayName)
       .to.equal("styled.input")
-    expect(wrapper.find(Input).childAt(1).props().type)
+    expect(wrapper.find(InputLabel).childAt(0).props().type)
       .to.equal("text")
   })
 })

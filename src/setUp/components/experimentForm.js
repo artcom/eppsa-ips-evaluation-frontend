@@ -1,4 +1,5 @@
 import React from "react"
+import autoBind from "react-autobind"
 import styled from "styled-components"
 import Input, { InputField } from "../components/input"
 
@@ -7,15 +8,19 @@ const StyledForm = styled.form`
   padding: 1em;
 `
 
-export default function ExperimentForm({ fields }) {
-  return (
-    <StyledForm>
-      {
-        fields && fields.map((field, i) =>
-          <Input key={ i } field={ field } />
-        )
-      }
-      <InputField type="submit" value="Create" />
-    </StyledForm>
-  )
+export default class ExperimentForm extends React.Component {
+  constructor(props) {
+    super(props)
+    autoBind(this)
+  }
+
+  render() {
+    const field = { name: "name", type: "text" }
+    return (
+      <StyledForm>
+        <Input field={ field } />
+        <InputField type="submit" value="Create" />
+      </StyledForm>
+    )
+  }
 }

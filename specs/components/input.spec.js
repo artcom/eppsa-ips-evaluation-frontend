@@ -2,7 +2,7 @@ import React from "react"
 import { describe, it } from "mocha"
 import { expect } from "chai"
 import { shallow } from "enzyme"
-import Input, { InputName, InputField } from "../../src/setUp/components/input"
+import Input, { InputLabel, InputField } from "../../src/setUp/components/input"
 
 
 describe("Input component", () => {
@@ -15,7 +15,7 @@ describe("Input component", () => {
   it("contains an input name", () => {
     const field = { name: "name", type: "text" }
     expect(shallow(<Input field={ field } />)
-      .find(InputName)).to.have.length(1)
+      .find(InputLabel)).to.have.length(1)
   })
 
   it("contains an input field", () => {

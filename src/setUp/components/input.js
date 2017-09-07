@@ -7,7 +7,7 @@ const Container = styled.div`
   width: 20em;
 `
 
-export const InputName = styled.div`
+export const InputLabel = styled.label`
   padding: 1em;
 `
 
@@ -19,8 +19,10 @@ export const InputField = styled.input`
 export default function Input({ field }) {
   return (
     <Container>
-      <InputName>{ field.name }</InputName>
-      <InputField type={ field.type } />
+      <InputLabel>
+        { field.name }
+        <InputField type={ field.type } />
+      </InputLabel>
     </Container>
   )
 }
