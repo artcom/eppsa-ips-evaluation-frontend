@@ -14,11 +14,11 @@ export const Name = styled.div`
   width: 30em;
 `
 
-export default function Experiment({ name }) {
+export default function Experiment({ name, onDelete }) {
   return (
     <Container>
       <Name>{ name }</Name>
-      <Button>Delete</Button>
+      <Button onClick={ () => onDelete(name) }>Delete</Button>
     </Container>
   )
 }

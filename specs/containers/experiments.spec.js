@@ -12,6 +12,7 @@ import Experiments from "../../src/setUp/containers/experiments"
 import ExperimentForm from "../../src/setUp/components/experimentForm"
 import { InputField, InputLabel } from "../../src/setUp/components/input"
 import Title from "../../src/setUp/components/title"
+const deleteExperiment = require("../../src/setUp/actions/deleteExperiment")
 const getExperiments = require("../../src/setUp/actions/getExperiments")
 const setExperiment = require("../../src/setUp/actions/setExperiment")
 
@@ -219,6 +220,50 @@ describe("Experiments", () => {
           expect(storedExperiments).to.equal(expectedExperiments)
           done()
         })
+      })
+    })
+  })
+
+  describe("for deletion", () => {
+    beforeEach(() => {
+      global.getMockExperiments = sinon.stub(getExperiments, "getExperiments")
+        .resolves([{ name: "fake-experiment1" }, { name: "fake-experiment2" }])
+      proxyquire(
+        "../../src/setUp/containers/experiments",
+        { getExperiments: { getExperiments: global.getMockExperiments } }
+      )
+      global.deleteMockExperiment = sinon.stub(deleteExperiment, "deleteExperiment")
+        .resolves("fake-experiment1")
+      proxyquire(
+        "../../src/setUp/containers/experiments",
+        { deleteExperiment: { deleteExperiment: global.deleteMockExperiment } }
+      )
+    })
+
+    afterEach(() => {
+      global.getMockExperiments.restore()
+      global.deleteMockExperiment.restore()
+    })
+
+    it("calls deleteExperiment when delete button is pushed", done => {
+      const experiments = mount(<Experiments backend={ backend } />)
+      expect(experiments.props().backend).to.equal(backend)
+      setImmediate(() => {
+        expect(experiments.find(Experiment))
+          .to.have.length(2)
+        const experiment1 = experiments
+          .find(Experiment)
+          .filterWhere(experiment => experiment.find(Name).text() === "fake-experiment1")
+        const experiment1DeleteButton = experiment1
+          .find(Button)
+          .filterWhere(button => button.text() === "Delete")
+        experiment1DeleteButton.simulate("click")
+        sinon.assert.calledOnce(global.deleteMockExperiment)
+        sinon.assert.calledWith(
+          global.deleteMockExperiment,
+          { backend, experimentName: "fake-experiment1" }
+        )
+        done()
       })
     })
   })

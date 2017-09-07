@@ -5,6 +5,7 @@ import Button from "../components/button"
 import Experiment from "../components/experiment"
 import Form from "../components/experimentForm"
 import Title from "../components/title"
+import { deleteExperiment } from "../actions/deleteExperiment"
 import { getExperiments } from "../actions/getExperiments"
 
 
@@ -30,7 +31,7 @@ export default class Experiments extends React.Component {
       <Title>Experiments:</Title>
       {
         this.state.experiments.map((experiment, i) =>
-          <Experiment key={ i } name={ experiment.name } />
+          <Experiment key={ i } name={ experiment.name } onDelete={ this.onDelete } />
         )
       }
       {
@@ -50,5 +51,9 @@ export default class Experiments extends React.Component {
     this.setState({ showExperimentForm: false })
     const experiments = await getExperiments({ backend: this.props.backend })
     this.setState({ experiments })
+  }
+
+  async onDelete(experimentName) {
+    await deleteExperiment({ backend: this.props.backend, experimentName })
   }
 }
