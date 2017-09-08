@@ -27,7 +27,7 @@ describe("DataTable component", () => {
     const data = [[1.5, 2, 3], [4, 5, 6]]
     const table = shallow(<DataTable headers={ headers } data={ data } />)
     const tableData = slice(table.find("tr").map(row => row.find("td").map(data => data.text())), 1)
-    expect(tableData.map(r => r.map(d => Number(d)))).to.deep.equal(data)
+    expect(tableData.map(r => slice(r, 0, r.length - 1).map(d => Number(d)))).to.deep.equal(data)
   })
 
   it("contains a delete button for each data point", () => {

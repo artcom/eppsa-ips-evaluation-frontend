@@ -98,7 +98,8 @@ describe("Points", () => {
         point.name,
         point.trueCoordinateX.toString(),
         point.trueCoordinateY.toString(),
-        point.trueCoordinateZ.toString()
+        point.trueCoordinateZ.toString(),
+        "Delete"
       ]))
     })
 
