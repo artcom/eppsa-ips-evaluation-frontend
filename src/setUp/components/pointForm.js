@@ -57,6 +57,7 @@ export default class PointForm extends React.Component {
   }
 
   async onSubmit(event) {
+    event.preventDefault()
     await setPoint({
       backend,
       point: {
@@ -67,6 +68,5 @@ export default class PointForm extends React.Component {
       }
     })
     this.props.onSubmitted()
-    event.preventDefault()
   }
 }

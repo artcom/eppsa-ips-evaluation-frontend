@@ -32,9 +32,8 @@ export default class ExperimentForm extends React.Component {
   }
 
   async onSubmit(event) {
-    console.error("submitting")
+    event.preventDefault()
     await setExperiment({ backend, experimentName: this.state.name })
     this.props.onSubmitted()
-    event.preventDefault()
   }
 }

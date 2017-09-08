@@ -9,7 +9,6 @@ export async function getPoints({ backend }) {
 }
 
 export async function setPoint({ backend, point }) {
-  console.error(point)
   const response = await rest.post(
     `http://${backend}/points`,
     { data: point }
