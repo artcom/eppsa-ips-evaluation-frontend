@@ -3,6 +3,7 @@ import { describe, it } from "mocha"
 import { expect } from "chai"
 import { slice } from "lodash"
 import { shallow } from "enzyme"
+import Button from "../../src/setUp/components/button"
 import DataTable from "../../src/setUp/components/dataTable"
 
 
@@ -27,5 +28,14 @@ describe("DataTable component", () => {
     const table = shallow(<DataTable headers={ headers } data={ data } />)
     const tableData = slice(table.find("tr").map(row => row.find("td").map(data => data.text())), 1)
     expect(tableData.map(r => r.map(d => Number(d)))).to.deep.equal(data)
+  })
+
+  it("contains a delete button for each data point", () => {
+    const headers = ["name", "X", "Y", "Z"]
+    const data = [[1.5, 2, 3], [4, 5, 6]]
+    const table = shallow(<DataTable headers={ headers } data={ data } />)
+    const tableDeleteButtons = slice(table.find("tr").map(row => row.find(Button)), 1)
+    expect(tableDeleteButtons.map(button => button.childAt(0).text()))
+      .to.deep.equal(["Delete", "Delete"])
   })
 })
