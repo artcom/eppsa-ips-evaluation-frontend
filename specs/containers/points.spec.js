@@ -7,6 +7,7 @@ import { shallow, mount } from "enzyme"
 import proxyquire from "proxyquire"
 import sinon from "sinon"
 import { backend } from "../../src/constants"
+import Button from "../../src/setUp/components/button"
 import DataTable from "../../src/setUp/components/dataTable"
 import Points from "../../src/setUp/containers/points"
 import pointsData from "../testData/points.json"
@@ -31,6 +32,19 @@ describe("Points", () => {
         .find("tr").at(0)
         .find("th").map(header => header.text())
       expect(tableHeaders).to.deep.equal(headers)
+    })
+
+    it("no create point button when loaded state is false", () => {
+      const points = shallow(<Points />)
+      expect(points.state("loaded")).to.equal(false)
+      expect(points.find(Button)).to.have.length(0)
+    })
+
+    it("a create point button when loaded state is true", () => {
+      const points = shallow(<Points />)
+      points.setState({ loaded: true })
+      expect(points.find(Button)).to.have.length(1)
+      expect(points.find(Button).childAt(0).text()).to.equal("Add Point")
     })
   })
 
