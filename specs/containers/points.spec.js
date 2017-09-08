@@ -322,4 +322,45 @@ describe("Points", () => {
       })
     })
   })
+
+  describe("for deletion", () => {
+    beforeEach(() => {
+      global.getMockPoints = sinon.stub(pointsActions, "getPoints")
+        .resolves(pointsData)
+      proxyquire(
+        "../../src/setUp/containers/points",
+        { getPoints: { getPoints: global.getMockPoints } }
+      )
+      global.deleteMockPoint = sinon.stub(pointsActions, "deletePoint")
+        .resolves("point1")
+      proxyquire(
+        "../../src/setUp/containers/points",
+        { deletePoint: { deletePoint: global.deleteMockPoint } }
+      )
+    })
+
+    afterEach(() => {
+      global.getMockPoints.restore()
+      global.deleteMockPoint.restore()
+    })
+
+    it("calls deletePoint when delete button is pushed", done => {
+      const points = mount(<Points backend={ backend } />)
+      expect(points.props().backend).to.equal(backend)
+      setImmediate(() => {
+        expect(points.find("tbody").find("tr"))
+          .to.have.length(2)
+        const point1DeleteButton = points.find("tbody").find("tr").at(0)
+          .find(Button)
+          .filterWhere(button => button.text() === "Delete")
+        point1DeleteButton.simulate("click")
+        sinon.assert.calledOnce(global.deleteMockPoint)
+        sinon.assert.calledWith(
+          global.deleteMockPoint,
+          { backend, name: "point1" }
+        )
+        done()
+      })
+    })
+  })
 })
