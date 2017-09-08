@@ -1,9 +1,14 @@
+/* eslint-disable  import/no-commonjs */
 import React from "react"
-import { describe, it } from "mocha"
+import { describe, it, beforeEach, afterEach } from "mocha"
 import { expect } from "chai"
 import { shallow, mount } from "enzyme"
+import sinon from "sinon"
+import proxyquire from "proxyquire"
+import { backend } from "../../src/constants"
 import Input, { InputField, InputLabel } from "../../src/setUp/components/input"
 import PointForm from "../../src/setUp/components/pointForm"
+const pointActions = require("../../src/setUp/actions/pointsActions")
 
 
 describe("PointForm component", () => {
@@ -77,5 +82,85 @@ describe("PointForm component", () => {
       expect(pointForm.find(InputLabel).at(3).childAt(0).props().value)
         .to.equal("")
     })
+  })
+
+  describe("does", () => {
+    beforeEach(() => {
+      global.setMockPoint = sinon.stub(pointActions, "setPoint")
+        .resolves("point1")
+      proxyquire(
+        "../../src/setUp/components/pointForm",
+        { setPoint: { setPoint: global.setMockPoint } }
+      )
+    })
+
+    afterEach(() => {
+      global.setMockPoint.restore()
+    })
+
+    it("store point name in state when changed in input field", () => {
+      const pointForm = mount(<PointForm />)
+      const pointNameInputField = pointForm
+        .find(InputLabel)
+        .filterWhere(field => field.text() === "name")
+        .find(InputField)
+      pointNameInputField.simulate("change", { target: { value: "point1" } })
+      expect(pointForm.state("name")).to.equal("point1")
+    })
+
+    it("store point X coordinate in state when changed in input field", () => {
+      const pointForm = mount(<PointForm />)
+      const pointNameInputField = pointForm
+        .find(InputLabel)
+        .filterWhere(field => field.text() === "X")
+        .find(InputField)
+      pointNameInputField.simulate("change", { target: { value: 1 } })
+      expect(pointForm.state("X")).to.equal(1)
+    })
+
+    it("store point Y coordinate in state when changed in input field", () => {
+      const pointForm = mount(<PointForm />)
+      const pointNameInputField = pointForm
+        .find(InputLabel)
+        .filterWhere(field => field.text() === "Y")
+        .find(InputField)
+      pointNameInputField.simulate("change", { target: { value: 1 } })
+      expect(pointForm.state("Y")).to.equal(1)
+    })
+
+    it("store point Z coordinate in state when changed in input field", () => {
+      const pointForm = mount(<PointForm />)
+      const pointNameInputField = pointForm
+        .find(InputLabel)
+        .filterWhere(field => field.text() === "Z")
+        .find(InputField)
+      pointNameInputField.simulate("change", { target: { value: 2 } })
+      expect(pointForm.state("Z")).to.equal(2)
+    })
+
+    it("call setPoint and onSubmitted with the expected data when form is submitted",
+      done => {
+        const onSubmitted = sinon.spy()
+        const pointForm = mount(<PointForm onSubmitted={ onSubmitted } />)
+        pointForm.setState({ name: "point1", X: 1, Y: 1, Z: 2 })
+        pointForm.simulate("submit")
+        sinon.assert.calledOnce(global.setMockPoint)
+        sinon.assert.calledWith(
+          global.setMockPoint,
+          {
+            backend,
+            point: {
+              name: "point1",
+              trueCoordinateX: 1,
+              trueCoordinateY: 1,
+              trueCoordinateZ: 2
+            }
+          }
+        )
+        setImmediate(() => {
+          sinon.assert.calledOnce(onSubmitted)
+          done()
+        })
+      })
   })
 })

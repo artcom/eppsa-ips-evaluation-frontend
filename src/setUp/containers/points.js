@@ -38,7 +38,7 @@ export default class Points extends React.Component {
         <Title>Points:</Title>
         <DataTable headers={ headers } data={ data } />
         {
-          this.state.showPointForm && <PointForm />
+          this.state.showPointForm && <PointForm onSubmitted={ this.onSubmitted } />
         }
         {
           this.state.loaded && <Button onClick={ this.onCreatePoint } >Add Point</Button>
@@ -49,5 +49,11 @@ export default class Points extends React.Component {
 
   onCreatePoint() {
     this.setState({ showPointForm: true })
+  }
+
+  async onSubmitted() {
+    this.setState({ showPointForm: false })
+    const points = await getPoints({ backend: this.props.backend })
+    this.setState({ points })
   }
 }

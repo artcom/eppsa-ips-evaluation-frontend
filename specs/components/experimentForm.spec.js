@@ -69,7 +69,7 @@ describe("ExperimentForm component", () => {
       expect(experimentForm.state("name")).to.equal("new-experiment")
     })
 
-    it("calls setExperiment and onSubmitted with the expected name when form is submitted",
+    it("call setExperiment and onSubmitted with the expected name when form is submitted",
       done => {
         const onSubmitted = sinon.spy()
         const experimentForm = mount(<ExperimentForm onSubmitted={ onSubmitted } />)

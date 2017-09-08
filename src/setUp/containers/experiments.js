@@ -3,7 +3,7 @@ import React from "react"
 import autoBind from "react-autobind"
 import Button from "../components/button"
 import Experiment from "../components/experiment"
-import Form from "../components/experimentForm"
+import ExperimentForm from "../components/experimentForm"
 import Title from "../components/title"
 import { getExperiments, deleteExperiment } from "../actions/experimentsActions"
 
@@ -34,7 +34,8 @@ export default class Experiments extends React.Component {
         )
       }
       {
-        this.state.showExperimentForm && <Form fields={ fields } onSubmitted={ this.onSubmitted } />
+        this.state.showExperimentForm
+        && <ExperimentForm fields={ fields } onSubmitted={ this.onSubmitted } />
       }
       {
         this.state.loaded && <Button onClick={ this.onCreateExperiment }>Create Experiment</Button>

@@ -155,6 +155,31 @@ describe("Experiments", () => {
       })
     })
 
+    it("submits new experiment to backend when filled form is submitted", done => {
+      const experiments = mount(<Experiments backend={ backend } />)
+      setImmediate(() => {
+        expect(experiments.find(ExperimentForm)).to.have.length(0)
+        const createExperimentButton = experiments
+          .find(Button)
+          .filterWhere(button => button.text() === "Create Experiment")
+        createExperimentButton.simulate("click")
+        expect(experiments.find(ExperimentForm)).to.have.length(1)
+        const experimentNameInputField = experiments
+          .find(ExperimentForm)
+          .find(InputLabel)
+          .filterWhere(field => field.text() === "name")
+          .find(InputField)
+        experimentNameInputField.simulate("change", { target: { value: "new-experiment" } })
+        experiments.find(ExperimentForm).simulate("submit")
+        sinon.assert.calledOnce(global.setMockExperiment)
+        sinon.assert.calledWith(
+          global.setMockExperiment,
+          { backend, experimentName: "new-experiment" }
+        )
+        done()
+      })
+    })
+
     it("hides experiment form when onSubmitted is called", done => {
       const experiments = mount(<Experiments backend={ backend } />)
       setImmediate(() => {
