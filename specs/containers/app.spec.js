@@ -14,9 +14,16 @@ describe("App", () => {
       expect(app.find(TabBar)).to.have.length(1)
     })
 
-    it("experiments", () => {
+    it("experiments when showExperiments state is true", () => {
       const app = shallow(<App />)
+      expect(app.state("show")).to.equal("experiments")
       expect(app.find(Experiments)).to.have.length(1)
+    })
+
+    it("no experiments when showExperiments state is false", () => {
+      const app = shallow(<App />)
+      app.setState({ show: "other" })
+      expect(app.find(Experiments)).to.have.length(0)
     })
   })
 })

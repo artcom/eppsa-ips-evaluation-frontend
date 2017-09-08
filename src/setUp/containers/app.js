@@ -1,4 +1,5 @@
 import React from "react"
+import autoBind from "react-autobind"
 import styled from "styled-components"
 import Experiments from "../containers/experiments"
 import TabBar from "../components/tabBar"
@@ -8,11 +9,23 @@ const Container = styled.div`
   background-color: #F6F7F7;
 `
 
-export default function({ backend }) {
-  return (
-    <Container>
-      <TabBar />
-      <Experiments backend={ backend } />
-    </Container>
-  )
+export default class App extends React.Component {
+  constructor(props) {
+    super(props)
+    autoBind(this)
+    this.state = {
+      show: "experiments"
+    }
+  }
+
+  render() {
+    return (
+      <Container>
+        <TabBar />
+        {
+          this.state.show === "experiments" && <Experiments backend={ this.props.backend } />
+        }
+      </Container>
+    )
+  }
 }
