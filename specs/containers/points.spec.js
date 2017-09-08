@@ -2,6 +2,7 @@
 import React from "react"
 import { describe, it, beforeEach, afterEach } from "mocha"
 import { expect } from "chai"
+import { slice } from "lodash"
 import { shallow, mount } from "enzyme"
 import proxyquire from "proxyquire"
 import sinon from "sinon"
@@ -65,6 +66,31 @@ describe("Points", () => {
         const storedPoints = JSON.stringify(points.state("points"))
         const expectedPoints = JSON.stringify(pointsData)
         expect(storedPoints).to.equal(expectedPoints)
+        done()
+      })
+    })
+
+    it("renders points that are present in state", () => {
+      const points = mount(<Points backend={ backend } />)
+      expect(points.props().backend).to.equal(backend)
+      points.setState({ points: pointsData })
+      const displayedPoints = points
+        .find(DataTable).at(0)
+        .find("tr")
+        .map(row => row.find("td").map(data => data.text()))
+      expect(slice(displayedPoints, 1)).to.deep.equal(pointsData.map(point => [
+        point.name,
+        point.trueCoordinateX.toString(),
+        point.trueCoordinateY.toString(),
+        point.trueCoordinateZ.toString()
+      ]))
+    })
+
+    it("sets loaded state to true when points have been retrieved from the backend", done => {
+      const points = mount(<Points backend={ backend } />)
+      expect(points.state("loaded")).to.equal(false)
+      setImmediate(() => {
+        expect(points.state("loaded")).to.equal(true)
         done()
       })
     })

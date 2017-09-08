@@ -1,7 +1,7 @@
 import React from "react"
 
 
-export default function DataTable({ headers }) {
+export default function DataTable({ headers, data }) {
   return (
     <table>
       <tr>
@@ -9,6 +9,13 @@ export default function DataTable({ headers }) {
           headers.map((header, i) => <th key={ i }>{ header }</th>)
         }
       </tr>
+      {
+        data && data.map((datum, i) => <tr key={ i }>
+          {
+            datum.map((d, i) => <td key={ i }>{ d }</td>)
+          }
+        </tr>)
+      }
     </table>
   )
 }

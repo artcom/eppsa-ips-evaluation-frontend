@@ -23,11 +23,17 @@ export default class Points extends React.Component {
 
   render() {
     const headers = ["name", "X", "Y", "Z"]
+    const data = this.state.points.map(point => [
+      point.name,
+      point.trueCoordinateX,
+      point.trueCoordinateY,
+      point.trueCoordinateZ
+    ])
 
     return (
       <div>
         <Title>Points:</Title>
-        <DataTable headers={ headers } />
+        <DataTable headers={ headers } data={ data } />
       </div>
     )
   }
