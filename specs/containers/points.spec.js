@@ -10,7 +10,6 @@ import Points from "../../src/setUp/containers/points"
 import pointsData from "../testData/points.json"
 import Title from "../../src/setUp/components/title"
 const pointsActions = require("../../src/setUp/actions/pointsActions")
-// const points = require("../testData/points.json")
 
 
 describe("Points", () => {

@@ -8,7 +8,7 @@ import sinon from "sinon"
 import { backend } from "../../src/constants"
 import ExperimentForm from "../../src/setUp/components/experimentForm"
 import Input, { InputField, InputLabel } from "../../src/setUp/components/input"
-const setExperiment = require("../../src/setUp/actions/setExperiment")
+const experimentActions = require("../../src/setUp/actions/experimentsActions")
 
 
 describe("ExperimentForm component", () => {
@@ -47,7 +47,7 @@ describe("ExperimentForm component", () => {
 
   describe("does", () => {
     beforeEach(() => {
-      global.setMockExperiment = sinon.stub(setExperiment, "setExperiment")
+      global.setMockExperiment = sinon.stub(experimentActions, "setExperiment")
         .resolves("new-experiment")
       proxyquire(
         "../../src/setUp/components/experimentForm",

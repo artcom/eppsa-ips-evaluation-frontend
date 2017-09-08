@@ -5,8 +5,7 @@ import Button from "../components/button"
 import Experiment from "../components/experiment"
 import Form from "../components/experimentForm"
 import Title from "../components/title"
-import { deleteExperiment } from "../actions/deleteExperiment"
-import { getExperiments } from "../actions/getExperiments"
+import { getExperiments, deleteExperiment } from "../actions/experimentsActions"
 
 
 export default class Experiments extends React.Component {

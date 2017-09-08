@@ -12,9 +12,7 @@ import Experiments from "../../src/setUp/containers/experiments"
 import ExperimentForm from "../../src/setUp/components/experimentForm"
 import { InputField, InputLabel } from "../../src/setUp/components/input"
 import Title from "../../src/setUp/components/title"
-const deleteExperiment = require("../../src/setUp/actions/deleteExperiment")
-const getExperiments = require("../../src/setUp/actions/getExperiments")
-const setExperiment = require("../../src/setUp/actions/setExperiment")
+const experimentsActions = require("../../src/setUp/actions/experimentsActions")
 
 
 describe("Experiments", () => {
@@ -53,7 +51,7 @@ describe("Experiments", () => {
 
   describe("for retrieval", () => {
     beforeEach(() => {
-      global.getMockExperiments = sinon.stub(getExperiments, "getExperiments")
+      global.getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
         .resolves([{ name: "fake-experiment1" }, { name: "fake-experiment2" }])
       proxyquire(
         "../../src/setUp/containers/experiments",
@@ -112,13 +110,13 @@ describe("Experiments", () => {
 
   describe("for creation", () => {
     beforeEach(() => {
-      global.getMockExperiments = sinon.stub(getExperiments, "getExperiments")
+      global.getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
         .resolves([{ name: "fake-experiment1" }, { name: "fake-experiment2" }])
       proxyquire(
         "../../src/setUp/containers/experiments",
         { getExperiments: { getExperiments: global.getMockExperiments } }
       )
-      global.setMockExperiment = sinon.stub(setExperiment, "setExperiment")
+      global.setMockExperiment = sinon.stub(experimentsActions, "setExperiment")
         .resolves("new-experiment")
       proxyquire(
         "../../src/setUp/components/experimentForm",
@@ -198,7 +196,7 @@ describe("Experiments", () => {
           .find(InputField)
         experimentNameInputField.simulate("change", { target: { value: "new-experiment" } })
         global.getMockExperiments.restore()
-        global.getMockExperiments = sinon.stub(getExperiments, "getExperiments")
+        global.getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
           .resolves([
             { name: "fake-experiment1" },
             { name: "fake-experiment2" },
@@ -227,13 +225,13 @@ describe("Experiments", () => {
 
   describe("for deletion", () => {
     beforeEach(() => {
-      global.getMockExperiments = sinon.stub(getExperiments, "getExperiments")
+      global.getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
         .resolves([{ name: "fake-experiment1" }, { name: "fake-experiment2" }])
       proxyquire(
         "../../src/setUp/containers/experiments",
         { getExperiments: { getExperiments: global.getMockExperiments } }
       )
-      global.deleteMockExperiment = sinon.stub(deleteExperiment, "deleteExperiment")
+      global.deleteMockExperiment = sinon.stub(experimentsActions, "deleteExperiment")
         .resolves("fake-experiment1")
       proxyquire(
         "../../src/setUp/containers/experiments",
@@ -281,7 +279,7 @@ describe("Experiments", () => {
           .find(Button)
           .filterWhere(button => button.text() === "Delete")
         global.getMockExperiments.restore()
-        global.getMockExperiments = sinon.stub(getExperiments, "getExperiments")
+        global.getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
           .resolves([{ name: "fake-experiment2" }])
         proxyquire(
           "../../src/setUp/containers/experiments",

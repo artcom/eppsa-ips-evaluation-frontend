@@ -3,7 +3,7 @@ import autoBind from "react-autobind"
 import styled from "styled-components"
 import { backend } from "../../constants"
 import Input, { InputField } from "../components/input"
-import { setExperiment } from "../actions/setExperiment"
+import { setExperiment } from "../actions/experimentsActions"
 
 
 const StyledForm = styled.form`
