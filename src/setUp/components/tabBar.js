@@ -9,12 +9,19 @@ const Container = styled.div`
   background-color: #BFBFBF;
 `
 
-export default function TabBar({ tabs, highlight }) {
+export default function TabBar({ tabs, highlight, onActivate }) {
   return (
     <Container>
       {
         tabs.map((tab, i) =>
-          <Tab key={ i } highlight={ tab === highlight }>{ upperFirst(tab) }</Tab>
+          <Tab
+            key={ i }
+            highlight={ tab === highlight }
+            onClick={ () => onActivate(tab) }>
+            {
+              upperFirst(tab)
+            }
+          </Tab>
         )
       }
     </Container>

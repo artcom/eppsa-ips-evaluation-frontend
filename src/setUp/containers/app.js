@@ -22,11 +22,15 @@ export default class App extends React.Component {
     const tabs = ["experiments", "points"]
     return (
       <Container>
-        <TabBar tabs={ tabs } highlight={ this.state.show } />
+        <TabBar tabs={ tabs } highlight={ this.state.show } onActivate={ this.onActivate } />
         {
           this.state.show === "experiments" && <Experiments backend={ this.props.backend } />
         }
       </Container>
     )
+  }
+
+  onActivate(tab) {
+    this.setState({ show: tab })
   }
 }

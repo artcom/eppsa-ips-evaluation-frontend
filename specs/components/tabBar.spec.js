@@ -11,7 +11,7 @@ describe("TabBar", () => {
     it("an experiments tab", () => {
       const tabs = ["experiments"]
       const app = shallow(<TabBar tabs={ tabs } />)
-      expect(app.find(Tab).findWhere(tab => tab.childAt(0).text() === "Experiments"))
+      expect(app.find(Tab).filterWhere(tab => tab.childAt(0).text() === "Experiments"))
         .to.have.length(1)
     })
 
@@ -25,13 +25,13 @@ describe("TabBar", () => {
     describe("highlights", () => {
       it("the expected tab", () => {
         const tabs = ["experiments", "points"]
-        const app = shallow(<TabBar tabs={ tabs } highLight="points" />)
+        const app = shallow(<TabBar tabs={ tabs } highlight="points" />)
         const experimentsTab = app
           .find(Tab)
-          .findWhere(tab => tab.childAt(0).text() === "Experiments")
+          .filterWhere(tab => tab.childAt(0).text() === "Experiments")
         const pointsTab = app
           .find(Tab)
-          .findWhere(tab => tab.childAt(0).text() === "Points")
+          .filterWhere(tab => tab.childAt(0).text() === "Points")
         expect(experimentsTab.props().highlight).to.equal(false)
         expect(pointsTab.props().highlight).to.equal(true)
       })
