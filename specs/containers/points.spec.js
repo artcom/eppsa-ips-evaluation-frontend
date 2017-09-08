@@ -10,6 +10,7 @@ import { backend } from "../../src/constants"
 import Button from "../../src/setUp/components/button"
 import DataTable from "../../src/setUp/components/dataTable"
 import Points from "../../src/setUp/containers/points"
+import PointForm from "../../src/setUp/components/pointForm"
 import pointsData from "../testData/points.json"
 import Title from "../../src/setUp/components/title"
 const pointsActions = require("../../src/setUp/actions/pointsActions")
@@ -105,6 +106,47 @@ describe("Points", () => {
       expect(points.state("loaded")).to.equal(false)
       setImmediate(() => {
         expect(points.state("loaded")).to.equal(true)
+        done()
+      })
+    })
+  })
+
+  describe("for creation", () => {
+    beforeEach(() => {
+      global.getMockPoints = sinon.stub(pointsActions, "getPoints")
+        .resolves(pointsData)
+      proxyquire(
+        "../../src/setUp/containers/points",
+        { getPoints: { getPoints: global.getMockPoints } }
+      )
+    })
+
+    afterEach(() => {
+      global.getMockPoints.restore()
+    })
+
+    it("sets showPointForm state to true when add point button is pushed", done => {
+      const points = mount(<Points backend={ backend } />)
+      expect(points.state("showPointForm")).to.equal(false)
+      setImmediate(() => {
+        const createPointButton = points
+          .find(Button)
+          .filterWhere(button => button.text() === "Add Point")
+        createPointButton.simulate("click")
+        expect(points.state("showPointForm")).to.equal(true)
+        done()
+      })
+    })
+
+    it("displays a point form when add point button is pushed", done => {
+      const points = mount(<Points backend={ backend } />)
+      setImmediate(() => {
+        expect(points.find(PointForm)).to.have.length(0)
+        const createPointButton = points
+          .find(Button)
+          .filterWhere(button => button.text() === "Add Point")
+        createPointButton.simulate("click")
+        expect(points.find(PointForm)).to.have.length(1)
         done()
       })
     })

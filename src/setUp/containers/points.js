@@ -3,6 +3,7 @@ import React from "react"
 import autoBind from "react-autobind"
 import Button from "../components/button"
 import DataTable from "../components/dataTable"
+import PointForm from "../components/pointForm"
 import Title from "../components/title"
 import { getPoints } from "../actions/pointsActions"
 
@@ -13,7 +14,8 @@ export default class Points extends React.Component {
     autoBind(this)
     this.state = {
       points: [],
-      loaded: false
+      loaded: false,
+      showPointForm: false
     }
   }
 
@@ -36,9 +38,16 @@ export default class Points extends React.Component {
         <Title>Points:</Title>
         <DataTable headers={ headers } data={ data } />
         {
-          this.state.loaded && <Button >Add Point</Button>
+          this.state.showPointForm && <PointForm />
+        }
+        {
+          this.state.loaded && <Button onClick={ this.onCreatePoint } >Add Point</Button>
         }
       </div>
     )
+  }
+
+  onCreatePoint() {
+    this.setState({ showPointForm: true })
   }
 }

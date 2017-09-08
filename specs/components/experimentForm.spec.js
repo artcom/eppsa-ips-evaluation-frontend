@@ -19,28 +19,28 @@ describe("ExperimentForm component", () => {
 
   describe("contains", () => {
     it("a Create submit input", () => {
-      const wrapper = shallow(<ExperimentForm />)
-      expect(wrapper.find(InputField)).to.have.length(1)
-      expect(wrapper.find(InputField).props().type)
+      const experimentForm = shallow(<ExperimentForm />)
+      expect(experimentForm.find(InputField)).to.have.length(1)
+      expect(experimentForm.find(InputField).props().type)
         .to.equal("submit")
-      expect(wrapper.find(InputField).props().value)
+      expect(experimentForm.find(InputField).props().value)
         .to.equal("Create")
     })
 
-    it("an input field", () => {
+    it("an Input component", () => {
       expect(shallow(<ExperimentForm />).find(Input)).to.have.length(1)
     })
 
     it("an input text field for experiment name with a label", () => {
-      const wrapper = mount(<ExperimentForm />)
-      expect(wrapper.find(Input).childAt(0).type().displayName)
+      const experimentForm = mount(<ExperimentForm />)
+      expect(experimentForm.find(Input).childAt(0).type().displayName)
         .to.equal("styled.label")
-      expect(wrapper.find(Input).childAt(0).text()).to.equal("name")
-      expect(wrapper.find(InputLabel).childAt(0).type().displayName)
+      expect(experimentForm.find(Input).childAt(0).text()).to.equal("name")
+      expect(experimentForm.find(InputLabel).childAt(0).type().displayName)
         .to.equal("styled.input")
-      expect(wrapper.find(InputLabel).childAt(0).props().type)
+      expect(experimentForm.find(InputLabel).childAt(0).props().type)
         .to.equal("text")
-      expect(wrapper.find(InputLabel).childAt(0).props().value)
+      expect(experimentForm.find(InputLabel).childAt(0).props().value)
         .to.equal("")
     })
   })
@@ -60,21 +60,21 @@ describe("ExperimentForm component", () => {
     })
 
     it("store experiment name in state when changed in input field", () => {
-      const wrapper = mount(<ExperimentForm />)
-      const experimentNameInputField = wrapper
+      const experimentForm = mount(<ExperimentForm />)
+      const experimentNameInputField = experimentForm
         .find(InputLabel)
         .filterWhere(field => field.text() === "name")
         .find(InputField)
       experimentNameInputField.simulate("change", { target: { value: "new-experiment" } })
-      expect(wrapper.state("name")).to.equal("new-experiment")
+      expect(experimentForm.state("name")).to.equal("new-experiment")
     })
 
     it("calls setExperiment and onSubmitted with the expected name when form is submitted",
       done => {
         const onSubmitted = sinon.spy()
-        const wrapper = mount(<ExperimentForm onSubmitted={ onSubmitted } />)
-        wrapper.setState({ name: "new-experiment" })
-        wrapper.simulate("submit")
+        const experimentForm = mount(<ExperimentForm onSubmitted={ onSubmitted } />)
+        experimentForm.setState({ name: "new-experiment" })
+        experimentForm.simulate("submit")
         sinon.assert.calledOnce(global.setMockExperiment)
         sinon.assert.calledWith(
           global.setMockExperiment,
