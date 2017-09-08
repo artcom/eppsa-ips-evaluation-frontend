@@ -2,6 +2,7 @@ import React from "react"
 import autoBind from "react-autobind"
 import styled from "styled-components"
 import Experiments from "../containers/experiments"
+import Points from "../containers/points"
 import TabBar from "../components/tabBar"
 
 
@@ -25,6 +26,9 @@ export default class App extends React.Component {
         <TabBar tabs={ tabs } highlight={ this.state.show } onActivate={ this.onActivate } />
         {
           this.state.show === "experiments" && <Experiments backend={ this.props.backend } />
+        }
+        {
+          this.state.show === "points" && <Points backend={ this.props.backend } />
         }
       </Container>
     )

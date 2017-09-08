@@ -5,7 +5,7 @@ import { shallow } from "enzyme"
 import Tab from "../../src/setUp/components/tab"
 
 
-describe("TAb component", () => {
+describe("Tab component", () => {
   it("is a div", () => {
     expect(shallow(<Tab />)
       .type()).to.equal("div")

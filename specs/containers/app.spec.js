@@ -4,6 +4,7 @@ import { expect } from "chai"
 import { shallow, mount } from "enzyme"
 import App from "../../src/setUp/containers/app"
 import Experiments from "../../src/setUp/containers/experiments"
+import Points from "../../src/setUp/containers/points"
 import Tab from "../../src/setUp/components/tab"
 import TabBar from "../../src/setUp/components/tabBar"
 
@@ -25,6 +26,18 @@ describe("App", () => {
       const app = shallow(<App />)
       app.setState({ show: "other" })
       expect(app.find(Experiments)).to.have.length(0)
+    })
+
+    it("points when show state is \"points\"", () => {
+      const app = shallow(<App />)
+      app.setState({ show: "points" })
+      expect(app.find(Points)).to.have.length(1)
+    })
+
+    it("no points when show state is not \"points\"", () => {
+      const app = shallow(<App />)
+      app.setState({ show: "other" })
+      expect(app.find(Points)).to.have.length(0)
     })
   })
 
