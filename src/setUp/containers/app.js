@@ -19,9 +19,10 @@ export default class App extends React.Component {
   }
 
   render() {
+    const tabs = ["experiments", "points"]
     return (
       <Container>
-        <TabBar />
+        <TabBar tabs={ tabs } highlight={ this.state.show } />
         {
           this.state.show === "experiments" && <Experiments backend={ this.props.backend } />
         }
