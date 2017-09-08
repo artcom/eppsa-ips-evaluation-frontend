@@ -2,7 +2,7 @@
 import React from "react"
 import { describe, it, beforeEach, afterEach } from "mocha"
 import { expect } from "chai"
-import { slice } from "lodash"
+import { concat, slice } from "lodash"
 import { shallow, mount } from "enzyme"
 import proxyquire from "proxyquire"
 import sinon from "sinon"
@@ -248,6 +248,74 @@ describe("Points", () => {
         setImmediate(() => {
           expect(points.state("showPointForm")).to.equal(false)
           expect(points.find(PointForm)).to.have.length(0)
+          done()
+        })
+      })
+    })
+
+    it("reloads points when onSubmitted is called", done => {
+      const points = mount(<Points backend={ backend } />)
+      setImmediate(() => {
+        expect(points.find(PointForm)).to.have.length(0)
+        const createPointButton = points
+          .find(Button)
+          .filterWhere(button => button.text() === "Add Point")
+        createPointButton.simulate("click")
+        expect(points.find(PointForm)).to.have.length(1)
+        const pointNameInputField = points
+          .find(PointForm)
+          .find(InputLabel)
+          .filterWhere(field => field.text() === "name")
+          .find(InputField)
+        const pointXInputField = points
+          .find(PointForm)
+          .find(InputLabel)
+          .filterWhere(field => field.text() === "X")
+          .find(InputField)
+        const pointYInputField = points
+          .find(PointForm)
+          .find(InputLabel)
+          .filterWhere(field => field.text() === "Y")
+          .find(InputField)
+        const pointZInputField = points
+          .find(PointForm)
+          .find(InputLabel)
+          .filterWhere(field => field.text() === "Z")
+          .find(InputField)
+        pointNameInputField.simulate("change", { target: { value: "point3" } })
+        pointXInputField.simulate("change", { target: { value: 3 } })
+        pointYInputField.simulate("change", { target: { value: 2 } })
+        pointZInputField.simulate("change", { target: { value: 4 } })
+        global.getMockPoints.restore()
+        global.getMockPoints = sinon.stub(pointsActions, "getPoints")
+          .resolves(concat(
+            pointsData,
+            {
+              name: "point3",
+              trueCoordinateX: 3,
+              trueCoordinateY: 2,
+              trueCoordinateZ: 4
+            }
+          ))
+        proxyquire(
+          "../../src/setUp/containers/points",
+          { getPoints: { getPoints: global.getMockPoints } }
+        )
+        points.find(PointForm).simulate("submit")
+        sinon.assert.calledOnce(global.setMockPoint)
+        setImmediate(() => {
+          sinon.assert.calledOnce(global.getMockPoints)
+          const storedPoints = JSON.stringify(points.state("points"))
+          const expectedPoints = JSON.stringify(concat(
+            pointsData,
+            {
+              name: "point3",
+              trueCoordinateX: 3,
+              trueCoordinateY: 2,
+              trueCoordinateZ: 4
+            }
+          ))
+          expect(storedPoints).to.equal(expectedPoints)
           done()
         })
       })
