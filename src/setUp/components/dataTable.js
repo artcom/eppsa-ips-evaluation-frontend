@@ -4,11 +4,14 @@ import React from "react"
 export default function DataTable({ headers, data }) {
   return (
     <table>
-      <tr>
+      <thead>
+        <tr>
         {
           headers.map((header, i) => <th key={ i }>{ header }</th>)
         }
-      </tr>
+        </tr>
+      </thead>
+      <tbody>
       {
         data && data.map((datum, i) => <tr key={ i }>
           {
@@ -16,6 +19,7 @@ export default function DataTable({ headers, data }) {
           }
         </tr>)
       }
+      </tbody>
     </table>
   )
 }
