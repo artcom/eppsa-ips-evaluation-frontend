@@ -6,6 +6,7 @@ import { shallow, mount } from "enzyme"
 import sinon from "sinon"
 import proxyquire from "proxyquire"
 import { backend } from "../../src/constants"
+import { findInputField } from "../helpers/findElements"
 import Input, { InputField, InputLabel } from "../../src/setUp/components/input"
 import PointForm from "../../src/setUp/components/pointForm"
 const pointActions = require("../../src/setUp/actions/pointsActions")
@@ -100,41 +101,25 @@ describe("PointForm component", () => {
 
     it("store point name in state when changed in input field", () => {
       const pointForm = mount(<PointForm />)
-      const pointNameInputField = pointForm
-        .find(InputLabel)
-        .filterWhere(field => field.text() === "name")
-        .find(InputField)
-      pointNameInputField.simulate("change", { target: { value: "point1" } })
+      findInputField(pointForm, "name").simulate("change", { target: { value: "point1" } })
       expect(pointForm.state("name")).to.equal("point1")
     })
 
     it("store point X coordinate in state when changed in input field", () => {
       const pointForm = mount(<PointForm />)
-      const pointNameInputField = pointForm
-        .find(InputLabel)
-        .filterWhere(field => field.text() === "X")
-        .find(InputField)
-      pointNameInputField.simulate("change", { target: { value: 1 } })
+      findInputField(pointForm, "X").simulate("change", { target: { value: 1 } })
       expect(pointForm.state("X")).to.equal(1)
     })
 
     it("store point Y coordinate in state when changed in input field", () => {
       const pointForm = mount(<PointForm />)
-      const pointNameInputField = pointForm
-        .find(InputLabel)
-        .filterWhere(field => field.text() === "Y")
-        .find(InputField)
-      pointNameInputField.simulate("change", { target: { value: 1 } })
+      findInputField(pointForm, "Y").simulate("change", { target: { value: 1 } })
       expect(pointForm.state("Y")).to.equal(1)
     })
 
     it("store point Z coordinate in state when changed in input field", () => {
       const pointForm = mount(<PointForm />)
-      const pointNameInputField = pointForm
-        .find(InputLabel)
-        .filterWhere(field => field.text() === "Z")
-        .find(InputField)
-      pointNameInputField.simulate("change", { target: { value: 2 } })
+      findInputField(pointForm, "Z").simulate("change", { target: { value: 2 } })
       expect(pointForm.state("Z")).to.equal(2)
     })
 

@@ -7,6 +7,7 @@ import proxyquire from "proxyquire"
 import sinon from "sinon"
 import { backend } from "../../src/constants"
 import ExperimentForm from "../../src/setUp/components/experimentForm"
+import inputData from "../helpers/inputData"
 import Input, { InputField, InputLabel } from "../../src/setUp/components/input"
 const experimentActions = require("../../src/setUp/actions/experimentsActions")
 
@@ -61,11 +62,7 @@ describe("ExperimentForm component", () => {
 
     it("store experiment name in state when changed in input field", () => {
       const experimentForm = mount(<ExperimentForm />)
-      const experimentNameInputField = experimentForm
-        .find(InputLabel)
-        .filterWhere(field => field.text() === "name")
-        .find(InputField)
-      experimentNameInputField.simulate("change", { target: { value: "new-experiment" } })
+      inputData(experimentForm, { name: "new-experiment" })
       expect(experimentForm.state("name")).to.equal("new-experiment")
     })
 

@@ -9,7 +9,7 @@ import sinon from "sinon"
 import { backend } from "../../src/constants"
 import Button from "../../src/setUp/components/button"
 import DataTable from "../../src/setUp/components/dataTable"
-import { InputField, InputLabel } from "../../src/setUp/components/input"
+import inputData from "../helpers/inputData"
 import Points from "../../src/setUp/containers/points"
 import PointForm from "../../src/setUp/components/pointForm"
 import pointsData from "../testData/points.json"
@@ -168,31 +168,14 @@ describe("Points", () => {
           .find(Button)
           .filterWhere(button => button.text() === "Add Point")
         createPointButton.simulate("click")
-        expect(points.find(PointForm)).to.have.length(1)
-        const pointNameInputField = points
-          .find(PointForm)
-          .find(InputLabel)
-          .filterWhere(field => field.text() === "name")
-          .find(InputField)
-        const pointXInputField = points
-          .find(PointForm)
-          .find(InputLabel)
-          .filterWhere(field => field.text() === "X")
-          .find(InputField)
-        const pointYInputField = points
-          .find(PointForm)
-          .find(InputLabel)
-          .filterWhere(field => field.text() === "Y")
-          .find(InputField)
-        const pointZInputField = points
-          .find(PointForm)
-          .find(InputLabel)
-          .filterWhere(field => field.text() === "Z")
-          .find(InputField)
-        pointNameInputField.simulate("change", { target: { value: "point1" } })
-        pointXInputField.simulate("change", { target: { value: 1 } })
-        pointYInputField.simulate("change", { target: { value: 1 } })
-        pointZInputField.simulate("change", { target: { value: 2 } })
+        const pointForm = points.find(PointForm)
+        expect(pointForm).to.have.length(1)
+        inputData(pointForm, {
+          name: "point1",
+          X: 1,
+          Y: 1,
+          Z: 2
+        })
         points.find(PointForm).simulate("submit")
         sinon.assert.calledOnce(global.setMockPoint)
         sinon.assert.calledWith(
@@ -219,31 +202,14 @@ describe("Points", () => {
           .find(Button)
           .filterWhere(button => button.text() === "Add Point")
         createPointButton.simulate("click")
-        expect(points.find(PointForm)).to.have.length(1)
-        const pointNameInputField = points
-          .find(PointForm)
-          .find(InputLabel)
-          .filterWhere(field => field.text() === "name")
-          .find(InputField)
-        const pointXInputField = points
-          .find(PointForm)
-          .find(InputLabel)
-          .filterWhere(field => field.text() === "X")
-          .find(InputField)
-        const pointYInputField = points
-          .find(PointForm)
-          .find(InputLabel)
-          .filterWhere(field => field.text() === "Y")
-          .find(InputField)
-        const pointZInputField = points
-          .find(PointForm)
-          .find(InputLabel)
-          .filterWhere(field => field.text() === "Z")
-          .find(InputField)
-        pointNameInputField.simulate("change", { target: { value: "point1" } })
-        pointXInputField.simulate("change", { target: { value: 1 } })
-        pointYInputField.simulate("change", { target: { value: 1 } })
-        pointZInputField.simulate("change", { target: { value: 2 } })
+        const pointForm = points.find(PointForm)
+        expect(pointForm).to.have.length(1)
+        inputData(pointForm, {
+          name: "point3",
+          X: 3,
+          Y: 2,
+          Z: 4
+        })
         points.find(PointForm).simulate("submit")
         sinon.assert.calledOnce(global.setMockPoint)
         setImmediate(() => {
@@ -262,31 +228,14 @@ describe("Points", () => {
           .find(Button)
           .filterWhere(button => button.text() === "Add Point")
         createPointButton.simulate("click")
-        expect(points.find(PointForm)).to.have.length(1)
-        const pointNameInputField = points
-          .find(PointForm)
-          .find(InputLabel)
-          .filterWhere(field => field.text() === "name")
-          .find(InputField)
-        const pointXInputField = points
-          .find(PointForm)
-          .find(InputLabel)
-          .filterWhere(field => field.text() === "X")
-          .find(InputField)
-        const pointYInputField = points
-          .find(PointForm)
-          .find(InputLabel)
-          .filterWhere(field => field.text() === "Y")
-          .find(InputField)
-        const pointZInputField = points
-          .find(PointForm)
-          .find(InputLabel)
-          .filterWhere(field => field.text() === "Z")
-          .find(InputField)
-        pointNameInputField.simulate("change", { target: { value: "point3" } })
-        pointXInputField.simulate("change", { target: { value: 3 } })
-        pointYInputField.simulate("change", { target: { value: 2 } })
-        pointZInputField.simulate("change", { target: { value: 4 } })
+        const piontForm = points.find(PointForm)
+        expect(piontForm).to.have.length(1)
+        inputData(piontForm, {
+          name: "point3",
+          X: 3,
+          Y: 2,
+          Z: 4
+        })
         global.getMockPoints.restore()
         global.getMockPoints = sinon.stub(pointsActions, "getPoints")
           .resolves(concat(

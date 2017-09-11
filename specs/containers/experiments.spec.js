@@ -10,7 +10,7 @@ import Button from "../../src/setUp/components/button"
 import Experiment, { Name } from "../../src/setUp/components/experiment"
 import Experiments from "../../src/setUp/containers/experiments"
 import ExperimentForm from "../../src/setUp/components/experimentForm"
-import { InputField, InputLabel } from "../../src/setUp/components/input"
+import inputData from "../helpers/inputData"
 import Title from "../../src/setUp/components/title"
 const experimentsActions = require("../../src/setUp/actions/experimentsActions")
 
@@ -164,12 +164,8 @@ describe("Experiments", () => {
           .filterWhere(button => button.text() === "Create Experiment")
         createExperimentButton.simulate("click")
         expect(experiments.find(ExperimentForm)).to.have.length(1)
-        const experimentNameInputField = experiments
-          .find(ExperimentForm)
-          .find(InputLabel)
-          .filterWhere(field => field.text() === "name")
-          .find(InputField)
-        experimentNameInputField.simulate("change", { target: { value: "new-experiment" } })
+        const experimentForm = experiments.find(ExperimentForm)
+        inputData(experimentForm, { name: "new-experiment" })
         experiments.find(ExperimentForm).simulate("submit")
         sinon.assert.calledOnce(global.setMockExperiment)
         sinon.assert.calledWith(
@@ -189,12 +185,8 @@ describe("Experiments", () => {
           .filterWhere(button => button.text() === "Create Experiment")
         createExperimentButton.simulate("click")
         expect(experiments.find(ExperimentForm)).to.have.length(1)
-        const experimentNameInputField = experiments
-          .find(ExperimentForm)
-          .find(InputLabel)
-          .filterWhere(field => field.text() === "name")
-          .find(InputField)
-        experimentNameInputField.simulate("change", { target: { value: "new-experiment" } })
+        const experimentForm = experiments.find(ExperimentForm)
+        inputData(experimentForm, { name: "new-experiment" })
         experiments.find(ExperimentForm).simulate("submit")
         sinon.assert.calledOnce(global.setMockExperiment)
         setImmediate(() => {
@@ -214,12 +206,8 @@ describe("Experiments", () => {
           .filterWhere(button => button.text() === "Create Experiment")
         createExperimentButton.simulate("click")
         expect(experiments.find(ExperimentForm)).to.have.length(1)
-        const experimentNameInputField = experiments
-          .find(ExperimentForm)
-          .find(InputLabel)
-          .filterWhere(field => field.text() === "name")
-          .find(InputField)
-        experimentNameInputField.simulate("change", { target: { value: "new-experiment" } })
+        const experimentForm = experiments.find(ExperimentForm)
+        inputData(experimentForm, { name: "new-experiment" })
         global.getMockExperiments.restore()
         global.getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
           .resolves([
