@@ -24,36 +24,26 @@ export default class PointForm extends React.Component {
 
   render() {
     const fields = [
-      { name: "name", type: "text", value: this.state.name, onChange: this.onChangeName },
-      { name: "X", type: "text", value: this.state.X, onChange: this.onChangeX },
-      { name: "Y", type: "text", value: this.state.Y, onChange: this.onChangeY },
-      { name: "Z", type: "text", value: this.state.Z, onChange: this.onChangeZ }
+      { name: "name", type: "text", value: this.state.name, onChange: this.onInput },
+      { name: "X", type: "text", value: this.state.X, onChange: this.onInput },
+      { name: "Y", type: "text", value: this.state.Y, onChange: this.onInput },
+      { name: "Z", type: "text", value: this.state.Z, onChange: this.onInput }
     ]
 
     return (
       <StyledForm onSubmit={ this.onSubmit }>
         {
-          fields.map((field, i) => <Input key={ i } field={ field } />)
+          fields.map((field, i) => <Input key={ i } field={ field } onInput={ this.onInput } />)
         }
         <InputField type="submit" value="Create" />
       </StyledForm>
     )
   }
 
-  onChangeName(event) {
-    this.setState({ name: event.target.value })
-  }
-
-  onChangeX(event) {
-    this.setState({ X: event.target.value })
-  }
-
-  onChangeY(event) {
-    this.setState({ Y: event.target.value })
-  }
-
-  onChangeZ(event) {
-    this.setState({ Z: event.target.value })
+  onInput(event, name) {
+    const data = {}
+    data[name] = event.target.value
+    this.setState(data)
   }
 
   async onSubmit(event) {

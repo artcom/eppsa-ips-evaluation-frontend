@@ -22,7 +22,7 @@ export default function Input({ field }) {
     <Container>
       <InputLabel>
         { name }
-        <InputField type={ type } value={ value } onChange={ onChange } />
+        <InputField type={ type } value={ value } onChange={ event => onChange(event, name) } />
       </InputLabel>
     </Container>
   )
