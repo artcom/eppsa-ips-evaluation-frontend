@@ -18,16 +18,16 @@ export default class ExperimentForm extends React.Component {
   }
 
   render() {
-    const field = { name: "name", type: "text", value: this.state.name, onChange: this.onChange }
+    const field = { name: "name", type: "text", value: this.state.name }
     return (
       <StyledForm onSubmit={ this.onSubmit }>
-        <Input field={ field } />
+        <Input field={ field } onInput={ this.onInput } />
         <InputField type="submit" value="Create" />
       </StyledForm>
     )
   }
 
-  onChange(event) {
+  onInput(event) {
     this.setState({ name: event.target.value })
   }
 

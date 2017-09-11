@@ -24,10 +24,10 @@ export default class PointForm extends React.Component {
 
   render() {
     const fields = [
-      { name: "name", type: "text", value: this.state.name, onChange: this.onInput },
-      { name: "X", type: "text", value: this.state.X, onChange: this.onInput },
-      { name: "Y", type: "text", value: this.state.Y, onChange: this.onInput },
-      { name: "Z", type: "text", value: this.state.Z, onChange: this.onInput }
+      { name: "name", type: "text", value: this.state.name },
+      { name: "X", type: "text", value: this.state.X },
+      { name: "Y", type: "text", value: this.state.Y },
+      { name: "Z", type: "text", value: this.state.Z }
     ]
 
     return (
