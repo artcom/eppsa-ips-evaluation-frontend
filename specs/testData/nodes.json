@@ -1,0 +1,12 @@
+[
+  {
+    "id": "node1",
+    "name": "Node1",
+    "type": "quuppa"
+  },
+  {
+    "id": "node2",
+    "name": "Node2",
+    "type": "quuppa"
+  }
+]
