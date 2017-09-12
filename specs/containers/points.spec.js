@@ -228,9 +228,9 @@ describe("Points", () => {
           .find(Button)
           .filterWhere(button => button.text() === "Add Point")
         createPointButton.simulate("click")
-        const piontForm = points.find(PointForm)
-        expect(piontForm).to.have.length(1)
-        inputData(piontForm, {
+        const pointForm = points.find(PointForm)
+        expect(pointForm).to.have.length(1)
+        inputData(pointForm, {
           name: "point3",
           X: 3,
           Y: 2,

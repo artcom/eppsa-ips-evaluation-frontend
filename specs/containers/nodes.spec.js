@@ -52,7 +52,7 @@ describe("Nodes", () => {
 
   describe("for retrieval", () => {
     beforeEach(() => {
-      global.getMockPoints = sinon.stub(nodesActions, "getNodes")
+      global.getMockNodes = sinon.stub(nodesActions, "getNodes")
         .resolves(nodesData)
       proxyquire(
         "../../src/setUp/containers/nodes",
@@ -79,7 +79,7 @@ describe("Nodes", () => {
       sinon.assert.calledOnce(global.getMockNodes)
       sinon.assert.calledWith(global.getMockNodes, { backend })
       setImmediate(() => {
-        const storedNodes = JSON.stringify(nodes.state("points"))
+        const storedNodes = JSON.stringify(nodes.state("nodes"))
         const expectedNodes = JSON.stringify(nodesData)
         expect(storedNodes).to.equal(expectedNodes)
         done()
@@ -120,10 +120,10 @@ describe("Nodes", () => {
         "../../src/setUp/containers/nodes",
         { getNodes: { getNodes: global.getMockNodes } }
       )
-      global.setMockNode = sinon.stub(nodesActions, "setPoint")
+      global.setMockNode = sinon.stub(nodesActions, "setNode")
         .resolves("Node1")
       proxyquire(
-        "../../src/setUp/components/pointForm",
+        "../../src/setUp/components/nodeForm",
         { setNode: { setNode: global.setMockNode } }
       )
     })
@@ -135,7 +135,7 @@ describe("Nodes", () => {
 
     it("sets showNodeForm state to true when add node button is pushed", done => {
       const nodes = mount(<Nodes backend={ backend } />)
-      expect(nodes.state("showPointForm")).to.equal(false)
+      expect(nodes.state("showNodeForm")).to.equal(false)
       setImmediate(() => {
         const createNodeButton = nodes
           .find(Button)
@@ -165,7 +165,7 @@ describe("Nodes", () => {
         expect(nodes.find(NodeForm)).to.have.length(0)
         const createNodeButton = nodes
           .find(Button)
-          .filterWhere(button => button.text() === "Add Point")
+          .filterWhere(button => button.text() === "Add Node")
         createNodeButton.simulate("click")
         const nodeForm = nodes.find(NodeForm)
         expect(nodeForm).to.have.length(1)

@@ -21,7 +21,7 @@ export default class Points extends React.Component {
 
   async componentDidMount() {
     const nodes = await getNodes({ backend: this.props.backend })
-    this.setState({ points: nodes, loaded: true })
+    this.setState({ nodes, loaded: true })
   }
 
   render() {
@@ -53,6 +53,6 @@ export default class Points extends React.Component {
   async onSubmitted() {
     this.setState({ showNodeForm: false })
     const nodes = await getNodes({ backend: this.props.backend })
-    this.setState({ points: nodes })
+    this.setState({ nodes })
   }
 }
