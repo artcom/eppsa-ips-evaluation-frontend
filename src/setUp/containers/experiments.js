@@ -2,7 +2,7 @@
 import React from "react"
 import autoBind from "react-autobind"
 import Button from "../components/button"
-import Experiment from "../components/experiment"
+import DataTable from "../components/dataTable"
 import ExperimentForm from "../components/experimentForm"
 import Title from "../components/title"
 import { getExperiments, deleteExperiment } from "../actions/experimentsActions"
@@ -25,14 +25,12 @@ export default class Experiments extends React.Component {
   }
 
   render() {
+    const headers = ["name"]
+    const data = this.state.experiments.map(experiment => [experiment.name])
     const fields = [{ name: "name", type: "text" }]
     return <div>
       <Title>Experiments:</Title>
-      {
-        this.state.experiments.map((experiment, i) =>
-          <Experiment key={ i } name={ experiment.name } onDelete={ this.onDelete } />
-        )
-      }
+      <DataTable headers={ headers } data={ data } onDelete={ this.onDelete } />
       {
         this.state.showExperimentForm
         && <ExperimentForm fields={ fields } onSubmitted={ this.onSubmitted } />
@@ -53,8 +51,8 @@ export default class Experiments extends React.Component {
     this.setState({ experiments })
   }
 
-  async onDelete(experimentName) {
-    await deleteExperiment({ backend: this.props.backend, experimentName })
+  async onDelete(experimentData) {
+    await deleteExperiment({ backend: this.props.backend, experimentName: experimentData[0] })
     const experiments = await getExperiments({ backend: this.props.backend })
     this.setState({ experiments })
   }

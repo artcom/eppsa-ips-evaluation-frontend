@@ -2,7 +2,7 @@ import React from "react"
 import Button from "./button"
 
 
-export default function DataTable({ headers, data }) {
+export default function DataTable({ headers, data, onDelete }) {
   return (
     <table>
       <thead>
@@ -18,7 +18,7 @@ export default function DataTable({ headers, data }) {
           {
             datum.map((d, i) => <td key={ i }>{ d }</td>)
           }
-          <td><Button>Delete</Button></td>
+          <td><Button onClick={ () => onDelete(datum) }>Delete</Button></td>
         </tr>)
       }
       </tbody>

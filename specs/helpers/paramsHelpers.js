@@ -157,3 +157,14 @@ export function callDeleteData(mountedComponent, deleteMock, callArgs, done) {
     done()
   })
 }
+
+export function deleteData(mountedComponent, stateKey, remainingData, done) {
+  const point1Row = mountedComponent.find("tbody").find("tr").at(0)
+  findButtonByName(point1Row, "Delete").simulate("click")
+  setImmediate(() => {
+    const storedExperiments = JSON.stringify(mountedComponent.state(stateKey))
+    const expectedExperiments = JSON.stringify(remainingData)
+    expect(storedExperiments).to.equal(expectedExperiments)
+    done()
+  })
+}
