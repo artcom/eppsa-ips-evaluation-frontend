@@ -2,38 +2,43 @@
 import React from "react"
 import { describe, it, beforeEach, afterEach } from "mocha"
 import { expect } from "chai"
-import { concat, slice } from "lodash"
+import { concat } from "lodash"
 import { shallow, mount } from "enzyme"
 import proxyquire from "proxyquire"
 import sinon from "sinon"
 import { backend } from "../../src/constants"
 import Button from "../../src/setUp/components/button"
-import DataTable from "../../src/setUp/components/dataTable"
-import inputData from "../helpers/inputData"
 import Nodes from "../../src/setUp/containers/nodes"
 import NodeForm from "../../src/setUp/components/nodeForm"
 import nodesData from "../testData/nodes.json"
-import Title from "../../src/setUp/components/title"
+import {
+  acknowledgeRetrieval,
+  activateForm,
+  activateOnSelect,
+  callDeleteData,
+  callsMountFunctions,
+  displayInTable,
+  hasTable,
+  hasTitle,
+  hideForm,
+  reloadData,
+  showForm,
+  storeDataInState,
+  submitData
+} from "../helpers/paramsHelpers"
 const nodesActions = require("../../src/setUp/actions/nodesActions")
 
 
 describe("Nodes", () => {
   describe("contains", () => {
     it("a title", () => {
-      const nodes = shallow(<Nodes />)
-      expect(nodes.find(Title)).to.have.length(1)
-      expect(nodes.find(Title).childAt(0).text()).to.equal("Nodes:")
+      hasTitle(shallow(<Nodes />), "Nodes:")
     })
 
     it("a table with the expected headers", () => {
       const headers = ["id", "name", "type"]
       const nodes = mount(<Nodes />)
-      expect(nodes.find(DataTable)).to.have.length(1)
-      const tableHeaders = nodes
-        .find(DataTable).at(0)
-        .find("tr").at(0)
-        .find("th").map(header => header.text())
-      expect(tableHeaders).to.deep.equal(headers)
+      hasTable(nodes, headers)
     })
 
     it("no create node button when loaded state is false", () => {
@@ -64,51 +69,29 @@ describe("Nodes", () => {
       global.getMockNodes.restore()
     })
 
-    it("calls componentDidMount and getNodes", () => {
-      const componentDidMount = sinon.spy(Nodes.prototype, "componentDidMount")
-      mount(<Nodes backend={ backend } />)
-      expect(Nodes.prototype.componentDidMount.calledOnce).to.equal(true)
-      sinon.assert.calledOnce(global.getMockNodes)
-      sinon.assert.calledWith(global.getMockNodes, { backend })
-      componentDidMount.restore()
+    it("calls componentDidMount and getNodes and passes the expected props to Nodes", () => {
+      callsMountFunctions(Nodes, { backend }, global.getMockNodes, { backend })
     })
 
     it("stores nodes retrieved from the backend in state", done => {
       const nodes = mount(<Nodes backend={ backend } />)
-      expect(nodes.state("nodes")).to.deep.equal([])
-      sinon.assert.calledOnce(global.getMockNodes)
-      sinon.assert.calledWith(global.getMockNodes, { backend })
-      setImmediate(() => {
-        const storedNodes = JSON.stringify(nodes.state("nodes"))
-        const expectedNodes = JSON.stringify(nodesData)
-        expect(storedNodes).to.equal(expectedNodes)
-        done()
-      })
+      storeDataInState(nodes, global.getMockNodes, "nodes", nodesData, done)
     })
 
     it("renders nodes that are present in state", () => {
       const nodes = mount(<Nodes backend={ backend } />)
-      expect(nodes.props().backend).to.equal(backend)
-      nodes.setState({ nodes: nodesData })
-      const displayedNodes = nodes
-        .find(DataTable).at(0)
-        .find("tr")
-        .map(row => row.find("td").map(data => data.text()))
-      expect(slice(displayedNodes, 1)).to.deep.equal(nodesData.map(node => [
+      const expectedRows = nodesData.map(node => [
         node.id,
         node.name,
         node.type,
         "Delete"
-      ]))
+      ])
+      displayInTable(nodes, { nodes: nodesData }, expectedRows)
     })
 
     it("sets loaded state to true when nodes have been retrieved from the backend", done => {
-      const points = mount(<Nodes backend={ backend } />)
-      expect(points.state("loaded")).to.equal(false)
-      setImmediate(() => {
-        expect(points.state("loaded")).to.equal(true)
-        done()
-      })
+      const nodes = mount(<Nodes backend={ backend } />)
+      acknowledgeRetrieval(nodes, global.getMockNodes, done)
     })
   })
 
@@ -135,132 +118,83 @@ describe("Nodes", () => {
 
     it("sets showNodeForm state to true when add node button is pushed", done => {
       const nodes = mount(<Nodes backend={ backend } />)
-      expect(nodes.state("showNodeForm")).to.equal(false)
-      setImmediate(() => {
-        const createNodeButton = nodes
-          .find(Button)
-          .filterWhere(button => button.text() === "Add Node")
-        createNodeButton.simulate("click")
-        expect(nodes.state("showNodeForm")).to.equal(true)
-        done()
-      })
+      activateOnSelect(nodes, "showNodeForm", "Add Node", done)
     })
 
     it("displays a node form when add node button is pushed", done => {
       const nodes = mount(<Nodes backend={ backend } />)
-      setImmediate(() => {
-        expect(nodes.find(NodeForm)).to.have.length(0)
-        const createNodeButton = nodes
-          .find(Button)
-          .filterWhere(button => button.text() === "Add Node")
-        createNodeButton.simulate("click")
-        expect(nodes.find(NodeForm)).to.have.length(1)
-        done()
-      })
+      showForm(nodes, NodeForm, "Add Node", done)
     })
 
     it("submits new node to backend when filled form is submitted", done => {
       const nodes = mount(<Nodes backend={ backend } />)
-      setImmediate(() => {
-        expect(nodes.find(NodeForm)).to.have.length(0)
-        const createNodeButton = nodes
-          .find(Button)
-          .filterWhere(button => button.text() === "Add Node")
-        createNodeButton.simulate("click")
-        const nodeForm = nodes.find(NodeForm)
-        expect(nodeForm).to.have.length(1)
-        inputData(nodeForm, {
+      const submitNode = {
+        id: "node1",
+        name: "Node1",
+        type: "quuppa"
+      }
+      const callArgs = {
+        backend,
+        node: {
           id: "node1",
           name: "Node1",
           type: "quuppa"
-        })
-        nodes.find(NodeForm).simulate("submit")
-        sinon.assert.calledOnce(global.setMockNode)
-        sinon.assert.calledWith(
-          global.setMockNode,
-          {
-            backend,
-            node: {
-              id: "node1",
-              name: "Node1",
-              type: "quuppa"
-            }
-          }
-        )
-        done()
-      })
+        }
+      }
+      submitData(nodes, NodeForm, "Add Node", submitNode, global.setMockNode, callArgs, done)
     })
 
     it("hides node form when onSubmitted is called", done => {
       const nodes = mount(<Nodes backend={ backend } />)
-      setImmediate(() => {
-        expect(nodes.find(NodeForm)).to.have.length(0)
-        const createNodeButton = nodes
-          .find(Button)
-          .filterWhere(button => button.text() === "Add Node")
-        createNodeButton.simulate("click")
-        const nodeForm = nodes.find(NodeForm)
-        expect(nodeForm).to.have.length(1)
-        inputData(nodeForm, {
-          id: "node1",
-          name: "Node1",
-          type: "quuppa"
-        })
-        nodes.find(NodeForm).simulate("submit")
-        sinon.assert.calledOnce(global.setMockNode)
-        setImmediate(() => {
-          expect(nodes.state("showNodeForm")).to.equal(false)
-          expect(nodes.find(NodeForm)).to.have.length(0)
-          done()
-        })
-      })
+      const submitNode = {
+        id: "node1",
+        name: "Node1",
+        type: "quuppa"
+      }
+      hideForm(
+        nodes,
+        NodeForm,
+        submitNode,
+        "showNodeForm",
+        "Add Node",
+        global.setMockNode,
+        done
+      )
     })
 
     it("reloads nodes when onSubmitted is called", done => {
       const nodes = mount(<Nodes backend={ backend } />)
+      const submitNode = {
+        id: "node3",
+        name: "Node3",
+        type: "quuppa"
+      }
       setImmediate(() => {
-        expect(nodes.find(NodeForm)).to.have.length(0)
-        const createNodeButton = nodes
-          .find(Button)
-          .filterWhere(button => button.text() === "Add Node")
-        createNodeButton.simulate("click")
-        const nodeForm = nodes.find(NodeForm)
-        expect(nodeForm).to.have.length(1)
-        inputData(nodeForm, {
-          id: "node3",
-          name: "Node3",
-          type: "quuppa"
-        })
+        activateForm(nodes, NodeForm, "Add Node", submitNode)
         global.getMockNodes.restore()
+        const newData = concat(
+          nodesData,
+          {
+            id: "node3",
+            name: "Node3",
+            type: "quuppa"
+          }
+        )
         global.getMockNodes = sinon.stub(nodesActions, "getNodes")
-          .resolves(concat(
-            nodesData,
-            {
-              id: "node3",
-              name: "Node3",
-              type: "quuppa"
-            }
-          ))
+          .resolves(newData)
         proxyquire(
           "../../src/setUp/containers/nodes",
           { getNodes: { getNodes: global.getMockNodes } }
         )
-        nodes.find(NodeForm).simulate("submit")
-        sinon.assert.calledOnce(global.setMockNode)
-        setImmediate(() => {
-          sinon.assert.calledOnce(global.getMockNodes)
-          const storedNodes = JSON.stringify(nodes.state("nodes"))
-          const expectedNodes = JSON.stringify(concat(
-            nodesData,
-            {
-              id: "node3",
-              name: "Node3",
-              type: "quuppa"
-            }
-          ))
-          expect(storedNodes).to.equal(expectedNodes)
-          done()
-        })
+        reloadData(
+          nodes,
+          NodeForm,
+          "nodes",
+          global.setMockNode,
+          global.getMockNodes,
+          newData,
+          done
+        )
       })
     })
   })
@@ -288,21 +222,8 @@ describe("Nodes", () => {
 
     it("calls deleteNode when delete button is pushed", done => {
       const nodes = mount(<Nodes backend={ backend } />)
-      expect(nodes.props().backend).to.equal(backend)
-      setImmediate(() => {
-        expect(nodes.find("tbody").find("tr"))
-          .to.have.length(2)
-        const point1DeleteButton = nodes.find("tbody").find("tr").at(0)
-          .find(Button)
-          .filterWhere(button => button.text() === "Delete")
-        point1DeleteButton.simulate("click")
-        sinon.assert.calledOnce(global.deleteMockNode)
-        sinon.assert.calledWith(
-          global.deleteMockNode,
-          { backend, name: "Node1" }
-        )
-        done()
-      })
+      const deleteArgs = { backend, name: "Node1" }
+      callDeleteData(nodes, global.deleteMockNode, deleteArgs, done)
     })
   })
 })
