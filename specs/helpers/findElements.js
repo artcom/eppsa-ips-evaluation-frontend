@@ -1,3 +1,4 @@
+import Button from "../../src/setUp/components/button"
 import { InputField, InputLabel } from "../../src/setUp/components/input"
 
 
@@ -6,4 +7,10 @@ export function findInputField(form, fieldName) {
     .find(InputLabel)
     .filterWhere(field => field.text() === fieldName)
     .find(InputField)
+}
+
+export function findButtonByName(mountedParentComponent, name) {
+  return mountedParentComponent
+    .find(Button)
+    .filterWhere(button => button.text() === name)
 }
