@@ -3,8 +3,8 @@ import autoBind from "react-autobind"
 import styled from "styled-components"
 import Params from "./params"
 import { deleteExperiment, getExperiments, setExperiment } from "../actions/experimentsActions"
+import { getNodes, setNode } from "../actions/nodesActions"
 import { getPoints, setPoint } from "../actions/pointsActions"
-import Nodes from "../containers/nodes"
 import TabBar from "../components/tabBar"
 
 
@@ -29,6 +29,11 @@ export default class App extends React.Component {
       { name: "X", type: "text" },
       { name: "Y", type: "text" },
       { name: "Z", type: "text" }
+    ]
+    const nodeFields = [
+      { name: "id", type: "text" },
+      { name: "name", type: "text" },
+      { name: "type", type: "text" }
     ]
     return (
       <Container>
@@ -57,7 +62,14 @@ export default class App extends React.Component {
             backend={ this.props.backend } />
         }
         {
-          this.state.show === "nodes" && <Nodes backend={ this.props.backend } />
+          this.state.show === "nodes" && <Params
+            title="Nodes:"
+            fields={ nodeFields }
+            get={ getNodes }
+            set={ setNode }
+            paramName="node"
+            createText="Add Node"
+            backend={ this.props.backend } />
         }
       </Container>
     )

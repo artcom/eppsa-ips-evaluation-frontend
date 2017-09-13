@@ -9,7 +9,7 @@ import App from "../../src/setUp/containers/app"
 import { backend } from "../../src/constants"
 import experimentsData from "../testData/experiments.json"
 import Params from "../../src/setUp/containers/params"
-import Nodes from "../../src/setUp/containers/nodes"
+import nodesData from "../testData/nodes.json"
 import pointsData from "../testData/points.json"
 import Tab from "../../src/setUp/components/tab"
 import TabBar from "../../src/setUp/components/tabBar"
@@ -18,11 +18,13 @@ import {
   getExperiments,
   setExperiment
 } from "../../src/setUp/actions/experimentsActions"
+import { getNodes, setNode } from "../../src/setUp/actions/nodesActions"
 import {
   getPoints,
   setPoint
 } from "../../src/setUp/actions/pointsActions"
 const experimentsActions = require("../../src/setUp/actions/experimentsActions")
+const nodesActions = require("../../src/setUp/actions/nodesActions")
 const pointsActions = require("../../src/setUp/actions/pointsActions")
 
 
@@ -66,13 +68,16 @@ describe("App", () => {
     it("nodes when show state is \"nodes\"", () => {
       const app = shallow(<App />)
       app.setState({ show: "nodes" })
-      expect(app.find(Nodes)).to.have.length(1)
+      expect(app.find(Params)).to.have.length(1)
+      expect(app.find(Params).filterWhere(params => params.props().paramName === "node"))
+        .to.have.length(1)
     })
 
     it("no nodes when show state is not \"nodes\"", () => {
       const app = shallow(<App />)
       app.setState({ show: "other" })
-      expect(app.find(Nodes)).to.have.length(0)
+      expect(app.find(Params).filterWhere(params => params.props().paramName === "node"))
+        .to.have.length(0)
     })
   })
 
@@ -162,6 +167,42 @@ describe("App", () => {
       expect(app.find(Params).props().paramName).to.equal("point")
       expect(app.find(Params).props().createText).to.equal("Add Point")
       sinon.assert.calledOnce(global.getMockPoints)
+    })
+  })
+
+  describe("when nodes tab is active", () => {
+    beforeEach(() => {
+      global.getMockNodes = sinon.stub(nodesActions, "getNodes")
+        .resolves(nodesData)
+      proxyquire(
+        "../../src/setUp/containers/params",
+        { getNodes: { getNodes: global.getMockNodes } }
+      )
+    })
+
+    afterEach(() => {
+      global.getMockNodes.restore()
+    })
+
+    it("sends expected props to params", () => {
+      const nodeFields = [
+        { name: "id", type: "text" },
+        { name: "name", type: "text" },
+        { name: "type", type: "text" }
+      ]
+      const app = mount(<App backend={ backend } />)
+      app.setState({ show: "nodes" })
+      expect(app.state("show")).to.equal("nodes")
+      expect(app.find(Params)).to.have.length(1)
+      expect(app.find(Params).props().backend).to.equal(backend)
+      expect(app.find(Params).props().title).to.equal("Nodes:")
+      expect(JSON.stringify(app.find(Params).props().fields))
+        .to.deep.equal(JSON.stringify(nodeFields))
+      expect(app.find(Params).props().get).to.equal(getNodes)
+      expect(app.find(Params).props().set).to.equal(setNode)
+      expect(app.find(Params).props().paramName).to.equal("node")
+      expect(app.find(Params).props().createText).to.equal("Add Node")
+      sinon.assert.calledOnce(global.getMockNodes)
     })
   })
 })
