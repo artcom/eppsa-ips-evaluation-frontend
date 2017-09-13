@@ -1,9 +1,7 @@
-/* eslint-disable  import/no-commonjs */
 import React from "react"
-import { describe, it, beforeEach, afterEach } from "mocha"
+import { describe, it } from "mocha"
 import { shallow, mount } from "enzyme"
 import sinon from "sinon"
-import proxyquire from "proxyquire"
 import { backend } from "../../src/constants"
 import {
   callSubmitFunctions,
@@ -13,7 +11,6 @@ import {
   storeInput
 } from "../helpers/formHelpers"
 import Form from "../../src/setUp/components/form"
-const nodesActions = require("../../src/setUp/actions/nodesActions")
 
 
 describe("Form component", () => {
@@ -38,19 +35,6 @@ describe("Form component", () => {
   })
 
   describe("does", () => {
-    beforeEach(() => {
-      global.setMockNode = sinon.stub(nodesActions, "setNode")
-        .resolves("Node1")
-      proxyquire(
-        "../../src/setUp/components/pointForm",
-        { setNode: { setNode: global.setMockNode } }
-      )
-    })
-
-    afterEach(() => {
-      global.setMockNode.restore()
-    })
-
     it("store node data in state when changed in input field", () => {
       const fields = [{ name: "field1", type: "text" }, { name: "field2", type: "text" }]
       storeInput(mount(<Form fields={ fields } />), [

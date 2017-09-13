@@ -102,7 +102,7 @@ describe("Experiments", () => {
       global.setMockExperiment = sinon.stub(experimentsActions, "setExperiment")
         .resolves("new-experiment")
       proxyquire(
-        "../../src/setUp/components/experimentForm",
+        "../../src/setUp/components/form",
         { setExperiment: { setExperiment: global.setMockExperiment } }
       )
     })

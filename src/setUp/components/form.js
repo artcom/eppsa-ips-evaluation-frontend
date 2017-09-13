@@ -10,7 +10,7 @@ const StyledForm = styled.form`
   padding: 1em;
 `
 
-export default class PointForm extends React.Component {
+export default class Form extends React.Component {
   constructor(props) {
     super(props)
     autoBind(this)
@@ -46,7 +46,15 @@ export default class PointForm extends React.Component {
     event.preventDefault()
     const setArgs = { backend }
     setArgs[this.props.paramName] = this.state
-    await this.props.set(setArgs)
+    if (this.props.processData) {
+      await this.props.set(this.props.processData(setArgs))
+    } else {
+      await this.props.set(setArgs)
+    }
     this.props.onSubmitted()
   }
+}
+
+Form.defaultProps = {
+  processData: false
 }

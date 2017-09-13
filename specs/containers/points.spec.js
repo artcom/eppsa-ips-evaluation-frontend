@@ -8,8 +8,8 @@ import proxyquire from "proxyquire"
 import sinon from "sinon"
 import { backend } from "../../src/constants"
 import Button from "../../src/setUp/components/button"
+import Form from "../../src/setUp/components/form"
 import Points from "../../src/setUp/containers/points"
-import PointForm from "../../src/setUp/components/pointForm"
 import pointsData from "../testData/points.json"
 import {
   acknowledgeRetrieval,
@@ -107,7 +107,7 @@ describe("Points", () => {
       global.setMockPoint = sinon.stub(pointsActions, "setPoint")
         .resolves("point1")
       proxyquire(
-        "../../src/setUp/components/pointForm",
+        "../../src/setUp/components/form",
         { setPoint: { setPoint: global.setMockPoint } }
       )
     })
@@ -117,14 +117,14 @@ describe("Points", () => {
       global.setMockPoint.restore()
     })
 
-    it("sets showPointForm state to true when add point button is pushed", done => {
+    it("sets showForm state to true when add point button is pushed", done => {
       const points = mount(<Points backend={ backend } />)
-      activateOnSelect(points, "showPointForm", "Add Point", done)
+      activateOnSelect(points, "showForm", "Add Point", done)
     })
 
     it("displays a point form when add point button is pushed", done => {
       const points = mount(<Points backend={ backend } />)
-      showForm(points, PointForm, "Add Point", done)
+      showForm(points, Form, "Add Point", done)
     })
 
     it("submits new point to backend when filled form is submitted", done => {
@@ -144,7 +144,7 @@ describe("Points", () => {
           trueCoordinateZ: 2
         }
       }
-      submitData(points, PointForm, "Add Point", submitPoint, global.setMockPoint, callArgs, done)
+      submitData(points, Form, "Add Point", submitPoint, global.setMockPoint, callArgs, done)
     })
 
     it("hides point form when onSubmitted is called", done => {
@@ -157,9 +157,9 @@ describe("Points", () => {
       }
       hideForm(
         points,
-        PointForm,
+        Form,
         submitPoint,
-        "showPointForm",
+        "showForm",
         "Add Point",
         global.setMockPoint,
         done
@@ -175,7 +175,7 @@ describe("Points", () => {
         Z: 4
       }
       setImmediate(() => {
-        activateForm(points, PointForm, "Add Point", submitPoint)
+        activateForm(points, Form, "Add Point", submitPoint)
         global.getMockPoints.restore()
         const newData = concat(
           pointsData,
@@ -194,7 +194,7 @@ describe("Points", () => {
         )
         reloadData(
           points,
-          PointForm,
+          Form,
           "points",
           global.setMockPoint,
           global.getMockPoints,
