@@ -3,11 +3,17 @@ import { describe, it } from "mocha"
 import { expect } from "chai"
 import { shallow, mount } from "enzyme"
 import App from "../../src/setUp/containers/app"
-import Experiments from "../../src/setUp/containers/experiments"
+import { backend } from "../../src/constants"
+import Experiments from "../../src/setUp/containers/params"
 import Nodes from "../../src/setUp/containers/nodes"
 import Points from "../../src/setUp/containers/points"
 import Tab from "../../src/setUp/components/tab"
 import TabBar from "../../src/setUp/components/tabBar"
+import {
+  deleteExperiment,
+  getExperiments,
+  setExperiment
+} from "../../src/setUp/actions/experimentsActions"
 
 
 describe("App", () => {
@@ -71,6 +77,24 @@ describe("App", () => {
       nodesTab.simulate("click")
       expect(nodesTab.props().highlight).to.equal(true)
       expect(app.state("show")).to.equal("nodes")
+    })
+  })
+
+  describe("when experiments tab is active", () => {
+    it("sends expected props to experiments", () => {
+      const app = mount(<App backend={ backend } />)
+      app.setState({ show: "experiments" })
+      expect(app.state("show")).to.equal("experiments")
+      expect(app.find(Experiments)).to.have.length(1)
+      expect(app.find(Experiments).props().backend).to.equal(backend)
+      expect(app.find(Experiments).props().title).to.equal("Experiments:")
+      expect(JSON.stringify(app.find(Experiments).props().fields))
+        .to.deep.equal(JSON.stringify([{ name: "name", type: "text" }]))
+      expect(app.find(Experiments).props().get).to.equal(getExperiments)
+      expect(app.find(Experiments).props().set).to.equal(setExperiment)
+      expect(app.find(Experiments).props().delete).to.equal(deleteExperiment)
+      expect(app.find(Experiments).props().paramName).to.equal("experiment")
+      expect(app.find(Experiments).props().createText).to.equal("Create Experiment")
     })
   })
 })

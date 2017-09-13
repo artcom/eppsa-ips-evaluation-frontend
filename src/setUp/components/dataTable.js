@@ -1,4 +1,5 @@
 import React from "react"
+import { zipObject } from "lodash"
 import Button from "./button"
 
 
@@ -18,7 +19,7 @@ export default function DataTable({ headers, data, onDelete }) {
           {
             datum.map((d, i) => <td key={ i }>{ d }</td>)
           }
-          <td><Button onClick={ () => onDelete(datum) }>Delete</Button></td>
+          <td><Button onClick={ () => onDelete(zipObject(headers, datum)) }>Delete</Button></td>
         </tr>)
       }
       </tbody>

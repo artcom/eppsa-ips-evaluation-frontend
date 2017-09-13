@@ -65,6 +65,7 @@ export function acknowledgeRetrieval(mountedComponent, getMock, done) {
 export function activateOnSelect(mountedComponent, stateKey, buttonName, done) {
   expect(mountedComponent.state(stateKey)).to.equal(false)
   setImmediate(() => {
+    expect(mountedComponent.state("loaded")).to.equal(true)
     findButtonByName(mountedComponent, buttonName).simulate("click")
     expect(mountedComponent.state(stateKey)).to.equal(true)
     done()
@@ -138,7 +139,7 @@ export function reloadData(
   mountedComponent.find(FormComponent).simulate("submit")
   sinon.assert.calledOnce(setMock)
   setImmediate(() => {
-    sinon.assert.calledOnce(getMock)
+    sinon.assert.calledTwice(getMock)
     const storedData = JSON.stringify(mountedComponent.state(stateKey))
     const expectedData = JSON.stringify(newData)
     expect(storedData).to.equal(expectedData)

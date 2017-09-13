@@ -9,8 +9,8 @@ export function findInputField(form, fieldName) {
     .find(InputField)
 }
 
-export function findButtonByName(mountedParentComponent, name) {
-  return mountedParentComponent
+export function findButtonByName(mountedComponent, name) {
+  return mountedComponent
     .find(Button)
     .filterWhere(button => button.text() === name)
 }
