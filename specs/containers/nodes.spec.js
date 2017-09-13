@@ -9,7 +9,7 @@ import sinon from "sinon"
 import { backend } from "../../src/constants"
 import Button from "../../src/setUp/components/button"
 import Nodes from "../../src/setUp/containers/nodes"
-import NodeForm from "../../src/setUp/components/nodeForm"
+import Form from "../../src/setUp/components/form"
 import nodesData from "../testData/nodes.json"
 import {
   acknowledgeRetrieval,
@@ -106,7 +106,7 @@ describe("Nodes", () => {
       global.setMockNode = sinon.stub(nodesActions, "setNode")
         .resolves("Node1")
       proxyquire(
-        "../../src/setUp/components/nodeForm",
+        "../../src/setUp/components/form",
         { setNode: { setNode: global.setMockNode } }
       )
     })
@@ -116,14 +116,14 @@ describe("Nodes", () => {
       global.setMockNode.restore()
     })
 
-    it("sets showNodeForm state to true when add node button is pushed", done => {
+    it("sets showForm state to true when add node button is pushed", done => {
       const nodes = mount(<Nodes backend={ backend } />)
-      activateOnSelect(nodes, "showNodeForm", "Add Node", done)
+      activateOnSelect(nodes, "showForm", "Add Node", done)
     })
 
     it("displays a node form when add node button is pushed", done => {
       const nodes = mount(<Nodes backend={ backend } />)
-      showForm(nodes, NodeForm, "Add Node", done)
+      showForm(nodes, Form, "Add Node", done)
     })
 
     it("submits new node to backend when filled form is submitted", done => {
@@ -141,7 +141,7 @@ describe("Nodes", () => {
           type: "quuppa"
         }
       }
-      submitData(nodes, NodeForm, "Add Node", submitNode, global.setMockNode, callArgs, done)
+      submitData(nodes, Form, "Add Node", submitNode, global.setMockNode, callArgs, done)
     })
 
     it("hides node form when onSubmitted is called", done => {
@@ -153,9 +153,9 @@ describe("Nodes", () => {
       }
       hideForm(
         nodes,
-        NodeForm,
+        Form,
         submitNode,
-        "showNodeForm",
+        "showForm",
         "Add Node",
         global.setMockNode,
         done
@@ -170,7 +170,7 @@ describe("Nodes", () => {
         type: "quuppa"
       }
       setImmediate(() => {
-        activateForm(nodes, NodeForm, "Add Node", submitNode)
+        activateForm(nodes, Form, "Add Node", submitNode)
         global.getMockNodes.restore()
         const newData = concat(
           nodesData,
@@ -188,7 +188,7 @@ describe("Nodes", () => {
         )
         reloadData(
           nodes,
-          NodeForm,
+          Form,
           "nodes",
           global.setMockNode,
           global.getMockNodes,

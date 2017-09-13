@@ -1,9 +1,9 @@
 import React from "react"
 import autoBind from "react-autobind"
+import { zipObject } from "lodash"
 import styled from "styled-components"
 import { backend } from "../../constants"
 import Input, { InputField } from "../components/input"
-import { setNode } from "../actions/nodesActions"
 
 
 const StyledForm = styled.form`
@@ -14,24 +14,22 @@ export default class PointForm extends React.Component {
   constructor(props) {
     super(props)
     autoBind(this)
-    this.state = {
-      id: "",
-      name: "",
-      type: ""
-    }
+    this.state = zipObject(
+      this.props.fields.map(field => field.name),
+      new Array(this.props.fields.length).fill("")
+    )
   }
 
   render() {
-    const fields = [
-      { name: "id", type: "text", value: this.state.id },
-      { name: "name", type: "text", value: this.state.name },
-      { name: "type", type: "text", value: this.state.type }
-    ]
+    const { fields } = this.props
+    const fieldsWithValues = fields.map(field => ({ ...field, value: this.state[field.name] }))
 
     return (
       <StyledForm onSubmit={ this.onSubmit }>
         {
-          fields.map((field, i) => <Input key={ i } field={ field } onInput={ this.onInput } />)
+          fieldsWithValues.map((field, i) =>
+            <Input key={ i } field={ field } onInput={ this.onInput } />
+          )
         }
         <InputField type="submit" value="Create" />
       </StyledForm>
@@ -46,10 +44,9 @@ export default class PointForm extends React.Component {
 
   async onSubmit(event) {
     event.preventDefault()
-    await setNode({
-      backend,
-      node: this.state
-    })
+    const setArgs = { backend }
+    setArgs[this.props.paramName] = this.state
+    await this.props.set(setArgs)
     this.props.onSubmitted()
   }
 }

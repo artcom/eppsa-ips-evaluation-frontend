@@ -3,9 +3,9 @@ import React from "react"
 import autoBind from "react-autobind"
 import Button from "../components/button"
 import DataTable from "../components/dataTable"
-import NodeForm from "../components/nodeForm"
+import Form from "../components/form"
 import Title from "../components/title"
-import { getNodes } from "../actions/nodesActions"
+import { getNodes, setNode } from "../actions/nodesActions"
 
 
 export default class Points extends React.Component {
@@ -15,7 +15,7 @@ export default class Points extends React.Component {
     this.state = {
       nodes: [],
       loaded: false,
-      showNodeForm: false
+      showForm: false
     }
   }
 
@@ -26,6 +26,8 @@ export default class Points extends React.Component {
 
   render() {
     const headers = ["id", "name", "type"]
+    const types = ["text", "text", "text"]
+    const fields = headers.map((header, i) => ({ name: header, type: types[i] }))
     const data = this.state.nodes.map(node => [
       node.id,
       node.name,
@@ -37,7 +39,12 @@ export default class Points extends React.Component {
         <Title>Nodes:</Title>
         <DataTable headers={ headers } data={ data } />
         {
-          this.state.showNodeForm && <NodeForm onSubmitted={ this.onSubmitted } />
+          this.state.showForm &&
+          <Form
+            fields={ fields }
+            set={ setNode }
+            paramName="node"
+            onSubmitted={ this.onSubmitted } />
         }
         {
           this.state.loaded && <Button onClick={ this.onCreateNode } >Add Node</Button>
@@ -47,11 +54,11 @@ export default class Points extends React.Component {
   }
 
   onCreateNode() {
-    this.setState({ showNodeForm: true })
+    this.setState({ showForm: true })
   }
 
   async onSubmitted() {
-    this.setState({ showNodeForm: false })
+    this.setState({ showForm: false })
     const nodes = await getNodes({ backend: this.props.backend })
     this.setState({ nodes })
   }
