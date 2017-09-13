@@ -46,15 +46,7 @@ export default class Form extends React.Component {
     event.preventDefault()
     const setArgs = { backend }
     setArgs[this.props.paramName] = this.state
-    if (this.props.processData) {
-      await this.props.set(this.props.processData(setArgs))
-    } else {
-      await this.props.set(setArgs)
-    }
+    await this.props.set(setArgs)
     this.props.onSubmitted()
   }
-}
-
-Form.defaultProps = {
-  processData: false
 }

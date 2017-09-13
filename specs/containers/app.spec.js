@@ -1,12 +1,16 @@
+/* eslint-disable  import/no-commonjs */
 import React from "react"
-import { describe, it } from "mocha"
+import { describe, it, beforeEach, afterEach } from "mocha"
 import { expect } from "chai"
+import sinon from "sinon"
+import proxyquire from "proxyquire"
 import { shallow, mount } from "enzyme"
 import App from "../../src/setUp/containers/app"
 import { backend } from "../../src/constants"
-import Experiments from "../../src/setUp/containers/params"
+import experimentsData from "../testData/experiments.json"
+import Params from "../../src/setUp/containers/params"
 import Nodes from "../../src/setUp/containers/nodes"
-import Points from "../../src/setUp/containers/points"
+import pointsData from "../testData/points.json"
 import Tab from "../../src/setUp/components/tab"
 import TabBar from "../../src/setUp/components/tabBar"
 import {
@@ -14,6 +18,12 @@ import {
   getExperiments,
   setExperiment
 } from "../../src/setUp/actions/experimentsActions"
+import {
+  getPoints,
+  setPoint
+} from "../../src/setUp/actions/pointsActions"
+const experimentsActions = require("../../src/setUp/actions/experimentsActions")
+const pointsActions = require("../../src/setUp/actions/pointsActions")
 
 
 describe("App", () => {
@@ -26,34 +36,40 @@ describe("App", () => {
     it("experiments when show state is \"experiments\"", () => {
       const app = shallow(<App />)
       expect(app.state("show")).to.equal("experiments")
-      expect(app.find(Experiments)).to.have.length(1)
+      expect(app.find(Params)).to.have.length(1)
+      expect(app.find(Params).filterWhere(params => params.props().paramName === "experiment"))
+        .to.have.length(1)
     })
 
     it("no experiments when show state is not \"experiments\"", () => {
       const app = shallow(<App />)
       app.setState({ show: "other" })
-      expect(app.find(Experiments)).to.have.length(0)
+      expect(app.find(Params).filterWhere(params => params.props().paramName === "experiment"))
+        .to.have.length(0)
     })
 
     it("points when show state is \"points\"", () => {
       const app = shallow(<App />)
       app.setState({ show: "points" })
-      expect(app.find(Points)).to.have.length(1)
+      expect(app.find(Params)).to.have.length(1)
+      expect(app.find(Params).filterWhere(params => params.props().paramName === "point"))
+        .to.have.length(1)
     })
 
     it("no points when show state is not \"points\"", () => {
       const app = shallow(<App />)
       app.setState({ show: "other" })
-      expect(app.find(Points)).to.have.length(0)
+      expect(app.find(Params).filterWhere(params => params.props().paramName === "point"))
+        .to.have.length(0)
     })
 
-    it("nodes when show state is \"points\"", () => {
+    it("nodes when show state is \"nodes\"", () => {
       const app = shallow(<App />)
       app.setState({ show: "nodes" })
       expect(app.find(Nodes)).to.have.length(1)
     })
 
-    it("no nodes when show state is not \"points\"", () => {
+    it("no nodes when show state is not \"nodes\"", () => {
       const app = shallow(<App />)
       app.setState({ show: "other" })
       expect(app.find(Nodes)).to.have.length(0)
@@ -81,20 +97,71 @@ describe("App", () => {
   })
 
   describe("when experiments tab is active", () => {
-    it("sends expected props to experiments", () => {
+    beforeEach(() => {
+      global.getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
+        .resolves(experimentsData)
+      proxyquire(
+        "../../src/setUp/containers/params",
+        { getExperiments: { getExperiments: global.getMockExperiments } }
+      )
+    })
+
+    afterEach(() => {
+      global.getMockExperiments.restore()
+    })
+
+    it("sends expected props to params", () => {
       const app = mount(<App backend={ backend } />)
       app.setState({ show: "experiments" })
       expect(app.state("show")).to.equal("experiments")
-      expect(app.find(Experiments)).to.have.length(1)
-      expect(app.find(Experiments).props().backend).to.equal(backend)
-      expect(app.find(Experiments).props().title).to.equal("Experiments:")
-      expect(JSON.stringify(app.find(Experiments).props().fields))
+      expect(app.find(Params)).to.have.length(1)
+      expect(app.find(Params).props().backend).to.equal(backend)
+      expect(app.find(Params).props().title).to.equal("Experiments:")
+      expect(JSON.stringify(app.find(Params).props().fields))
         .to.deep.equal(JSON.stringify([{ name: "name", type: "text" }]))
-      expect(app.find(Experiments).props().get).to.equal(getExperiments)
-      expect(app.find(Experiments).props().set).to.equal(setExperiment)
-      expect(app.find(Experiments).props().delete).to.equal(deleteExperiment)
-      expect(app.find(Experiments).props().paramName).to.equal("experiment")
-      expect(app.find(Experiments).props().createText).to.equal("Create Experiment")
+      expect(app.find(Params).props().get).to.equal(getExperiments)
+      expect(app.find(Params).props().set).to.equal(setExperiment)
+      expect(app.find(Params).props().delete).to.equal(deleteExperiment)
+      expect(app.find(Params).props().paramName).to.equal("experiment")
+      expect(app.find(Params).props().createText).to.equal("Create Experiment")
+      sinon.assert.calledOnce(global.getMockExperiments)
+    })
+  })
+
+  describe("when points tab is active", () => {
+    beforeEach(() => {
+      global.getMockPoints = sinon.stub(pointsActions, "getPoints")
+        .resolves(pointsData)
+      proxyquire(
+        "../../src/setUp/containers/params",
+        { getPoints: { getPoints: global.getMockPoints } }
+      )
+    })
+
+    afterEach(() => {
+      global.getMockPoints.restore()
+    })
+
+    it("sends expected props to params", () => {
+      const pointFields = [
+        { name: "name", type: "text" },
+        { name: "X", type: "text" },
+        { name: "Y", type: "text" },
+        { name: "Z", type: "text" }
+      ]
+      const app = mount(<App backend={ backend } />)
+      app.setState({ show: "points" })
+      expect(app.state("show")).to.equal("points")
+      expect(app.find(Params)).to.have.length(1)
+      expect(app.find(Params).props().backend).to.equal(backend)
+      expect(app.find(Params).props().title).to.equal("Points:")
+      expect(JSON.stringify(app.find(Params).props().fields))
+        .to.deep.equal(JSON.stringify(pointFields))
+      expect(app.find(Params).props().get).to.equal(getPoints)
+      expect(app.find(Params).props().set).to.equal(setPoint)
+      expect(app.find(Params).props().paramName).to.equal("point")
+      expect(app.find(Params).props().createText).to.equal("Add Point")
+      sinon.assert.calledOnce(global.getMockPoints)
     })
   })
 })
