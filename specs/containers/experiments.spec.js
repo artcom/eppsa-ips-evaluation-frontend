@@ -10,7 +10,7 @@ import { backend } from "../../src/constants"
 import Button from "../../src/setUp/components/button"
 import Experiments from "../../src/setUp/containers/experiments"
 import experimentsData from "../testData/experiments.json"
-import ExperimentForm from "../../src/setUp/components/experimentForm"
+import Form from "../../src/setUp/components/form"
 import {
   acknowledgeRetrieval,
   activateForm,
@@ -112,23 +112,23 @@ describe("Experiments", () => {
       global.setMockExperiment.restore()
     })
 
-    it("sets showExperimentForm state to true when create experiment button is pushed", done => {
+    it("sets showForm state to true when create experiment button is pushed", done => {
       const experiments = mount(<Experiments backend={ backend } />)
-      activateOnSelect(experiments, "showExperimentForm", "Create Experiment", done)
+      activateOnSelect(experiments, "showForm", "Create Experiment", done)
     })
 
     it("displays an experiment form when create experiment button is pushed", done => {
       const experiments = mount(<Experiments backend={ backend } />)
-      showForm(experiments, ExperimentForm, "Create Experiment", done)
+      showForm(experiments, Form, "Create Experiment", done)
     })
 
     it("submits new experiment to backend when filled form is submitted", done => {
       const experiments = mount(<Experiments backend={ backend } />)
       const submitExperiment = { name: "new-experiment" }
-      const callArgs = { backend, experimentName: "new-experiment" }
+      const callArgs = { backend, experiment: { name: "new-experiment" } }
       submitData(
         experiments,
-        ExperimentForm,
+        Form,
         "Create Experiment",
         submitExperiment,
         global.setMockExperiment,
@@ -142,9 +142,9 @@ describe("Experiments", () => {
       const submitExperiment = { name: "new-experiment" }
       hideForm(
         experiments,
-        ExperimentForm,
+        Form,
         submitExperiment,
-        "showExperimentForm",
+        "showForm",
         "Create Experiment",
         global.setMockExperiment,
         done
@@ -155,7 +155,7 @@ describe("Experiments", () => {
       const experiments = mount(<Experiments backend={ backend } />)
       const submitExperiment = { name: "new-experiment" }
       setImmediate(() => {
-        activateForm(experiments, ExperimentForm, "Create Experiment", submitExperiment)
+        activateForm(experiments, Form, "Create Experiment", submitExperiment)
         global.getMockExperiments.restore()
         const newData = concat(experimentsData, { name: "new-experiment" })
         global.getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
@@ -166,7 +166,7 @@ describe("Experiments", () => {
         )
         reloadData(
           experiments,
-          ExperimentForm,
+          Form,
           "experiments",
           global.setMockExperiment,
           global.getMockExperiments,

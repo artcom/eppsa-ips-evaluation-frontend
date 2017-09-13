@@ -8,11 +8,11 @@ export async function getExperiments({ backend }) {
   return response.data
 }
 
-export async function setExperiment({ backend, experimentName }) {
+export async function setExperiment({ backend, experiment }) {
   try {
     return await rest.post(
       `http://${backend}/experiments`,
-      { data: { name: experimentName } }
+      { data: experiment }
     )
   } catch (error) {
     return error

@@ -3,9 +3,9 @@ import React from "react"
 import autoBind from "react-autobind"
 import Button from "../components/button"
 import DataTable from "../components/dataTable"
-import ExperimentForm from "../components/experimentForm"
+import Form from "../components/form"
 import Title from "../components/title"
-import { getExperiments, deleteExperiment } from "../actions/experimentsActions"
+import { getExperiments, deleteExperiment, setExperiment } from "../actions/experimentsActions"
 
 
 export default class Experiments extends React.Component {
@@ -15,7 +15,7 @@ export default class Experiments extends React.Component {
     this.state = {
       experiments: [],
       loaded: false,
-      showExperimentForm: false
+      showForm: false
     }
   }
 
@@ -32,8 +32,12 @@ export default class Experiments extends React.Component {
       <Title>Experiments:</Title>
       <DataTable headers={ headers } data={ data } onDelete={ this.onDelete } />
       {
-        this.state.showExperimentForm
-        && <ExperimentForm fields={ fields } onSubmitted={ this.onSubmitted } />
+        this.state.showForm &&
+        <Form
+          fields={ fields }
+          set={ setExperiment }
+          paramName="experiment"
+          onSubmitted={ this.onSubmitted } />
       }
       {
         this.state.loaded && <Button onClick={ this.onCreateExperiment }>Create Experiment</Button>
@@ -42,11 +46,11 @@ export default class Experiments extends React.Component {
   }
 
   onCreateExperiment() {
-    this.setState({ showExperimentForm: true })
+    this.setState({ showForm: true })
   }
 
   async onSubmitted() {
-    this.setState({ showExperimentForm: false })
+    this.setState({ showForm: false })
     const experiments = await getExperiments({ backend: this.props.backend })
     this.setState({ experiments })
   }
