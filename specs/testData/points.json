@@ -1,14 +1,14 @@
 [
   {
     "name": "point1",
-    "trueCoordinateX": 1,
-    "trueCoordinateY": 1,
-    "trueCoordinateZ": 2
+    "X": 1,
+    "Y": 1,
+    "Z": 2
   },
   {
     "name": "point2",
-    "trueCoordinateX": 2,
-    "trueCoordinateY": 2,
-    "trueCoordinateZ": 3
+    "X": 2,
+    "Y": 2,
+    "Z": 3
   }
 ]
