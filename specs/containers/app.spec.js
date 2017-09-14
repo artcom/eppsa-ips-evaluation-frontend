@@ -17,6 +17,7 @@ import Params from "../../src/setUp/containers/params"
 import nodesData from "../testData/nodes.json"
 import nodePositionsData from "../testData/nodePositions.json"
 import pointsData from "../testData/points.json"
+import SelectExperiment from "../../src/setUp/components/selectExperiment"
 import Tab from "../../src/setUp/components/tab"
 import TabBar from "../../src/setUp/components/tabBar"
 import {
@@ -85,19 +86,43 @@ describe("App", () => {
         .to.have.length(0)
     })
 
-    it("node positions when show state is \"nodePositions\"", () => {
+    it("node positions when show state is \"nodePositions\" and an experiment is selected", () => {
       const app = shallow(<App />)
-      app.setState({ show: "nodePositions" })
-      setImmediate(() => {
-        expect(app.find(Params)).to.have.length(1)
-        expect(app.find(Params).filterWhere(params => params.props().paramName === "nodePosition"))
-          .to.have.length(1)
+      app.setState({
+        show: "nodePositions",
+        loaded: true,
+        selectedExperiment: "fake-experiment",
+        experiments: [{ name: "fake-experiment" }]
       })
+      expect(app.find(Params)).to.have.length(1)
+      expect(app.find(Params).filterWhere(params => params.props().paramName === "nodePosition"))
+        .to.have.length(1)
     })
+
+    it("no node positions when show state is \"nodePositions\" but no experiment is selected",
+      () => {
+        const app = shallow(<App />)
+        app.setState({ show: "nodePositions", loaded: true, selectedExperiment: false })
+        expect(app.find(Params).filterWhere(params => params.props().paramName === "nodePosition"))
+          .to.have.length(0)
+      }
+    )
+
+    it("an experiment selection component when show state is \"nodePositions\" but no experiment" +
+      " is selected",
+      done => {
+        const app = shallow(<App />)
+        setImmediate(() => {
+          app.setState({ show: "nodePositions", loaded: true, selectedExperiment: false })
+          expect(app.find(SelectExperiment)).to.have.length(1)
+          done()
+        })
+      }
+    )
 
     it("no node positions when show state is not \"nodePositions\"", () => {
       const app = shallow(<App />)
-      app.setState({ show: "other" })
+      app.setState({ show: "other", loaded: true })
       expect(app.find(Params).filterWhere(params => params.props().paramName === "nodePosition"))
         .to.have.length(0)
     })
@@ -543,13 +568,13 @@ describe("App", () => {
 
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
-        app.setState({ show: "nodePositions" })
+        app.setState({ show: "nodePositions", selectedExperiment: "fake-experiment1" })
         const params = app.find(Params)
 
         expect(app.state("show")).to.equal("nodePositions")
-        expect(params).to.have.length(2)
-        checkProps({ mountedComponent: params.at(0), props })
-        checkProps({ mountedComponent: params.at(0), props: copyProps, copy: true })
+        expect(params).to.have.length(1)
+        checkProps({ mountedComponent: params, props })
+        checkProps({ mountedComponent: params, props: copyProps, copy: true })
         done()
       })
     })
@@ -557,18 +582,14 @@ describe("App", () => {
     it("get function is called", done => {
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
-        app.setState({ show: "nodePositions" })
+        app.setState({ show: "nodePositions", selectedExperiment: "fake-experiment1" })
         sinon.assert.calledTwice(getMockExperiments)
         sinon.assert.calledWith(getMockExperiments, { backend })
         setImmediate(() => {
-          sinon.assert.calledTwice(getMockNodePositions)
+          sinon.assert.calledOnce(getMockNodePositions)
           sinon.assert.calledWith(
             getMockNodePositions,
             { backend, experimentName: "fake-experiment1" }
-          )
-          sinon.assert.calledWith(
-            getMockNodePositions,
-            { backend, experimentName: "fake-experiment2" }
           )
           done()
         })
@@ -578,8 +599,8 @@ describe("App", () => {
     it("when a node position is added set function is called with the expected arguments", done => {
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
-        app.setState({ show: "nodePositions" })
-        sinon.assert.calledTwice(getMockNodePositions)
+        app.setState({ show: "nodePositions", selectedExperiment: "fake-experiment1" })
+        sinon.assert.calledOnce(getMockNodePositions)
         const data = {
           nodeName: "Node3",
           pointName: "point3",

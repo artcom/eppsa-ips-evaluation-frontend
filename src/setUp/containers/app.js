@@ -3,6 +3,7 @@ import React from "react"
 import autoBind from "react-autobind"
 import styled from "styled-components"
 import Params from "./params"
+import SelectExperiment from "../components/selectExperiment"
 import { deleteExperiment, getExperiments, setExperiment } from "../actions/experimentsActions"
 import { getNodes, setNode } from "../actions/nodesActions"
 import { getNodePositions, setNodePosition } from "../actions/nodePositionsActions"
@@ -21,7 +22,8 @@ export default class App extends React.Component {
     this.state = {
       show: "experiments",
       experiments: [],
-      loaded: false
+      loaded: false,
+      selectedExperiment: null,
     }
   }
 
@@ -89,17 +91,23 @@ export default class App extends React.Component {
         {
           this.state.show === "nodePositions" &&
           this.state.loaded &&
-          this.state.experiments.map(experiment =>
+          this.state.selectedExperiment &&
             <Params
-              key={ experiment.name }
-              title={ `Node Positions for "${experiment.name}":` }
+              key={ this.state.selectedExperiment }
+              title={ `Node Positions for "${this.state.selectedExperiment}":` }
               fields={ nodePositionsFields }
               get={ getNodePositions }
               set={ setNodePosition }
               paramName="nodePosition"
-              createText={ `Set Node Position in "${experiment.name}"` }
-              experiment={ experiment.name }
-              backend={ this.props.backend } />)
+              createText={ `Set Node Position in "${this.state.selectedExperiment}"` }
+              experiment={ this.state.selectedExperiment }
+              backend={ this.props.backend } />
+        }
+        {
+          this.state.show === "nodePositions" &&
+          this.state.loaded &&
+          !this.state.selectedExperiment &&
+          <SelectExperiment />
         }
       </Container>
     )
