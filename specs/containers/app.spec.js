@@ -164,16 +164,15 @@ describe("App", () => {
       app.setState({ show: "experiments" })
       sinon.assert.calledOnce(global.getMockExperiments)
       setImmediate(() => {
-        const experimentParams = app
-          .find(Params)
-          .filterWhere(params => params.props().paramName === "experiment")
-        findButtonByName(experimentParams, "Create Experiment").simulate("click")
-        const form = experimentParams.find(Form)
         const data = {
           name: "fake-experiment3"
         }
-        inputData(form, data)
-        form.simulate("submit")
+        addParam({
+          mountedComponent: app,
+          paramName: "experiment",
+          createText: "Create Experiment",
+          data
+        })
         setImmediate(() => {
           sinon.assert.calledOnce(global.setMockExperiment)
           sinon.assert.calledWith(global.setMockExperiment, { backend, experiment: data })
@@ -247,19 +246,13 @@ describe("App", () => {
       app.setState({ show: "points" })
       sinon.assert.calledOnce(global.getMockPoints)
       setImmediate(() => {
-        const pointParams = app
-          .find(Params)
-          .filterWhere(params => params.props().paramName === "point")
-        findButtonByName(pointParams, "Add Point").simulate("click")
-        const form = pointParams.find(Form)
         const data = {
           name: "point3",
           X: 4,
           Y: 4,
           Z: 5
         }
-        inputData(form, data)
-        form.simulate("submit")
+        addParam({ mountedComponent: app, paramName: "point", createText: "Add Point", data })
         setImmediate(() => {
           sinon.assert.calledOnce(global.setMockPoint)
           sinon.assert.calledWith(global.setMockPoint, { backend, point: data })
@@ -326,23 +319,17 @@ describe("App", () => {
       sinon.assert.calledOnce(global.getMockNodes)
     })
 
-    it("when a node is added set function is called", done => {
+    it("when a node is added set function is called with the expected arguments", done => {
       const app = mount(<App backend={ backend } />)
       app.setState({ show: "nodes" })
       sinon.assert.calledOnce(global.getMockNodes)
       setImmediate(() => {
-        const nodeParams = app
-          .find(Params)
-          .filterWhere(params => params.props().paramName === "node")
-        findButtonByName(nodeParams, "Add Node").simulate("click")
-        const form = nodeParams.find(Form)
         const data = {
           id: "node3",
           name: "Node3",
           type: "quuppa"
         }
-        inputData(form, data)
-        form.simulate("submit")
+        addParam({ mountedComponent: app, paramName: "node", createText: "Add Node", data })
         setImmediate(() => {
           sinon.assert.calledOnce(global.setMockNode)
           sinon.assert.calledWith(global.setMockNode, { backend, node: data })
@@ -361,4 +348,14 @@ function checkProps({ mountedComponent, props, copy = false }) {
       expect(mountedComponent.props()[key]).to.equal(props[key])
     }
   }
+}
+
+function addParam({ mountedComponent, paramName, createText, data }) {
+  const specificParams = mountedComponent
+    .find(Params)
+    .filterWhere(params => params.props().paramName === paramName)
+  findButtonByName(specificParams, createText).simulate("click")
+  const form = specificParams.find(Form)
+  inputData(form, data)
+  form.simulate("submit")
 }
