@@ -15,6 +15,7 @@ import Form from "../../src/setUp/components/form"
 import inputData from "../helpers/inputData"
 import Params from "../../src/setUp/containers/params"
 import nodesData from "../testData/nodes.json"
+import nodePositionsData from "../testData/nodePositions.json"
 import pointsData from "../testData/points.json"
 import Tab from "../../src/setUp/components/tab"
 import TabBar from "../../src/setUp/components/tabBar"
@@ -24,12 +25,11 @@ import {
   setExperiment
 } from "../../src/setUp/actions/experimentsActions"
 import { getNodes, setNode } from "../../src/setUp/actions/nodesActions"
-import {
-  getPoints,
-  setPoint
-} from "../../src/setUp/actions/pointsActions"
+import { getNodePositions, setNodePosition } from "../../src/setUp/actions/nodePositionsActions"
+import { getPoints, setPoint } from "../../src/setUp/actions/pointsActions"
 const experimentsActions = require("../../src/setUp/actions/experimentsActions")
 const nodesActions = require("../../src/setUp/actions/nodesActions")
+const nodePositionsActions = require("../../src/setUp/actions/nodePositionsActions")
 const pointsActions = require("../../src/setUp/actions/pointsActions")
 
 
@@ -84,6 +84,21 @@ describe("App", () => {
       expect(app.find(Params).filterWhere(params => params.props().paramName === "node"))
         .to.have.length(0)
     })
+
+    it("node positions when show state is \"nodePositions\"", () => {
+      const app = shallow(<App />)
+      app.setState({ show: "nodePositions" })
+      expect(app.find(Params)).to.have.length(1)
+      expect(app.find(Params).filterWhere(params => params.props().paramName === "nodePosition"))
+        .to.have.length(1)
+    })
+
+    it("no node positions when show state is not \"nodePositions\"", () => {
+      const app = shallow(<App />)
+      app.setState({ show: "other" })
+      expect(app.find(Params).filterWhere(params => params.props().paramName === "nodePosition"))
+        .to.have.length(0)
+    })
   })
 
   describe("activates", () => {
@@ -103,6 +118,15 @@ describe("App", () => {
       nodesTab.simulate("click")
       expect(nodesTab.props().highlight).to.equal(true)
       expect(app.state("show")).to.equal("nodes")
+    })
+
+    it("NodePositions when nodePositions tab is clicked", () => {
+      const app = mount(<App />)
+      expect(app.state("show")).to.equal("experiments")
+      const nodesTab = app.find(Tab).filterWhere(tab => tab.text() === "NodePositions")
+      nodesTab.simulate("click")
+      expect(nodesTab.props().highlight).to.equal(true)
+      expect(app.state("show")).to.equal("nodePositions")
     })
   })
 
@@ -218,7 +242,7 @@ describe("App", () => {
         .resolves(pointsData)
       proxyquire(
         "../../src/setUp/containers/app",
-        { getPoints: { getPoints: global.getMockPoints } }
+        { getPoints: getMockPoints }
       )
       setMockPoint = sinon.stub(pointsActions, "setPoint")
         .resolves({
@@ -229,7 +253,7 @@ describe("App", () => {
         })
       proxyquire(
         "../../src/setUp/containers/app",
-        { setPoint: { setPoint: global.setMockPoint } }
+        { setPoint: setMockPoint }
       )
     })
 
@@ -269,6 +293,7 @@ describe("App", () => {
       const app = mount(<App backend={ backend } />)
       app.setState({ show: "points" })
       sinon.assert.calledOnce(getMockPoints)
+      sinon.assert.calledWith(getMockPoints, { backend })
     })
 
     it("when a point is added set function is called", done => {
@@ -301,7 +326,7 @@ describe("App", () => {
         .resolves(nodesData)
       proxyquire(
         "../../src/setUp/containers/app",
-        { getNodes: { getNodes: global.getMockNodes } }
+        { getNodes: getMockNodes }
       )
       setMockNode = sinon.stub(nodesActions, "setNode")
         .resolves({
@@ -311,7 +336,7 @@ describe("App", () => {
         })
       proxyquire(
         "../../src/setUp/containers/app",
-        { setNode: { setNode: global.setMockNode } }
+        { setNode: setMockNode }
       )
     })
 
@@ -350,6 +375,7 @@ describe("App", () => {
       const app = mount(<App backend={ backend } />)
       app.setState({ show: "nodes" })
       sinon.assert.calledOnce(getMockNodes)
+      sinon.assert.calledWith(getMockNodes, { backend })
     })
 
     it("when a node is added set function is called with the expected arguments", done => {
@@ -366,6 +392,92 @@ describe("App", () => {
         setImmediate(() => {
           sinon.assert.calledOnce(setMockNode)
           sinon.assert.calledWith(setMockNode, { backend, node: data })
+          done()
+        })
+      })
+    })
+  })
+
+  describe("when nodePositions tab is active", () => {
+    let getMockNodePositions
+    let setMockNodePosition
+
+    beforeEach(() => {
+      getMockNodePositions = sinon.stub(nodePositionsActions, "getNodePositions")
+        .resolves(nodePositionsData)
+      proxyquire(
+        "../../src/setUp/containers/app",
+        { getNodePositions: { getNodePositions: getMockNodePositions } }
+      )
+      setMockNodePosition = sinon.stub(nodePositionsActions, "setNodePosition")
+        .resolves({
+          nodeName: "Node3",
+          pointName: "point3",
+          experimentName: "fake-experiment1"
+        })
+      proxyquire(
+        "../../src/setUp/containers/app",
+        { setNodePosition: { setNodePosition: setMockNodePosition } }
+      )
+    })
+
+    afterEach(() => {
+      getMockNodePositions.restore()
+      setMockNodePosition.restore()
+    })
+
+    it("sends expected props to params", () => {
+      const nodePositionsFields = [
+        { name: "nodeName", type: "text" },
+        { name: "pointName", type: "text" },
+        { name: "experimentName", type: "text" }
+      ]
+      const props = {
+        backend,
+        title: "Node Positions:",
+        get: getNodePositions,
+        set: setNodePosition,
+        paramName: "nodePosition",
+        createText: "Set Node Position"
+      }
+      const copyProps = { fields: nodePositionsFields }
+
+      const app = mount(<App backend={ backend } />)
+      app.setState({ show: "nodePositions" })
+      const params = app.find(Params)
+
+      expect(app.state("show")).to.equal("nodePositions")
+      expect(params).to.have.length(1)
+      checkProps({ mountedComponent: params, props })
+      checkProps({ mountedComponent: params, props: copyProps, copy: true })
+    })
+
+    it("get function is called", () => {
+      const app = mount(<App backend={ backend } />)
+      app.setState({ show: "nodePositions" })
+      sinon.assert.calledOnce(getMockNodePositions)
+      sinon.assert.calledWith(getMockNodePositions, { backend })
+    })
+
+    it("when a node position is added set function is called with the expected arguments", done => {
+      const app = mount(<App backend={ backend } />)
+      app.setState({ show: "nodePositions" })
+      sinon.assert.calledOnce(getMockNodePositions)
+      setImmediate(() => {
+        const data = {
+          nodeName: "Node3",
+          pointName: "point3",
+          experimentName: "fake-experiment1"
+        }
+        addParam({
+          mountedComponent: app,
+          paramName: "nodePosition",
+          createText: "Set Node Position",
+          data
+        })
+        setImmediate(() => {
+          sinon.assert.calledOnce(setMockNodePosition)
+          sinon.assert.calledWith(setMockNodePosition, { backend, nodePosition: data })
           done()
         })
       })

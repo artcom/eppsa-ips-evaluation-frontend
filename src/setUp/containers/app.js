@@ -4,6 +4,7 @@ import styled from "styled-components"
 import Params from "./params"
 import { deleteExperiment, getExperiments, setExperiment } from "../actions/experimentsActions"
 import { getNodes, setNode } from "../actions/nodesActions"
+import { getNodePositions, setNodePosition } from "../actions/nodePositionsActions"
 import { getPoints, setPoint } from "../actions/pointsActions"
 import TabBar from "../components/tabBar"
 
@@ -22,7 +23,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    const tabs = ["experiments", "points", "nodes"]
+    const tabs = ["experiments", "points", "nodes", "nodePositions"]
     const experimentFields = [{ name: "name", type: "text" }]
     const pointFields = [
       { name: "name", type: "text" },
@@ -34,6 +35,11 @@ export default class App extends React.Component {
       { name: "id", type: "text" },
       { name: "name", type: "text" },
       { name: "type", type: "text" }
+    ]
+    const nodePositionsFields = [
+      { name: "nodeName", type: "text" },
+      { name: "pointName", type: "text" },
+      { name: "experimentName", type: "text" }
     ]
     return (
       <Container>
@@ -62,7 +68,8 @@ export default class App extends React.Component {
             backend={ this.props.backend } />
         }
         {
-          this.state.show === "nodes" && <Params
+          this.state.show === "nodes" &&
+          <Params
             title="Nodes:"
             fields={ nodeFields }
             get={ getNodes }
@@ -70,6 +77,17 @@ export default class App extends React.Component {
             paramName="node"
             createText="Add Node"
             backend={ this.props.backend } />
+        }
+        {
+          this.state.show === "nodePositions" &&
+            <Params
+              title="Node Positions:"
+              fields={ nodePositionsFields }
+              get={ getNodePositions }
+              set={ setNodePosition }
+              paramName="nodePosition"
+              createText="Set Node Position"
+              backend={ this.props.backend } />
         }
       </Container>
     )

@@ -16,20 +16,20 @@ export async function setPoint({ backend, point }) {
   return response.data
 }
 
-export function processSendData(data) {
-  return data.map(datum => ({
-    name: datum.name,
-    trueCoordinateX: datum.X,
-    trueCoordinateY: datum.Y,
-    trueCoordinateZ: datum.Z
-  }))
-}
-
 export function processReceivedData(data) {
   return data.map(datum => ({
     name: datum.name,
     X: datum.trueCoordinateX,
     Y: datum.trueCoordinateY,
     Z: datum.trueCoordinateZ
+  }))
+}
+
+export function processSendData(data) {
+  return data.map(datum => ({
+    name: datum.name,
+    trueCoordinateX: datum.X,
+    trueCoordinateY: datum.Y,
+    trueCoordinateZ: datum.Z
   }))
 }
