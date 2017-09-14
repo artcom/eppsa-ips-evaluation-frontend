@@ -210,14 +210,17 @@ describe("App", () => {
   })
 
   describe("when points tab is active", () => {
+    let getMockPoints
+    let setMockPoint
+
     beforeEach(() => {
-      global.getMockPoints = sinon.stub(pointsActions, "getPoints")
+      getMockPoints = sinon.stub(pointsActions, "getPoints")
         .resolves(pointsData)
       proxyquire(
-        "../../src/setUp/containers/params",
+        "../../src/setUp/containers/app",
         { getPoints: { getPoints: global.getMockPoints } }
       )
-      global.setMockPoint = sinon.stub(pointsActions, "setPoint")
+      setMockPoint = sinon.stub(pointsActions, "setPoint")
         .resolves({
           name: "point3",
           X: 4,
@@ -225,14 +228,14 @@ describe("App", () => {
           Z: 5
         })
       proxyquire(
-        "../../src/setUp/containers/params",
+        "../../src/setUp/containers/app",
         { setPoint: { setPoint: global.setMockPoint } }
       )
     })
 
     afterEach(() => {
-      global.getMockPoints.restore()
-      global.setMockPoint.restore()
+      getMockPoints.restore()
+      setMockPoint.restore()
     })
 
     it("expected props are sent to params", () => {
@@ -265,13 +268,13 @@ describe("App", () => {
     it("get function is called", () => {
       const app = mount(<App backend={ backend } />)
       app.setState({ show: "points" })
-      sinon.assert.calledOnce(global.getMockPoints)
+      sinon.assert.calledOnce(getMockPoints)
     })
 
     it("when a point is added set function is called", done => {
       const app = mount(<App backend={ backend } />)
       app.setState({ show: "points" })
-      sinon.assert.calledOnce(global.getMockPoints)
+      sinon.assert.calledOnce(getMockPoints)
       setImmediate(() => {
         const data = {
           name: "point3",
@@ -281,8 +284,8 @@ describe("App", () => {
         }
         addParam({ mountedComponent: app, paramName: "point", createText: "Add Point", data })
         setImmediate(() => {
-          sinon.assert.calledOnce(global.setMockPoint)
-          sinon.assert.calledWith(global.setMockPoint, { backend, point: data })
+          sinon.assert.calledOnce(setMockPoint)
+          sinon.assert.calledWith(setMockPoint, { backend, point: data })
           done()
         })
       })
@@ -290,28 +293,31 @@ describe("App", () => {
   })
 
   describe("when nodes tab is active", () => {
+    let getMockNodes
+    let setMockNode
+
     beforeEach(() => {
-      global.getMockNodes = sinon.stub(nodesActions, "getNodes")
+      getMockNodes = sinon.stub(nodesActions, "getNodes")
         .resolves(nodesData)
       proxyquire(
-        "../../src/setUp/containers/params",
+        "../../src/setUp/containers/app",
         { getNodes: { getNodes: global.getMockNodes } }
       )
-      global.setMockNode = sinon.stub(nodesActions, "setNode")
+      setMockNode = sinon.stub(nodesActions, "setNode")
         .resolves({
           id: "node3",
           name: "Node3",
           type: "quuppa"
         })
       proxyquire(
-        "../../src/setUp/containers/params",
+        "../../src/setUp/containers/app",
         { setNode: { setNode: global.setMockNode } }
       )
     })
 
     afterEach(() => {
-      global.getMockNodes.restore()
-      global.setMockNode.restore()
+      getMockNodes.restore()
+      setMockNode.restore()
     })
 
     it("sends expected props to params", () => {
@@ -343,13 +349,13 @@ describe("App", () => {
     it("get function is called", () => {
       const app = mount(<App backend={ backend } />)
       app.setState({ show: "nodes" })
-      sinon.assert.calledOnce(global.getMockNodes)
+      sinon.assert.calledOnce(getMockNodes)
     })
 
     it("when a node is added set function is called with the expected arguments", done => {
       const app = mount(<App backend={ backend } />)
       app.setState({ show: "nodes" })
-      sinon.assert.calledOnce(global.getMockNodes)
+      sinon.assert.calledOnce(getMockNodes)
       setImmediate(() => {
         const data = {
           id: "node3",
@@ -358,8 +364,8 @@ describe("App", () => {
         }
         addParam({ mountedComponent: app, paramName: "node", createText: "Add Node", data })
         setImmediate(() => {
-          sinon.assert.calledOnce(global.setMockNode)
-          sinon.assert.calledWith(global.setMockNode, { backend, node: data })
+          sinon.assert.calledOnce(setMockNode)
+          sinon.assert.calledWith(setMockNode, { backend, node: data })
           done()
         })
       })
