@@ -5,6 +5,7 @@ import { expect } from "chai"
 import sinon from "sinon"
 import proxyquire from "proxyquire"
 import { shallow, mount } from "enzyme"
+import { keys } from "lodash"
 import App from "../../src/setUp/containers/app"
 import { backend } from "../../src/constants"
 import experimentsData from "../testData/experiments.json"
@@ -128,19 +129,28 @@ describe("App", () => {
     })
 
     it("sends expected props to params", () => {
+      const experimentFields = [{ name: "name", type: "text" }]
+      const props = {
+        backend,
+        title: "Experiments:",
+        get: getExperiments,
+        set: setExperiment,
+        delete: deleteExperiment,
+        paramName: "experiment",
+        createText: "Create Experiment"
+      }
+      const copyProps = {
+        fields: experimentFields
+      }
+
       const app = mount(<App backend={ backend } />)
       app.setState({ show: "experiments" })
+      const params = app.find(Params)
+
       expect(app.state("show")).to.equal("experiments")
-      expect(app.find(Params)).to.have.length(1)
-      expect(app.find(Params).props().backend).to.equal(backend)
-      expect(app.find(Params).props().title).to.equal("Experiments:")
-      expect(JSON.stringify(app.find(Params).props().fields))
-        .to.deep.equal(JSON.stringify([{ name: "name", type: "text" }]))
-      expect(app.find(Params).props().get).to.equal(getExperiments)
-      expect(app.find(Params).props().set).to.equal(setExperiment)
-      expect(app.find(Params).props().delete).to.equal(deleteExperiment)
-      expect(app.find(Params).props().paramName).to.equal("experiment")
-      expect(app.find(Params).props().createText).to.equal("Create Experiment")
+      expect(params).to.have.length(1)
+      checkProps({ mountedComponent: params, props })
+      checkProps({ mountedComponent: params, props: copyProps, copy: true })
     })
 
     it("get function is called", () => {
@@ -206,18 +216,24 @@ describe("App", () => {
         { name: "Y", type: "text" },
         { name: "Z", type: "text" }
       ]
+      const props = {
+        backend,
+        title: "Points:",
+        get: getPoints,
+        set: setPoint,
+        paramName: "point",
+        createText: "Add Point"
+      }
+      const copyProps = { fields: pointFields }
+
       const app = mount(<App backend={ backend } />)
       app.setState({ show: "points" })
+      const params = app.find(Params)
+
       expect(app.state("show")).to.equal("points")
-      expect(app.find(Params)).to.have.length(1)
-      expect(app.find(Params).props().backend).to.equal(backend)
-      expect(app.find(Params).props().title).to.equal("Points:")
-      expect(JSON.stringify(app.find(Params).props().fields))
-        .to.deep.equal(JSON.stringify(pointFields))
-      expect(app.find(Params).props().get).to.equal(getPoints)
-      expect(app.find(Params).props().set).to.equal(setPoint)
-      expect(app.find(Params).props().paramName).to.equal("point")
-      expect(app.find(Params).props().createText).to.equal("Add Point")
+      expect(params).to.have.length(1)
+      checkProps({ mountedComponent: params, props })
+      checkProps({ mountedComponent: params, props: copyProps, copy: true })
     })
 
     it("get function is called", () => {
@@ -284,18 +300,24 @@ describe("App", () => {
         { name: "name", type: "text" },
         { name: "type", type: "text" }
       ]
+      const props = {
+        backend,
+        title: "Nodes:",
+        get: getNodes,
+        set: setNode,
+        paramName: "node",
+        createText: "Add Node"
+      }
+      const copyProps = { fields: nodeFields }
+
       const app = mount(<App backend={ backend } />)
       app.setState({ show: "nodes" })
+      const params = app.find(Params)
+
       expect(app.state("show")).to.equal("nodes")
-      expect(app.find(Params)).to.have.length(1)
-      expect(app.find(Params).props().backend).to.equal(backend)
-      expect(app.find(Params).props().title).to.equal("Nodes:")
-      expect(JSON.stringify(app.find(Params).props().fields))
-        .to.deep.equal(JSON.stringify(nodeFields))
-      expect(app.find(Params).props().get).to.equal(getNodes)
-      expect(app.find(Params).props().set).to.equal(setNode)
-      expect(app.find(Params).props().paramName).to.equal("node")
-      expect(app.find(Params).props().createText).to.equal("Add Node")
+      expect(params).to.have.length(1)
+      checkProps({ mountedComponent: params, props })
+      checkProps({ mountedComponent: params, props: copyProps, copy: true })
     })
 
     it("get function is called", () => {
@@ -330,3 +352,13 @@ describe("App", () => {
     })
   })
 })
+
+function checkProps({ mountedComponent, props, copy = false }) {
+  for (const key of keys(props)) {
+    if (copy) {
+      expect(JSON.stringify(mountedComponent.props()[key])).to.equal(JSON.stringify(props[key]))
+    } else {
+      expect(mountedComponent.props()[key]).to.equal(props[key])
+    }
+  }
+}
