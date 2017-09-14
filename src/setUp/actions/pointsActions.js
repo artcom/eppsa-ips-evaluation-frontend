@@ -26,10 +26,10 @@ export function processReceivedData(data) {
 }
 
 export function processSendData(data) {
-  return data.map(datum => ({
-    name: datum.name,
-    trueCoordinateX: datum.X,
-    trueCoordinateY: datum.Y,
-    trueCoordinateZ: datum.Z
-  }))
+  return {
+    name: data.name,
+    trueCoordinateX: data.X,
+    trueCoordinateY: data.Y,
+    trueCoordinateZ: data.Z
+  }
 }

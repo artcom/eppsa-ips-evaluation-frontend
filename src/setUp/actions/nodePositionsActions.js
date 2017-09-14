@@ -25,9 +25,10 @@ export function processReceivedData(data) {
 }
 
 export function processSendData(data) {
-  return data.map(datum => ({
-    localizedNodeName: datum.nodeName,
-    pointName: datum.pointName,
-    experimentName: datum.experimentName
-  }))
+  console.error(data)
+  return {
+    localizedNodeName: data.nodeName,
+    pointName: data.pointName,
+    experimentName: data.experimentName
+  }
 }
