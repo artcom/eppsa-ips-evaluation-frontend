@@ -8,6 +8,7 @@ import { shallow, mount } from "enzyme"
 import { keys } from "lodash"
 import App from "../../src/setUp/containers/app"
 import { backend } from "../../src/constants"
+import DataTable from "../../src/setUp/components/dataTable"
 import experimentsData from "../testData/experiments.json"
 import { findButtonByName } from "../helpers/findElements"
 import Form from "../../src/setUp/components/form"
@@ -106,26 +107,34 @@ describe("App", () => {
   })
 
   describe("when experiments tab is active", () => {
+    let getMockExperiments
+    let setMockExperiment
+    let deleteMockExperiment
+
     beforeEach(() => {
-      global.getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
+      getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
         .resolves(experimentsData)
       proxyquire(
-        "../../src/setUp/containers/params",
-        { getExperiments: { getExperiments: global.getMockExperiments } }
+        "../../src/setUp/containers/app",
+        { getExperiments: getMockExperiments }
       )
-      global.setMockExperiment = sinon.stub(experimentsActions, "setExperiment")
+      setMockExperiment = sinon.stub(experimentsActions, "setExperiment")
         .resolves({
           name: "fake-experiment3"
         })
       proxyquire(
-        "../../src/setUp/containers/params",
-        { setExperiment: { setExperiment: global.setMockExperiment } }
+        "../../src/setUp/containers/app",
+        { setExperiment: setMockExperiment }
       )
+      deleteMockExperiment = sinon.stub(experimentsActions, "deleteExperiment")
+        .resolves("fake-experiment1")
+      proxyquire("../../src/setUp/containers/app", { deleteExperiment: deleteMockExperiment })
     })
 
     afterEach(() => {
-      global.getMockExperiments.restore()
-      global.setMockExperiment.restore()
+      getMockExperiments.restore()
+      setMockExperiment.restore()
+      deleteMockExperiment.restore()
     })
 
     it("sends expected props to params", () => {
@@ -156,13 +165,14 @@ describe("App", () => {
     it("get function is called", () => {
       const app = mount(<App backend={ backend } />)
       app.setState({ show: "experiments" })
-      sinon.assert.calledOnce(global.getMockExperiments)
+      sinon.assert.calledOnce(getMockExperiments)
+      sinon.assert.calledWith(getMockExperiments, { backend })
     })
 
-    it("when an experiment  is added set function is called", done => {
+    it("when an experiment is added set function is called", done => {
       const app = mount(<App backend={ backend } />)
       app.setState({ show: "experiments" })
-      sinon.assert.calledOnce(global.getMockExperiments)
+      sinon.assert.calledOnce(getMockExperiments)
       setImmediate(() => {
         const data = {
           name: "fake-experiment3"
@@ -174,10 +184,27 @@ describe("App", () => {
           data
         })
         setImmediate(() => {
-          sinon.assert.calledOnce(global.setMockExperiment)
-          sinon.assert.calledWith(global.setMockExperiment, { backend, experiment: data })
+          sinon.assert.calledOnce(setMockExperiment)
+          sinon.assert.calledWith(setMockExperiment, { backend, experiment: data })
           done()
         })
+      })
+    })
+
+    it("when an experiment is deleted delete function is called", done => {
+      const app = mount(<App backend={ backend } />)
+      app.setState({ show: "experiments" })
+      const callArgs = { backend, experiment: { name: "fake-experiment1" } }
+      const dataTable = app
+        .find(Params)
+        .filterWhere(params => params.props().paramName === "experiment")
+        .find(DataTable)
+      setImmediate(() => {
+        const param1Row = dataTable.find("tbody").find("tr").at(0)
+        findButtonByName(param1Row, "Delete").simulate("click")
+        sinon.assert.calledOnce(deleteMockExperiment)
+        sinon.assert.calledWith(deleteMockExperiment, callArgs)
+        done()
       })
     })
   })
