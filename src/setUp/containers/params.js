@@ -19,7 +19,10 @@ export default class Params extends React.Component {
   }
 
   async componentDidMount() {
-    const data = await this.props.get({ backend: this.props.backend })
+    const getArgs = this.props.experiment
+      ? { backend: this.props.backend, experimentName: this.props.experiment }
+      : { backend: this.props.backend }
+    const data = await this.props.get(getArgs)
     this.setState({ data, loaded: true })
   }
 
@@ -36,6 +39,7 @@ export default class Params extends React.Component {
           fields={ fields }
           set={ set }
           paramName={ paramName }
+          experiment={ this.props.experiment }
           onSubmitted={ this.onSubmitted } />
       }
       {

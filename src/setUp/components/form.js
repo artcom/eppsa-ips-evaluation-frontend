@@ -44,7 +44,9 @@ export default class Form extends React.Component {
 
   async onSubmit(event) {
     event.preventDefault()
-    const setArgs = { backend }
+    const setArgs = this.props.experiment
+      ? { backend, experimentName: this.props.experiment }
+      : { backend }
     setArgs[this.props.paramName] = this.state
     await this.props.set(setArgs)
     this.props.onSubmitted()

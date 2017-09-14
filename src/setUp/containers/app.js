@@ -1,3 +1,4 @@
+/* eslint-disable react/no-did-mount-set-state */
 import React from "react"
 import autoBind from "react-autobind"
 import styled from "styled-components"
@@ -18,8 +19,15 @@ export default class App extends React.Component {
     super(props)
     autoBind(this)
     this.state = {
-      show: "experiments"
+      show: "experiments",
+      experiments: [],
+      loaded: false
     }
+  }
+
+  async componentDidMount() {
+    const experiments = await getExperiments({ backend: this.props.backend })
+    this.setState({ experiments, loaded: true })
   }
 
   render() {
@@ -80,14 +88,18 @@ export default class App extends React.Component {
         }
         {
           this.state.show === "nodePositions" &&
+          this.state.loaded &&
+          this.state.experiments.map(experiment =>
             <Params
-              title="Node Positions:"
+              key={ experiment.name }
+              title={ `Node Positions for "${experiment.name}":` }
               fields={ nodePositionsFields }
               get={ getNodePositions }
               set={ setNodePosition }
               paramName="nodePosition"
-              createText="Set Node Position"
-              backend={ this.props.backend } />
+              createText={ `Set Node Position in "${experiment.name}"` }
+              experiment={ experiment.name }
+              backend={ this.props.backend } />)
         }
       </Container>
     )
