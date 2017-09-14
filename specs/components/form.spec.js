@@ -35,7 +35,7 @@ describe("Form component", () => {
   })
 
   describe("does", () => {
-    it("store node data in state when changed in input field", () => {
+    it("store param data in state when changed in input field", () => {
       const fields = [{ name: "field1", type: "text" }, { name: "field2", type: "text" }]
       storeInput(mount(<Form fields={ fields } />), [
         { name: "field1", value: "value1" },
@@ -43,7 +43,26 @@ describe("Form component", () => {
       ])
     })
 
-    it("call setNode and onSubmitted with the expected data when form is submitted",
+    it("call set and onSubmitted with the expected data when form is submitted",
+      done => {
+        const fields = [{ name: "field1", type: "text" }, { name: "field2", type: "text" }]
+        const onSubmittedSpy = sinon.spy()
+        const setSpy = sinon.spy()
+        const paramForm = mount(
+          <Form
+            fields={ fields }
+            set={ setSpy }
+            paramName={ "param" }
+            onSubmitted={ onSubmittedSpy } />
+        )
+        const input = { field1: "value1", field2: "value2" }
+        const callArgs = { backend, param: { field1: "value1", field2: "value2" } }
+        callSubmitFunctions(paramForm, input, callArgs, setSpy, onSubmittedSpy, done)
+      }
+    )
+
+    it("call set and onSubmitted with the expected data when form is submitted when experiment" +
+      "prop is set",
       done => {
         const fields = [{ name: "field1", type: "text" }, { name: "field2", type: "text" }]
         const onSubmittedSpy = sinon.spy()
@@ -53,11 +72,17 @@ describe("Form component", () => {
             fields={ fields }
             set={ setSpy }
             paramName={ "param" }
+            experiment={ "fake-experiment" }
             onSubmitted={ onSubmittedSpy } />
         )
         const input = { field1: "value1", field2: "value2" }
-        const callArgs = { backend, param: { field1: "value1", field2: "value2" } }
+        const callArgs = {
+          backend,
+          param: { field1: "value1", field2: "value2" },
+          experimentName: "fake-experiment"
+        }
         callSubmitFunctions(nodeForm, input, callArgs, setSpy, onSubmittedSpy, done)
-      })
+      }
+    )
   })
 })

@@ -136,6 +136,34 @@ describe("Params", () => {
       )
     })
 
+    it("submits new param to backend when filled form is submitted and experiment prop is set",
+      done => {
+        const getStub = sinon.stub().resolves([])
+        const setStub = sinon.stub().resolves("")
+        const fields = [{ name: "field1", type: "text" }, { name: "field2", type: "text" }]
+        const params = mount(
+          <Params
+            backend={ backend }
+            fields={ fields }
+            get={ getStub }
+            set={ setStub }
+            paramName="param"
+            experiment="fake-experiment"
+            createText="Create Param" />)
+        const submitParam = { field1: "value1", field2: "value2" }
+        const callArgs = { backend, param: submitParam, experimentName: "fake-experiment" }
+        submitData(
+          params,
+          Form,
+          "Create Param",
+          submitParam,
+          setStub,
+          callArgs,
+          done
+        )
+      }
+    )
+
     it("hides experiment form when onSubmitted is called", done => {
       const getStub = sinon.stub().resolves([])
       const setStub = sinon.stub().resolves("")
