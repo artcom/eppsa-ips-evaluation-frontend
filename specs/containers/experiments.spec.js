@@ -1,7 +1,7 @@
 /* eslint-disable  import/no-commonjs */
 import React from "react"
 import { expect } from "chai"
-import { mount } from "enzyme"
+import { mount, shallow } from "enzyme"
 import { describe, it, beforeEach, afterEach } from "mocha"
 import proxyquire from "proxyquire"
 import sinon from "sinon"
@@ -55,6 +55,23 @@ describe("App", () => {
     getMockExperiments.restore()
     getMockNodes.restore()
     getMockPoints.restore()
+  })
+
+  describe("contains", () => {
+    it("experiments when show state is \"experiments\"", () => {
+      const app = shallow(<App />)
+      expect(app.state("show")).to.equal("experiments")
+      expect(app.find(Params)).to.have.length(1)
+      expect(app.find(Params).filterWhere(params => params.props().paramName === "experiment"))
+        .to.have.length(1)
+    })
+
+    it("no experiments when show state is not \"experiments\"", () => {
+      const app = shallow(<App />)
+      app.setState({ show: "other" })
+      expect(app.find(Params).filterWhere(params => params.props().paramName === "experiment"))
+        .to.have.length(0)
+    })
   })
 
   describe("when experiments tab is active", () => {

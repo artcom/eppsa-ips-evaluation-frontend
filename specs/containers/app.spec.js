@@ -90,21 +90,6 @@ describe("App", () => {
       expect(app.find(TabBar).find(Tab).map(tab => tab.text())).to.deep.equal(tabs)
     })
 
-    it("experiments when show state is \"experiments\"", () => {
-      const app = shallow(<App />)
-      expect(app.state("show")).to.equal("experiments")
-      expect(app.find(Params)).to.have.length(1)
-      expect(app.find(Params).filterWhere(params => params.props().paramName === "experiment"))
-        .to.have.length(1)
-    })
-
-    it("no experiments when show state is not \"experiments\"", () => {
-      const app = shallow(<App />)
-      app.setState({ show: "other" })
-      expect(app.find(Params).filterWhere(params => params.props().paramName === "experiment"))
-        .to.have.length(0)
-    })
-
     it("points when show state is \"points\"", () => {
       const app = shallow(<App />)
       app.setState({ show: "points" })
@@ -257,6 +242,18 @@ describe("App", () => {
         pointsTab.simulate("click")
         expect(pointsTab.props().highlight).to.equal(true)
         expect(app.state("show")).to.equal("points")
+        done()
+      })
+    })
+
+    it("Zones when zones tab is clicked", done => {
+      const app = mount(<App backend={ backend } />)
+      setImmediate(() => {
+        expect(app.state("show")).to.equal("experiments")
+        const pointsTab = app.find(Tab).filterWhere(tab => tab.text() === "Zones")
+        pointsTab.simulate("click")
+        expect(pointsTab.props().highlight).to.equal(true)
+        expect(app.state("show")).to.equal("zones")
         done()
       })
     })
