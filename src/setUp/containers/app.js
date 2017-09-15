@@ -2,6 +2,7 @@
 import React from "react"
 import autoBind from "react-autobind"
 import styled from "styled-components"
+import { assignIn, zipObject } from "lodash"
 import Button from "../components/button"
 import Params from "./params"
 import SelectExperiment from "../components/selectExperiment"
@@ -23,14 +24,21 @@ export default class App extends React.Component {
     this.state = {
       show: "experiments",
       experiments: [],
+      nodes: [],
+      points: [],
       loaded: false,
       selectedExperiment: null,
     }
   }
 
   async componentDidMount() {
-    const experiments = await getExperiments({ backend: this.props.backend })
-    this.setState({ experiments, loaded: true })
+    const params = ["experiments", "nodes", "points"]
+    const data = await Promise.all([
+      getExperiments({ backend: this.props.backend }),
+      getNodes({ backend: this.props.backend }),
+      getPoints({ backend: this.props.backend })
+    ])
+    this.setState(assignIn(zipObject(params, data), { loaded: true }))
   }
 
   render() {
@@ -48,8 +56,8 @@ export default class App extends React.Component {
       { name: "type", type: "text" }
     ]
     const nodePositionsFields = [
-      { name: "nodeName", type: "text" },
-      { name: "pointName", type: "text" },
+      { name: "nodeName", type: "select", options: this.state.nodes.map(node => node.name) },
+      { name: "pointName", type: "select", options: this.state.points.map(point => point.name) },
       { name: "experimentName", type: "text" }
     ]
     return (
