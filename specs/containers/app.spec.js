@@ -18,7 +18,6 @@ import TabBar from "../../src/setUp/components/tabBar"
 import zonesData from "../testData/zones.json"
 import { addParam } from "../helpers/appHelpers"
 import { findButtonByName } from "../helpers/findElements"
-import { getNodes, setNode } from "../../src/setUp/actions/nodesActions"
 import { getNodePositions, setNodePosition } from "../../src/setUp/actions/nodePositionsActions"
 import { getZones, setZone } from "../../src/setUp/actions/zoneActions"
 import { checkProps } from "../helpers/propsHelpers"
@@ -360,85 +359,6 @@ describe("App", () => {
           addParam({ mountedComponent: app, paramName: "zone", createText: "Add Zone", data })
           sinon.assert.calledOnce(setMockZone)
           sinon.assert.calledWith(setMockZone, { backend, zone: data })
-          done()
-        })
-      })
-    })
-  })
-
-  describe("when nodes tab is active", () => {
-    let setMockNode
-
-    beforeEach(() => {
-      setMockNode = sinon.stub(nodesActions, "setNode")
-        .resolves({
-          id: "node3",
-          name: "Node3",
-          type: "quuppa"
-        })
-      proxyquire(
-        "../../src/setUp/containers/app",
-        { setNode: setMockNode }
-      )
-    })
-
-    afterEach(() => {
-      setMockNode.restore()
-    })
-
-    it("sends expected props to params", done => {
-      const nodeFields = [
-        { name: "id", type: "text" },
-        { name: "name", type: "text" },
-        { name: "type", type: "text" }
-      ]
-      const props = {
-        backend,
-        title: "Nodes:",
-        get: getNodes,
-        set: setNode,
-        paramName: "node",
-        createText: "Add Node"
-      }
-      const copyProps = { fields: nodeFields }
-
-      const app = mount(<App backend={ backend } />)
-      setImmediate(() => {
-        app.setState({ show: "nodes" })
-        const params = app.find(Params)
-
-        expect(app.state("show")).to.equal("nodes")
-        expect(params).to.have.length(1)
-        checkProps({ mountedComponent: params, props })
-        checkProps({ mountedComponent: params, props: copyProps, copy: true })
-        done()
-      })
-    })
-
-    it("get function is called", done => {
-      const app = mount(<App backend={ backend } />)
-      setImmediate(() => {
-        app.setState({ show: "nodes" })
-        sinon.assert.calledTwice(getMockNodes)
-        sinon.assert.calledWith(getMockNodes, { backend })
-        done()
-      })
-    })
-
-    it("when a node is added set function is called with the expected arguments", done => {
-      const app = mount(<App backend={ backend } />)
-      setImmediate(() => {
-        app.setState({ show: "nodes" })
-        sinon.assert.calledTwice(getMockNodes)
-        const data = {
-          id: "node3",
-          name: "Node3",
-          type: "quuppa"
-        }
-        setImmediate(() => {
-          addParam({ mountedComponent: app, paramName: "node", createText: "Add Node", data })
-          sinon.assert.calledOnce(setMockNode)
-          sinon.assert.calledWith(setMockNode, { backend, node: data })
           done()
         })
       })
