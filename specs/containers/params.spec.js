@@ -36,12 +36,13 @@ describe("Params", () => {
     it("a table with the expected headers", () => {
       const headers = ["field1", "field2"]
       const fields = [{ name: "field1", type: "text" }, { name: "field2", type: "text" }]
-      const params = mount(<Params fields={ fields } />)
+      const getStub = sinon.stub().resolves([])
+      const params = mount(<Params fields={ fields } get={ getStub } />)
       hasTable(params, headers)
     })
 
     it("no create param button when loaded state is false", () => {
-      const params = shallow(<Params fields={ [] } />)
+      const params = shallow(<Params fields={ [] } get={ a => a } />)
       expect(params.state("loaded")).to.equal(false)
       expect(params.find(Button)).to.have.length(0)
     })
@@ -56,8 +57,8 @@ describe("Params", () => {
 
   describe("for retrieval", () => {
     it("calls componentDidMount and get functions", () => {
-      const getSpy = sinon.spy()
-      callsMountFunctions(Params, { backend, fields: [], get: getSpy }, getSpy, { backend })
+      const getStub = sinon.stub().resolves([])
+      callsMountFunctions(Params, { backend, fields: [], get: getStub }, getStub, { backend })
     })
 
     it("stores params retrieved from the backend in state", done => {
@@ -82,7 +83,7 @@ describe("Params", () => {
     })
 
     it("sets loaded state to true when params have been retrieved from the backend", done => {
-      const getStub = sinon.stub().resolves("")
+      const getStub = sinon.stub().resolves([])
       const params = mount(<Params backend={ backend } fields={ [] } get={ getStub } />)
       acknowledgeRetrieval(params, getStub, done)
     })
