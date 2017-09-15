@@ -665,8 +665,8 @@ describe("App", () => {
         app.setState({ show: "nodePositions", selectedExperiment: "fake-experiment1" })
         sinon.assert.calledOnce(getMockNodePositions)
         const data = {
-          nodeName: "Node3",
-          pointName: "point3",
+          nodeName: "Node2",
+          pointName: "point2",
           experimentName: "fake-experiment1"
         }
         setImmediate(() => {
