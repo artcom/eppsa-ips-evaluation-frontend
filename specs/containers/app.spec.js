@@ -19,6 +19,7 @@ import pointsData from "../testData/points.json"
 import SelectExperiment from "../../src/setUp/components/selectExperiment"
 import Tab from "../../src/setUp/components/tab"
 import TabBar from "../../src/setUp/components/tabBar"
+import zonesData from "../testData/zones.json"
 import {
   deleteExperiment,
   getExperiments,
@@ -27,11 +28,13 @@ import {
 import { getNodes, setNode } from "../../src/setUp/actions/nodesActions"
 import { getNodePositions, setNodePosition } from "../../src/setUp/actions/nodePositionsActions"
 import { getPoints, setPoint } from "../../src/setUp/actions/pointsActions"
+import { getZones, setZone } from "../../src/setUp/actions/zoneActions"
 import { checkProps } from "../helpers/propsHelpers"
 const experimentsActions = require("../../src/setUp/actions/experimentsActions")
 const nodesActions = require("../../src/setUp/actions/nodesActions")
 const nodePositionsActions = require("../../src/setUp/actions/nodePositionsActions")
 const pointsActions = require("../../src/setUp/actions/pointsActions")
+const zonesActions = require("../../src/setUp/actions/zoneActions")
 
 
 describe("App", () => {
@@ -86,6 +89,13 @@ describe("App", () => {
       expect(app.find(TabBar)).to.have.length(1)
     })
 
+    it("tabs", () => {
+      const tabs = ["Experiments", "Points", "Zones", "Nodes", "NodePositions"]
+      const app = mount(<App />)
+      expect(app.find(TabBar).find(Tab)).to.have.length(tabs.length)
+      expect(app.find(TabBar).find(Tab).map(tab => tab.text())).to.deep.equal(tabs)
+    })
+
     it("experiments when show state is \"experiments\"", () => {
       const app = shallow(<App />)
       expect(app.state("show")).to.equal("experiments")
@@ -113,6 +123,21 @@ describe("App", () => {
       const app = shallow(<App />)
       app.setState({ show: "other" })
       expect(app.find(Params).filterWhere(params => params.props().paramName === "point"))
+        .to.have.length(0)
+    })
+
+    it("zones when show state is \"zones\"", () => {
+      const app = shallow(<App />)
+      app.setState({ show: "zones" })
+      expect(app.find(Params)).to.have.length(1)
+      expect(app.find(Params).filterWhere(params => params.props().paramName === "zone"))
+        .to.have.length(1)
+    })
+
+    it("no zones when show state is not \"zones\"", () => {
+      const app = shallow(<App />)
+      app.setState({ show: "other" })
+      expect(app.find(Params).filterWhere(params => params.props().paramName === "zone"))
         .to.have.length(0)
     })
 
@@ -369,18 +394,9 @@ describe("App", () => {
   })
 
   describe("when points tab is active", () => {
-    let setMockExperiment
     let setMockPoint
 
     beforeEach(() => {
-      setMockExperiment = sinon.stub(experimentsActions, "setExperiment")
-        .resolves({
-          name: "fake-experiment3"
-        })
-      proxyquire(
-        "../../src/setUp/containers/app",
-        { setExperiment: setMockExperiment }
-      )
       setMockPoint = sinon.stub(pointsActions, "setPoint")
         .resolves({
           name: "point3",
@@ -395,7 +411,6 @@ describe("App", () => {
     })
 
     afterEach(() => {
-      setMockExperiment.restore()
       setMockPoint.restore()
     })
 
@@ -460,19 +475,109 @@ describe("App", () => {
     })
   })
 
-  describe("when nodes tab is active", () => {
-    let setMockExperiment
-    let setMockNode
+  describe("when zones tab is active", () => {
+    let getMockZones
+    let setMockZone
 
     beforeEach(() => {
-      setMockExperiment = sinon.stub(experimentsActions, "setExperiment")
+      getMockZones = sinon.stub(zonesActions, "getZones")
+        .resolves(zonesData)
+      proxyquire(
+        "../../src/setUp/containers/app",
+        { getZones: getMockZones }
+      )
+      setMockZone = sinon.stub(zonesActions, "setZone")
         .resolves({
-          name: "fake-experiment3"
+          name: "zone3",
+          xMin: 5,
+          xMax: 7,
+          yMin: 3,
+          yMax: 5,
+          zMin: 2,
+          zMax: 4
         })
       proxyquire(
         "../../src/setUp/containers/app",
-        { setExperiment: setMockExperiment }
+        { setZone: setMockZone }
       )
+    })
+
+    afterEach(() => {
+      getMockZones.restore()
+      setMockZone.restore()
+    })
+
+    it("expected props are sent to params", done => {
+      const zoneFields = [
+        { name: "name", type: "text" },
+        { name: "xMin", type: "text" },
+        { name: "xMax", type: "text" },
+        { name: "yMin", type: "text" },
+        { name: "yMax", type: "text" },
+        { name: "zMin", type: "text" },
+        { name: "zMax", type: "text" }
+      ]
+      const props = {
+        backend,
+        title: "Zones:",
+        get: getZones,
+        set: setZone,
+        paramName: "zone",
+        createText: "Add Zone"
+      }
+      const copyProps = { fields: zoneFields }
+
+      const app = mount(<App backend={ backend } />)
+      setImmediate(() => {
+        app.setState({ show: "zones" })
+        const params = app.find(Params)
+
+        expect(app.state("show")).to.equal("zones")
+        expect(params).to.have.length(1)
+        checkProps({ mountedComponent: params, props })
+        checkProps({ mountedComponent: params, props: copyProps, copy: true })
+        done()
+      })
+    })
+
+    it("get function is called", done => {
+      const app = mount(<App backend={ backend } />)
+      setImmediate(() => {
+        app.setState({ show: "zones" })
+        sinon.assert.calledOnce(getMockZones)
+        sinon.assert.calledWith(getMockZones, { backend })
+        done()
+      })
+    })
+
+    it("when a point is added set function is called", done => {
+      const app = mount(<App backend={ backend } />)
+      setImmediate(() => {
+        app.setState({ show: "zones" })
+        sinon.assert.calledOnce(getMockZones)
+        const data = {
+          name: "zone3",
+          xMin: 5,
+          xMax: 7,
+          yMin: 3,
+          yMax: 5,
+          zMin: 2,
+          zMax: 4
+        }
+        setImmediate(() => {
+          addParam({ mountedComponent: app, paramName: "zone", createText: "Add Zone", data })
+          sinon.assert.calledOnce(setMockZone)
+          sinon.assert.calledWith(setMockZone, { backend, zone: data })
+          done()
+        })
+      })
+    })
+  })
+
+  describe("when nodes tab is active", () => {
+    let setMockNode
+
+    beforeEach(() => {
       setMockNode = sinon.stub(nodesActions, "setNode")
         .resolves({
           id: "node3",
@@ -486,7 +591,6 @@ describe("App", () => {
     })
 
     afterEach(() => {
-      setMockExperiment.restore()
       setMockNode.restore()
     })
 

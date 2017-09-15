@@ -1,0 +1,20 @@
+[
+  {
+    "name": "zone1",
+    "xMin": 2,
+    "xMax": 4,
+    "yMin": 2,
+    "yMax": 5,
+    "zMin": 1,
+    "zMax": 4
+  },
+  {
+    "name": "zone2",
+    "xMin": 4,
+    "xMax": 8,
+    "yMin": 5,
+    "yMax": 7,
+    "zMin": 3,
+    "zMax": 6
+  }
+]

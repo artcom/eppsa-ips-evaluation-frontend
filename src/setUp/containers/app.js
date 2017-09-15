@@ -11,6 +11,7 @@ import { deleteExperiment, getExperiments, setExperiment } from "../actions/expe
 import { getNodes, setNode } from "../actions/nodesActions"
 import { getNodePositions, setNodePosition } from "../actions/nodePositionsActions"
 import { getPoints, setPoint } from "../actions/pointsActions"
+import { getZones, setZone } from "../actions/zoneActions"
 
 
 const Container = styled.div`
@@ -42,13 +43,22 @@ export default class App extends React.Component {
   }
 
   render() {
-    const tabs = ["experiments", "points", "nodes", "nodePositions"]
+    const tabs = ["experiments", "points", "zones", "nodes", "nodePositions"]
     const experimentFields = [{ name: "name", type: "text" }]
     const pointFields = [
       { name: "name", type: "text" },
       { name: "X", type: "text" },
       { name: "Y", type: "text" },
       { name: "Z", type: "text" }
+    ]
+    const zoneFields = [
+      { name: "name", type: "text" },
+      { name: "xMin", type: "text" },
+      { name: "xMax", type: "text" },
+      { name: "yMin", type: "text" },
+      { name: "yMax", type: "text" },
+      { name: "zMin", type: "text" },
+      { name: "zMax", type: "text" }
     ]
     const nodeFields = [
       { name: "id", type: "text" },
@@ -84,6 +94,17 @@ export default class App extends React.Component {
             set={ setPoint }
             paramName="point"
             createText="Add Point"
+            backend={ this.props.backend } />
+        }
+        {
+          this.state.show === "zones" &&
+          <Params
+            title="Zones:"
+            fields={ zoneFields }
+            get={ getZones }
+            set={ setZone }
+            paramName="zone"
+            createText="Add Zone"
             backend={ this.props.backend } />
         }
         {
