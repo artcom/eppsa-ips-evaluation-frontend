@@ -28,7 +28,8 @@ export default function Input({ field, onInput }) {
             : <InputField
               type={ type }
               value={ value }
-              onChange={ event => onInput(event, name) } />
+              onChange={ event => onInput(event, name) }
+              readOnly={ field.readOnly != null ? field.readOnly : false } />
         }
       </InputLabel>
     </Container>

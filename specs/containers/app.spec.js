@@ -581,7 +581,7 @@ describe("App", () => {
       const nodePositionsFields = [
         { name: "nodeName", type: "select", options: ["Node1", "Node2"] },
         { name: "pointName", type: "select", options: ["point1", "point2"] },
-        { name: "experimentName", type: "text" }
+        { name: "experimentName", type: "text", value: "fake-experiment1", readOnly: true }
       ]
       const props = {
         backend,

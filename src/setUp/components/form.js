@@ -53,6 +53,18 @@ export default class Form extends React.Component {
 export function setInitialValues(fields) {
   return zipObject(
     fields.map(field => field.name),
-    fields.map(field => field.type === "select" ? field.options[0] : "")
+    fields.map(getValue)
   )
+}
+
+function getValue(field) {
+  if (field.type === "select") {
+    return field.options[0]
+  } else {
+    if (field.value) {
+      return field.value
+    } else {
+      return ""
+    }
+  }
 }

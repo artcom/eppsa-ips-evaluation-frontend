@@ -39,4 +39,20 @@ describe("Input component", () => {
     const select = shallow(<Input field={ field } onInput={ onInput } />).find(Select)
     checkProps({ mountedComponent: select, props })
   })
+
+  it("passes the readonly prop to input component", () => {
+    const field = { name: "name", type: "text", readOnly: true }
+    const onInput = a => a
+    const props = { type: field.type, readOnly: true }
+    const inputField = shallow(<Input field={ field } onInput={ onInput } />).find(InputField)
+    checkProps({ mountedComponent: inputField, props })
+  })
+
+  it("is not readonly by default", () => {
+    const field = { name: "name", type: "text" }
+    const onInput = a => a
+    const props = { type: field.type, readOnly: false }
+    const inputField = shallow(<Input field={ field } onInput={ onInput } />).find(InputField)
+    checkProps({ mountedComponent: inputField, props })
+  })
 })

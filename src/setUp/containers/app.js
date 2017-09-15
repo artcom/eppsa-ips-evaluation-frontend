@@ -58,7 +58,7 @@ export default class App extends React.Component {
     const nodePositionsFields = [
       { name: "nodeName", type: "select", options: this.state.nodes.map(node => node.name) },
       { name: "pointName", type: "select", options: this.state.points.map(point => point.name) },
-      { name: "experimentName", type: "text" }
+      { name: "experimentName", type: "text", value: this.state.selectedExperiment, readOnly: true }
     ]
     return (
       <Container>

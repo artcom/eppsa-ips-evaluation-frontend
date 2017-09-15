@@ -42,9 +42,10 @@ describe("Form component", () => {
     it("returns expected values", () => {
       const fields = [
         { name: "field1", type: "text" },
-        { name: "field2", type: "select", options: ["option1", "option2"] }
+        { name: "field2", type: "select", options: ["option1", "option2"] },
+        { name: "field3", type: "text", value: "value3" }
       ]
-      const expectedValues = { field1: "", field2: "option1" }
+      const expectedValues = { field1: "", field2: "option1", field3: "value3" }
       expect(JSON.stringify(setInitialValues(fields))).to.equal(JSON.stringify(expectedValues))
     })
   })
