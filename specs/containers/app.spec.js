@@ -579,6 +579,17 @@ describe("App", () => {
       })
     })
 
+    it("sends expected props to selectExperiment", done => {
+      const props = { experiments: experimentsData }
+      const app = mount(<App backend={ backend } />)
+      setImmediate(() => {
+        app.setState({ show: "nodePositions" })
+        const selectExperiment = app.find(SelectExperiment)
+        checkProps({ mountedComponent: selectExperiment, props })
+        done()
+      })
+    })
+
     it("get function is called", done => {
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
@@ -593,6 +604,17 @@ describe("App", () => {
           )
           done()
         })
+      })
+    })
+
+    it("when an experiment is selected the selected experiment is set in state", done => {
+      const app = mount(<App backend={ backend } />)
+      setImmediate(() => {
+        app.setState({ show: "nodePositions" })
+        const selectExperiment = app.find(SelectExperiment)
+        findButtonByName(selectExperiment, "fake-experiment1").simulate("click")
+        expect(app.state("selectedExperiment")).to.equal("fake-experiment1")
+        done()
       })
     })
 

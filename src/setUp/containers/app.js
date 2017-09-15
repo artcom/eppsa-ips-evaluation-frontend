@@ -107,7 +107,9 @@ export default class App extends React.Component {
           this.state.show === "nodePositions" &&
           this.state.loaded &&
           !this.state.selectedExperiment &&
-          <SelectExperiment />
+          <SelectExperiment
+            experiments={ this.state.experiments }
+            onSelect={ this.onSelectExperiment } />
         }
       </Container>
     )
@@ -115,5 +117,9 @@ export default class App extends React.Component {
 
   onActivate(tab) {
     this.setState({ show: tab })
+  }
+
+  onSelectExperiment(experiment) {
+    this.setState({ selectedExperiment: experiment.name })
   }
 }
