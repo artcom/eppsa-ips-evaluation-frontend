@@ -1,5 +1,6 @@
 import React from "react"
 import styled from "styled-components"
+import Select from "./select"
 
 
 const Container = styled.div`
@@ -15,14 +16,20 @@ export const InputField = styled.input`
   padding: 1em;
 `
 
-
 export default function Input({ field, onInput }) {
   const { name, type, value } = field
   return (
     <Container>
       <InputLabel>
         { name }
-        <InputField type={ type } value={ value } onChange={ event => onInput(event, name) } />
+        {
+          type === "select"
+            ? <Select />
+            : <InputField
+              type={ type }
+              value={ value }
+              onChange={ event => onInput(event, name) } />
+        }
       </InputLabel>
     </Container>
   )

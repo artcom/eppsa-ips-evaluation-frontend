@@ -27,10 +27,12 @@ describe("Form component", () => {
 
     it("the expected Input components", () => {
       const fields = [{ name: "field1", type: "text" }, { name: "field2", type: "text" }]
-      hasInputs(mount(<Form fields={ fields } />), [
-        { name: "field1", type: "text" },
-        { name: "field2", type: "text" }
-      ])
+      hasInputs(mount(<Form fields={ fields } />), fields)
+    })
+
+    it("a select element when type is \"select\"", () => {
+      const fields = [{ name: "field1", type: "select" }]
+      hasInputs(mount(<Form fields={ fields } />), fields)
     })
   })
 

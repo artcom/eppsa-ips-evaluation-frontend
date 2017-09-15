@@ -2,6 +2,7 @@ import { expect } from "chai"
 import sinon from "sinon"
 import { findInputField } from "./findElements"
 import Input, { InputField, InputLabel } from "../../src/setUp/components/input"
+import Select from "../../src/setUp/components/select"
 
 
 export function isAForm(form) {
@@ -24,12 +25,16 @@ export function hasInputs(form, inputs) {
     expect(form.find(Input).at(i).childAt(0).type().displayName)
       .to.equal("styled.label")
     expect(form.find(Input).at(i).childAt(0).text()).to.equal(input.name)
-    expect(form.find(InputLabel).at(i).childAt(0).type().displayName)
-      .to.equal("styled.input")
-    expect(form.find(InputLabel).at(i).childAt(0).props().type)
-      .to.equal(input.type)
-    expect(form.find(InputLabel).at(i).childAt(0).props().value)
-      .to.equal("")
+    if (input.type === "select") {
+      expect(form.find(InputLabel).find(Select)).to.have.length(1)
+    } else {
+      expect(form.find(InputLabel).at(i).childAt(0).type().displayName)
+        .to.equal("styled.input")
+      expect(form.find(InputLabel).at(i).childAt(0).props().type)
+        .to.equal(input.type)
+      expect(form.find(InputLabel).at(i).childAt(0).props().value)
+        .to.equal("")
+    }
   }
 }
 
