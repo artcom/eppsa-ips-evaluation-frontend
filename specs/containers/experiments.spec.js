@@ -25,7 +25,7 @@ const nodesActions = require("../../src/setUp/actions/nodesActions")
 const pointsActions = require("../../src/setUp/actions/pointsActions")
 
 
-describe("App", () => {
+describe("App Experiment", () => {
   let getMockExperiments
   let getMockNodes
   let getMockPoints
