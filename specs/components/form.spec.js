@@ -1,5 +1,6 @@
 import React from "react"
 import { describe, it } from "mocha"
+import { expect } from "chai"
 import { shallow, mount } from "enzyme"
 import sinon from "sinon"
 import { backend } from "../../src/constants"
@@ -11,6 +12,7 @@ import {
   storeInput
 } from "../helpers/formHelpers"
 import Form from "../../src/setUp/components/form"
+import { StyledSelect } from "../../src/setUp/components/select"
 
 
 describe("Form component", () => {
@@ -43,6 +45,13 @@ describe("Form component", () => {
         { name: "field1", value: "value1" },
         { name: "field2", value: "value2" }
       ])
+    })
+
+    it("store param data in state when changed in select field", () => {
+      const fields = [{ name: "field1", type: "select", options: ["option1", "option2"] }]
+      const form = mount(<Form fields={ fields } />)
+      form.find(StyledSelect).simulate("change", { target: { value: "option2" } })
+      expect(form.state("field1")).to.equal("option2")
     })
 
     it("call set and onSubmitted with the expected data when form is submitted",

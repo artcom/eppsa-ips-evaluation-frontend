@@ -3,6 +3,7 @@ import { describe, it } from "mocha"
 import { expect } from "chai"
 import { shallow } from "enzyme"
 import Input, { InputLabel, InputField } from "../../src/setUp/components/input"
+import { checkProps } from "../helpers/propsHelpers"
 import Select from "../../src/setUp/components/select"
 
 
@@ -29,5 +30,13 @@ describe("Input component", () => {
     const field = { name: "name", type: "select" }
     expect(shallow(<Input field={ field } />)
       .find(Select)).to.have.length(1)
+  })
+
+  it("passes the expected props to select component", () => {
+    const field = { name: "name", type: "select", options: ["option1", "option2"] }
+    const onInput = a => a
+    const props = { options: field.options, name: field.name, onInput }
+    const select = shallow(<Input field={ field } onInput={ onInput } />).find(Select)
+    checkProps({ mountedComponent: select, props })
   })
 })

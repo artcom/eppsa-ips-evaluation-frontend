@@ -5,7 +5,6 @@ import { expect } from "chai"
 import sinon from "sinon"
 import proxyquire from "proxyquire"
 import { shallow, mount } from "enzyme"
-import { keys } from "lodash"
 import App from "../../src/setUp/containers/app"
 import { backend } from "../../src/constants"
 import DataTable from "../../src/setUp/components/dataTable"
@@ -28,6 +27,7 @@ import {
 import { getNodes, setNode } from "../../src/setUp/actions/nodesActions"
 import { getNodePositions, setNodePosition } from "../../src/setUp/actions/nodePositionsActions"
 import { getPoints, setPoint } from "../../src/setUp/actions/pointsActions"
+import { checkProps } from "../helpers/propsHelpers"
 const experimentsActions = require("../../src/setUp/actions/experimentsActions")
 const nodesActions = require("../../src/setUp/actions/nodesActions")
 const nodePositionsActions = require("../../src/setUp/actions/nodePositionsActions")
@@ -661,16 +661,6 @@ describe("App", () => {
     })
   })
 })
-
-function checkProps({ mountedComponent, props, copy = false }) {
-  for (const key of keys(props)) {
-    if (copy) {
-      expect(JSON.stringify(mountedComponent.props()[key])).to.equal(JSON.stringify(props[key]))
-    } else {
-      expect(mountedComponent.props()[key]).to.equal(props[key])
-    }
-  }
-}
 
 function addParam({ mountedComponent, paramName, experiment, createText, data }) {
   const specificParams = experiment
