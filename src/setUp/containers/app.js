@@ -2,13 +2,14 @@
 import React from "react"
 import autoBind from "react-autobind"
 import styled from "styled-components"
+import Button from "../components/button"
 import Params from "./params"
 import SelectExperiment from "../components/selectExperiment"
+import TabBar from "../components/tabBar"
 import { deleteExperiment, getExperiments, setExperiment } from "../actions/experimentsActions"
 import { getNodes, setNode } from "../actions/nodesActions"
 import { getNodePositions, setNodePosition } from "../actions/nodePositionsActions"
 import { getPoints, setPoint } from "../actions/pointsActions"
-import TabBar from "../components/tabBar"
 
 
 const Container = styled.div`
@@ -92,6 +93,7 @@ export default class App extends React.Component {
           this.state.show === "nodePositions" &&
           this.state.loaded &&
           this.state.selectedExperiment &&
+          <div>
             <Params
               key={ this.state.selectedExperiment }
               title={ `Node Positions for "${this.state.selectedExperiment}":` }
@@ -102,6 +104,11 @@ export default class App extends React.Component {
               createText={ `Set Node Position in "${this.state.selectedExperiment}"` }
               experiment={ this.state.selectedExperiment }
               backend={ this.props.backend } />
+            <Button
+              onClick={ () => this.onSelectExperiment({ name: null }) }>
+              Select Other Experiment
+            </Button>
+          </div>
         }
         {
           this.state.show === "nodePositions" &&

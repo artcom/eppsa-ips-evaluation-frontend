@@ -35,7 +35,36 @@ const pointsActions = require("../../src/setUp/actions/pointsActions")
 
 
 describe("App", () => {
+  let getMockExperiments
+
+  beforeEach(() => {
+    getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
+      .resolves(experimentsData)
+    proxyquire(
+      "../../src/setUp/containers/app",
+      { getExperiments: getMockExperiments }
+    )
+  })
+
+  afterEach(() => {
+    getMockExperiments.restore()
+  })
+
   describe("contains", () => {
+    let getMockNodePositions
+
+    beforeEach(() => {
+      getMockNodePositions = sinon.stub(nodePositionsActions, "getNodePositions")
+        .resolves(nodePositionsData)
+      proxyquire(
+        "../../src/setUp/containers/app",
+        { getNodePositions: { getNodePositions: getMockNodePositions } }
+      )
+    })
+
+    afterEach(() => {
+      getMockNodePositions.restore()
+    })
     it("tab bar", () => {
       const app = shallow(<App />)
       expect(app.find(TabBar)).to.have.length(1)
@@ -86,18 +115,28 @@ describe("App", () => {
         .to.have.length(0)
     })
 
-    it("node positions when show state is \"nodePositions\" and an experiment is selected", () => {
-      const app = shallow(<App />)
-      app.setState({
-        show: "nodePositions",
-        loaded: true,
-        selectedExperiment: "fake-experiment",
-        experiments: [{ name: "fake-experiment" }]
-      })
-      expect(app.find(Params)).to.have.length(1)
-      expect(app.find(Params).filterWhere(params => params.props().paramName === "nodePosition"))
-        .to.have.length(1)
-    })
+    it("node positions when show state is \"nodePositions\" and an experiment is selected",
+      done => {
+        const app = mount(<App />)
+        app.setState({
+          show: "nodePositions",
+          loaded: true,
+          selectedExperiment: "fake-experiment",
+          experiments: [{ name: "fake-experiment" }]
+        })
+        setImmediate(() => {
+          sinon.assert.calledTwice(getMockExperiments)
+          expect(app.find(Params)).to.have.length(1)
+          expect(
+            app
+              .find(Params)
+              .filterWhere(params => params.props().paramName === "nodePosition")
+          ).to.have.length(1)
+          expect(findButtonByName(app, "Select Other Experiment")).to.have.length(1)
+          done()
+        })
+      }
+    )
 
     it("no node positions when show state is \"nodePositions\" but no experiment is selected",
       () => {
@@ -129,16 +168,9 @@ describe("App", () => {
   })
 
   describe("activates", () => {
-    let getMockExperiments
     let setMockExperiment
 
     beforeEach(() => {
-      getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
-        .resolves(experimentsData)
-      proxyquire(
-        "../../src/setUp/containers/app",
-        { getExperiments: getMockExperiments }
-      )
       setMockExperiment = sinon.stub(experimentsActions, "setExperiment")
         .resolves({
           name: "fake-experiment3"
@@ -150,7 +182,6 @@ describe("App", () => {
     })
 
     afterEach(() => {
-      getMockExperiments.restore()
       setMockExperiment.restore()
     })
 
@@ -192,17 +223,10 @@ describe("App", () => {
   })
 
   describe("when experiments tab is active", () => {
-    let getMockExperiments
     let setMockExperiment
     let deleteMockExperiment
 
     beforeEach(() => {
-      getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
-        .resolves(experimentsData)
-      proxyquire(
-        "../../src/setUp/containers/app",
-        { getExperiments: getMockExperiments }
-      )
       setMockExperiment = sinon.stub(experimentsActions, "setExperiment")
         .resolves({
           name: "fake-experiment3"
@@ -217,7 +241,6 @@ describe("App", () => {
     })
 
     afterEach(() => {
-      getMockExperiments.restore()
       setMockExperiment.restore()
       deleteMockExperiment.restore()
     })
@@ -301,18 +324,11 @@ describe("App", () => {
   })
 
   describe("when points tab is active", () => {
-    let getMockExperiments
     let setMockExperiment
     let getMockPoints
     let setMockPoint
 
     beforeEach(() => {
-      getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
-        .resolves(experimentsData)
-      proxyquire(
-        "../../src/setUp/containers/app",
-        { getExperiments: getMockExperiments }
-      )
       setMockExperiment = sinon.stub(experimentsActions, "setExperiment")
         .resolves({
           name: "fake-experiment3"
@@ -341,7 +357,6 @@ describe("App", () => {
     })
 
     afterEach(() => {
-      getMockExperiments.restore()
       setMockExperiment.restore()
       getMockPoints.restore()
       setMockPoint.restore()
@@ -409,18 +424,11 @@ describe("App", () => {
   })
 
   describe("when nodes tab is active", () => {
-    let getMockExperiments
     let setMockExperiment
     let getMockNodes
     let setMockNode
 
     beforeEach(() => {
-      getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
-        .resolves(experimentsData)
-      proxyquire(
-        "../../src/setUp/containers/app",
-        { getExperiments: getMockExperiments }
-      )
       setMockExperiment = sinon.stub(experimentsActions, "setExperiment")
         .resolves({
           name: "fake-experiment3"
@@ -448,7 +456,6 @@ describe("App", () => {
     })
 
     afterEach(() => {
-      getMockExperiments.restore()
       setMockExperiment.restore()
       getMockNodes.restore()
       setMockNode.restore()
@@ -514,17 +521,10 @@ describe("App", () => {
   })
 
   describe("when nodePositions tab is active", () => {
-    let getMockExperiments
     let getMockNodePositions
     let setMockNodePosition
 
     beforeEach(() => {
-      getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
-        .resolves(experimentsData)
-      proxyquire(
-        "../../src/setUp/containers/app",
-        { getExperiments: getMockExperiments }
-      )
       getMockNodePositions = sinon.stub(nodePositionsActions, "getNodePositions")
         .resolves(nodePositionsData)
       proxyquire(
@@ -544,7 +544,6 @@ describe("App", () => {
     })
 
     afterEach(() => {
-      getMockExperiments.restore()
       getMockNodePositions.restore()
       setMockNodePosition.restore()
     })
@@ -617,6 +616,19 @@ describe("App", () => {
         done()
       })
     })
+
+    it("sets selectedExperiment state to null when select other experiment button is pushed",
+      done => {
+        const app = mount(<App backend={ backend } />)
+        setImmediate(() => {
+          app.setState({ show: "nodePositions", selectedExperiment: "fake-experiment1" })
+          expect(app.state("selectedExperiment")).to.equal("fake-experiment1")
+          findButtonByName(app, "Select Other Experiment").simulate("click")
+          expect(app.state("selectedExperiment")).to.equal(null)
+          done()
+        })
+      }
+    )
 
     it("when a node position is added set function is called with the expected arguments", done => {
       const app = mount(<App backend={ backend } />)

@@ -11,6 +11,7 @@ export default class Params extends React.Component {
   constructor(props) {
     super(props)
     autoBind(this)
+    this.mounted = false
     this.state = {
       data: [],
       loaded: false,
@@ -19,11 +20,18 @@ export default class Params extends React.Component {
   }
 
   async componentDidMount() {
+    this.mounted = true
     const getArgs = this.props.experiment
       ? { backend: this.props.backend, experimentName: this.props.experiment }
       : { backend: this.props.backend }
     const data = await this.props.get(getArgs)
-    this.setState({ data, loaded: true })
+    if (this.mounted) {
+      this.setState({ data, loaded: true })
+    }
+  }
+
+  componentWillUnmount() {
+    this.mounted = false
   }
 
   render() {
