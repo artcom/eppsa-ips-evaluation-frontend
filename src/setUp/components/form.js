@@ -14,10 +14,7 @@ export default class Form extends React.Component {
   constructor(props) {
     super(props)
     autoBind(this)
-    this.state = zipObject(
-      this.props.fields.map(field => field.name),
-      new Array(this.props.fields.length).fill("")
-    )
+    this.state = setInitialValues(this.props.fields)
   }
 
   render() {
@@ -51,4 +48,11 @@ export default class Form extends React.Component {
     await this.props.set(setArgs)
     this.props.onSubmitted()
   }
+}
+
+export function setInitialValues(fields) {
+  return zipObject(
+    fields.map(field => field.name),
+    fields.map(field => field.type === "select" ? field.options[0] : "")
+  )
 }

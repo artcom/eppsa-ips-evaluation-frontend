@@ -25,7 +25,6 @@ export function processReceivedData(data) {
 }
 
 export function processSendData(data) {
-  console.error(data)
   return {
     localizedNodeName: data.nodeName,
     pointName: data.pointName,

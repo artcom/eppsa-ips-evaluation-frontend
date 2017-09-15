@@ -11,7 +11,7 @@ import {
   isAForm,
   storeInput
 } from "../helpers/formHelpers"
-import Form from "../../src/setUp/components/form"
+import Form, { setInitialValues } from "../../src/setUp/components/form"
 import { StyledSelect } from "../../src/setUp/components/select"
 
 
@@ -38,6 +38,17 @@ describe("Form component", () => {
     })
   })
 
+  describe("setInitialvalues", () => {
+    it("returns expected values", () => {
+      const fields = [
+        { name: "field1", type: "text" },
+        { name: "field2", type: "select", options: ["option1", "option2"] }
+      ]
+      const expectedValues = { field1: "", field2: "option1" }
+      expect(JSON.stringify(setInitialValues(fields))).to.equal(JSON.stringify(expectedValues))
+    })
+  })
+
   describe("does", () => {
     it("store param data in state when changed in input field", () => {
       const fields = [{ name: "field1", type: "text" }, { name: "field2", type: "text" }]
@@ -53,6 +64,18 @@ describe("Form component", () => {
       form.find(StyledSelect).simulate("change", { target: { value: "option2" } })
       expect(form.state("field1")).to.equal("option2")
     })
+
+    it("sets initial value to first option for select fields and empty string for other inputs",
+      () => {
+        const fields = [
+          { name: "field1", type: "text" },
+          { name: "field2", type: "select", options: ["option1", "option2"] }
+        ]
+        const form = mount(<Form fields={ fields } />)
+        expect(form.state("field1")).to.equal("")
+        expect(form.state("field2")).to.equal("option1")
+      }
+    )
 
     it("call set and onSubmitted with the expected data when form is submitted",
       done => {
