@@ -7,11 +7,7 @@ import proxyquire from "proxyquire"
 import { shallow, mount } from "enzyme"
 import App from "../../src/setUp/containers/app"
 import { backend } from "../../src/constants"
-import DataTable from "../../src/setUp/components/dataTable"
 import experimentsData from "../testData/experiments.json"
-import { findButtonByName } from "../helpers/findElements"
-import Form from "../../src/setUp/components/form"
-import inputData from "../helpers/inputData"
 import Params from "../../src/setUp/containers/params"
 import nodesData from "../testData/nodes.json"
 import nodePositionsData from "../testData/nodePositions.json"
@@ -20,11 +16,8 @@ import SelectExperiment from "../../src/setUp/components/selectExperiment"
 import Tab from "../../src/setUp/components/tab"
 import TabBar from "../../src/setUp/components/tabBar"
 import zonesData from "../testData/zones.json"
-import {
-  deleteExperiment,
-  getExperiments,
-  setExperiment
-} from "../../src/setUp/actions/experimentsActions"
+import { addParam } from "../helpers/appHelpers"
+import { findButtonByName } from "../helpers/findElements"
 import { getNodes, setNode } from "../../src/setUp/actions/nodesActions"
 import { getNodePositions, setNodePosition } from "../../src/setUp/actions/nodePositionsActions"
 import { getPoints, setPoint } from "../../src/setUp/actions/pointsActions"
@@ -84,6 +77,7 @@ describe("App", () => {
     afterEach(() => {
       getMockNodePositions.restore()
     })
+
     it("tab bar", () => {
       const app = shallow(<App />)
       expect(app.find(TabBar)).to.have.length(1)
@@ -287,107 +281,6 @@ describe("App", () => {
         nodesTab.simulate("click")
         expect(nodesTab.props().highlight).to.equal(true)
         expect(app.state("show")).to.equal("nodePositions")
-        done()
-      })
-    })
-  })
-
-  describe("when experiments tab is active", () => {
-    let setMockExperiment
-    let deleteMockExperiment
-
-    beforeEach(() => {
-      setMockExperiment = sinon.stub(experimentsActions, "setExperiment")
-        .resolves({
-          name: "fake-experiment3"
-        })
-      proxyquire(
-        "../../src/setUp/containers/app",
-        { setExperiment: setMockExperiment }
-      )
-      deleteMockExperiment = sinon.stub(experimentsActions, "deleteExperiment")
-        .resolves("fake-experiment1")
-      proxyquire("../../src/setUp/containers/app", { deleteExperiment: deleteMockExperiment })
-    })
-
-    afterEach(() => {
-      setMockExperiment.restore()
-      deleteMockExperiment.restore()
-    })
-
-    it("sends expected props to params", done => {
-      const experimentFields = [{ name: "name", type: "text" }]
-      const props = {
-        backend,
-        title: "Experiments:",
-        get: getExperiments,
-        set: setExperiment,
-        delete: deleteExperiment,
-        paramName: "experiment",
-        createText: "Create Experiment"
-      }
-      const copyProps = {
-        fields: experimentFields
-      }
-
-      const app = mount(<App backend={ backend } />)
-      setImmediate(() => {
-        app.setState({ show: "experiments" })
-        const params = app.find(Params)
-
-        expect(app.state("show")).to.equal("experiments")
-        expect(params).to.have.length(1)
-        checkProps({ mountedComponent: params, props })
-        checkProps({ mountedComponent: params, props: copyProps, copy: true })
-        done()
-      })
-    })
-
-    it("get function is called", done => {
-      const app = mount(<App backend={ backend } />)
-      setImmediate(() => {
-        app.setState({ show: "experiments" })
-        sinon.assert.calledTwice(getMockExperiments)
-        sinon.assert.calledWith(getMockExperiments, { backend })
-        done()
-      })
-    })
-
-    it("when an experiment is added set function is called", done => {
-      const app = mount(<App backend={ backend } />)
-      setImmediate(() => {
-        app.setState({ show: "experiments" })
-        sinon.assert.calledTwice(getMockExperiments)
-        const data = {
-          name: "fake-experiment3"
-        }
-        addParam({
-          mountedComponent: app,
-          paramName: "experiment",
-          createText: "Create Experiment",
-          data
-        })
-        setImmediate(() => {
-          sinon.assert.calledOnce(setMockExperiment)
-          sinon.assert.calledWith(setMockExperiment, { backend, experiment: data })
-          done()
-        })
-      })
-    })
-
-    it("when an experiment is deleted delete function is called", done => {
-      const app = mount(<App backend={ backend } />)
-      const callArgs = { backend, experiment: { name: "fake-experiment1" } }
-      const dataTable = app
-      app.setState({ show: "experiments" })
-        .find(Params)
-        .filterWhere(params => params.props().paramName === "experiment")
-        .find(DataTable)
-      setImmediate(() => {
-        const param1Row = dataTable.find("tbody").find("tr").at(0)
-        findButtonByName(param1Row, "Delete").simulate("click")
-        sinon.assert.calledOnce(deleteMockExperiment)
-        sinon.assert.calledWith(deleteMockExperiment, callArgs)
         done()
       })
     })
@@ -824,20 +717,3 @@ describe("App", () => {
     })
   })
 })
-
-function addParam({ mountedComponent, paramName, experiment, createText, data }) {
-  const specificParams = experiment
-    ? mountedComponent
-        .find(Params)
-        .filterWhere(params =>
-          params.props().paramName === paramName
-          && params.props().experiment === experiment
-        )
-    : mountedComponent
-        .find(Params)
-        .filterWhere(params => params.props().paramName === paramName)
-  findButtonByName(specificParams, createText).simulate("click")
-  const form = specificParams.find(Form)
-  inputData(form, data)
-  form.simulate("submit")
-}
