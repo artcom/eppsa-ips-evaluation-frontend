@@ -31,7 +31,7 @@ describe("Form component", () => {
     })
 
     it("a select element when type is \"select\"", () => {
-      const fields = [{ name: "field1", type: "select" }]
+      const fields = [{ name: "field1", type: "select", options: ["option1", "option2"] }]
       hasInputs(mount(<Form fields={ fields } />), fields)
     })
   })

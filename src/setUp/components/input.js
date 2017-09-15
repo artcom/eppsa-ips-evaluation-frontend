@@ -24,7 +24,7 @@ export default function Input({ field, onInput }) {
         { name }
         {
           type === "select"
-            ? <Select />
+            ? <Select options={ field.options } />
             : <InputField
               type={ type }
               value={ value }

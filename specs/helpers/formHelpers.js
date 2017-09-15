@@ -24,10 +24,10 @@ export function hasInputs(form, inputs) {
     const i = inputs.indexOf(input)
     expect(form.find(Input).at(i).childAt(0).type().displayName)
       .to.equal("styled.label")
-    expect(form.find(Input).at(i).childAt(0).text()).to.equal(input.name)
     if (input.type === "select") {
-      expect(form.find(InputLabel).find(Select)).to.have.length(1)
+      expect(form.find(InputLabel).at(i).find(Select)).to.have.length(1)
     } else {
+      expect(form.find(InputLabel).at(i).text()).to.equal(input.name)
       expect(form.find(InputLabel).at(i).childAt(0).type().displayName)
         .to.equal("styled.input")
       expect(form.find(InputLabel).at(i).childAt(0).props().type)
