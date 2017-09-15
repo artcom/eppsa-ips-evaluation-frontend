@@ -62,7 +62,10 @@ export default class Params extends React.Component {
 
   async onSubmitted() {
     this.setState({ showForm: false })
-    const data = await this.props.get({ backend: this.props.backend })
+    const getArgs = this.props.experiment
+      ? { backend: this.props.backend, experimentName: this.props.experiment }
+      : { backend: this.props.backend }
+    const data = await this.props.get(getArgs)
     this.setState({ data })
   }
 

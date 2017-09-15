@@ -688,6 +688,36 @@ describe("App", () => {
         })
       })
     })
+
+    it("when a node position is added get function is called", done => {
+      const app = mount(<App backend={ backend } />)
+      setImmediate(() => {
+        app.setState({ show: "nodePositions", selectedExperiment: "fake-experiment1" })
+        sinon.assert.calledOnce(getMockNodePositions)
+        const data = {
+          nodeName: "Node2",
+          pointName: "point2",
+          experimentName: "fake-experiment1"
+        }
+        setImmediate(() => {
+          addParam({
+            mountedComponent: app,
+            paramName: "nodePosition",
+            experiment: "fake-experiment1",
+            createText: "Set Node Position in \"fake-experiment1\"",
+            data
+          })
+          setImmediate(() => {
+            sinon.assert.calledTwice(getMockNodePositions)
+            sinon.assert.calledWith(
+              getMockNodePositions,
+              { backend, experimentName: "fake-experiment1" }
+            )
+            done()
+          })
+        })
+      })
+    })
   })
 })
 
