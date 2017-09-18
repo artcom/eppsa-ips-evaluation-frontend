@@ -5,24 +5,24 @@ import { mount, shallow } from "enzyme"
 import { describe, it, beforeEach, afterEach } from "mocha"
 import proxyquire from "proxyquire"
 import sinon from "sinon"
-import App from "../../src/setUp/containers/app"
-import { backend } from "../../src/constants"
-import DataTable from "../../src/setUp/components/dataTable"
-import experimentsData from "../testData/experiments.json"
-import nodesData from "../testData/nodes.json"
-import Params from "../../src/setUp/containers/params"
-import pointsData from "../testData/points.json"
-import { addParam } from "../helpers/appHelpers"
+import App from "../../../src/setUp/containers/app"
+import { backend } from "../../../src/constants"
+import DataTable from "../../../src/setUp/components/dataTable"
+import experimentsData from "../../testData/experiments.json"
+import nodesData from "../../testData/nodes.json"
+import Params from "../../../src/setUp/containers/params"
+import pointsData from "../../testData/points.json"
+import { addParam } from "../../helpers/appHelpers"
 import {
   deleteExperiment,
   getExperiments,
   setExperiment
-} from "../../src/setUp/actions/experimentsActions"
-import { findButtonByName } from "../helpers/findElements"
-import { checkProps } from "../helpers/propsHelpers"
-const experimentsActions = require("../../src/setUp/actions/experimentsActions")
-const nodesActions = require("../../src/setUp/actions/nodesActions")
-const pointsActions = require("../../src/setUp/actions/pointsActions")
+} from "../../../src/setUp/actions/experimentsActions"
+import { findButtonByName } from "../../helpers/findElements"
+import { checkProps } from "../../helpers/propsHelpers"
+const experimentsActions = require("../../../src/setUp/actions/experimentsActions")
+const nodesActions = require("../../../src/setUp/actions/nodesActions")
+const pointsActions = require("../../../src/setUp/actions/pointsActions")
 
 
 describe("App Experiment", () => {
@@ -34,19 +34,19 @@ describe("App Experiment", () => {
     getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
       .resolves(experimentsData)
     proxyquire(
-      "../../src/setUp/containers/app",
+      "../../../src/setUp/containers/app",
       { getExperiments: getMockExperiments }
     )
     getMockNodes = sinon.stub(nodesActions, "getNodes")
       .resolves(nodesData)
     proxyquire(
-      "../../src/setUp/containers/app",
+      "../../../src/setUp/containers/app",
       { getNodes: getMockNodes }
     )
     getMockPoints = sinon.stub(pointsActions, "getPoints")
       .resolves(pointsData)
     proxyquire(
-      "../../src/setUp/containers/app",
+      "../../../src/setUp/containers/app",
       { getPoints: getMockPoints }
     )
   })
@@ -84,12 +84,12 @@ describe("App Experiment", () => {
           name: "fake-experiment3"
         })
       proxyquire(
-        "../../src/setUp/containers/app",
+        "../../../src/setUp/containers/app",
         { setExperiment: setMockExperiment }
       )
       deleteMockExperiment = sinon.stub(experimentsActions, "deleteExperiment")
         .resolves("fake-experiment1")
-      proxyquire("../../src/setUp/containers/app", { deleteExperiment: deleteMockExperiment })
+      proxyquire("../../../src/setUp/containers/app", { deleteExperiment: deleteMockExperiment })
     })
 
     afterEach(() => {

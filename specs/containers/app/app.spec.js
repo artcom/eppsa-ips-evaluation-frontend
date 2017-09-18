@@ -5,27 +5,27 @@ import { expect } from "chai"
 import sinon from "sinon"
 import proxyquire from "proxyquire"
 import { shallow, mount } from "enzyme"
-import App from "../../src/setUp/containers/app"
-import { backend } from "../../src/constants"
-import experimentsData from "../testData/experiments.json"
-import Params from "../../src/setUp/containers/params"
-import nodesData from "../testData/nodes.json"
-import nodePositionsData from "../testData/nodePositions.json"
-import pointsData from "../testData/points.json"
-import SelectExperiment from "../../src/setUp/components/selectExperiment"
-import Tab from "../../src/setUp/components/tab"
-import TabBar from "../../src/setUp/components/tabBar"
-import zonesData from "../testData/zones.json"
-import { addParam } from "../helpers/appHelpers"
-import { findButtonByName } from "../helpers/findElements"
-import { getNodePositions, setNodePosition } from "../../src/setUp/actions/nodePositionsActions"
-import { getZones, setZone } from "../../src/setUp/actions/zoneActions"
-import { checkProps } from "../helpers/propsHelpers"
-const experimentsActions = require("../../src/setUp/actions/experimentsActions")
-const nodesActions = require("../../src/setUp/actions/nodesActions")
-const nodePositionsActions = require("../../src/setUp/actions/nodePositionsActions")
-const pointsActions = require("../../src/setUp/actions/pointsActions")
-const zonesActions = require("../../src/setUp/actions/zoneActions")
+import App from "../../../src/setUp/containers/app"
+import { backend } from "../../../src/constants"
+import experimentsData from "../../testData/experiments.json"
+import Params from "../../../src/setUp/containers/params"
+import nodesData from "../../testData/nodes.json"
+import nodePositionsData from "../../testData/nodePositions.json"
+import pointsData from "../../testData/points.json"
+import SelectExperiment from "../../../src/setUp/components/selectExperiment"
+import Tab from "../../../src/setUp/components/tab"
+import TabBar from "../../../src/setUp/components/tabBar"
+import zonesData from "../../testData/zones.json"
+import { addParam } from "../../helpers/appHelpers"
+import { findButtonByName } from "../../helpers/findElements"
+import { getNodePositions, setNodePosition } from "../../../src/setUp/actions/nodePositionsActions"
+import { getZones, setZone } from "../../../src/setUp/actions/zoneActions"
+import { checkProps } from "../../helpers/propsHelpers"
+const experimentsActions = require("../../../src/setUp/actions/experimentsActions")
+const nodesActions = require("../../../src/setUp/actions/nodesActions")
+const nodePositionsActions = require("../../../src/setUp/actions/nodePositionsActions")
+const pointsActions = require("../../../src/setUp/actions/pointsActions")
+const zonesActions = require("../../../src/setUp/actions/zoneActions")
 
 
 describe("App", () => {
@@ -37,19 +37,19 @@ describe("App", () => {
     getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
       .resolves(experimentsData)
     proxyquire(
-      "../../src/setUp/containers/app",
+      "../../../src/setUp/containers/app",
       { getExperiments: getMockExperiments }
     )
     getMockNodes = sinon.stub(nodesActions, "getNodes")
       .resolves(nodesData)
     proxyquire(
-      "../../src/setUp/containers/app",
+      "../../../src/setUp/containers/app",
       { getNodes: getMockNodes }
     )
     getMockPoints = sinon.stub(pointsActions, "getPoints")
       .resolves(pointsData)
     proxyquire(
-      "../../src/setUp/containers/app",
+      "../../../src/setUp/containers/app",
       { getPoints: getMockPoints }
     )
   })
@@ -67,7 +67,7 @@ describe("App", () => {
       getMockNodePositions = sinon.stub(nodePositionsActions, "getNodePositions")
         .resolves(nodePositionsData)
       proxyquire(
-        "../../src/setUp/containers/app",
+        "../../../src/setUp/containers/app",
         { getNodePositions: { getNodePositions: getMockNodePositions } }
       )
     })
@@ -208,7 +208,7 @@ describe("App", () => {
           name: "fake-experiment3"
         })
       proxyquire(
-        "../../src/setUp/containers/app",
+        "../../../src/setUp/containers/app",
         { setExperiment: setMockExperiment }
       )
     })
@@ -274,7 +274,7 @@ describe("App", () => {
       getMockZones = sinon.stub(zonesActions, "getZones")
         .resolves(zonesData)
       proxyquire(
-        "../../src/setUp/containers/app",
+        "../../../src/setUp/containers/app",
         { getZones: getMockZones }
       )
       setMockZone = sinon.stub(zonesActions, "setZone")
@@ -288,7 +288,7 @@ describe("App", () => {
           zMax: 4
         })
       proxyquire(
-        "../../src/setUp/containers/app",
+        "../../../src/setUp/containers/app",
         { setZone: setMockZone }
       )
     })
@@ -373,7 +373,7 @@ describe("App", () => {
       getMockNodePositions = sinon.stub(nodePositionsActions, "getNodePositions")
         .resolves(nodePositionsData)
       proxyquire(
-        "../../src/setUp/containers/app",
+        "../../../src/setUp/containers/app",
         { getNodePositions: { getNodePositions: getMockNodePositions } }
       )
       setMockNodePosition = sinon.stub(nodePositionsActions, "setNodePosition")
@@ -383,7 +383,7 @@ describe("App", () => {
           experimentName: "fake-experiment1"
         })
       proxyquire(
-        "../../src/setUp/containers/app",
+        "../../../src/setUp/containers/app",
         { setNodePosition: { setNodePosition: setMockNodePosition } }
       )
     })
