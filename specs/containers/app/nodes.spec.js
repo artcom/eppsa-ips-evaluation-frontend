@@ -5,18 +5,18 @@ import { expect } from "chai"
 import sinon from "sinon"
 import proxyquire from "proxyquire"
 import { shallow, mount } from "enzyme"
-import App from "../../src/setUp/containers/app"
-import { backend } from "../../src/constants"
-import experimentsData from "../testData/experiments.json"
-import Params from "../../src/setUp/containers/params"
-import nodesData from "../testData/nodes.json"
-import pointsData from "../testData/points.json"
-import { addParam } from "../helpers/appHelpers"
-import { getNodes, setNode } from "../../src/setUp/actions/nodesActions"
-import { checkProps } from "../helpers/propsHelpers"
-const experimentsActions = require("../../src/setUp/actions/experimentsActions")
-const nodesActions = require("../../src/setUp/actions/nodesActions")
-const pointsActions = require("../../src/setUp/actions/pointsActions")
+import App from "../../../src/setUp/containers/app"
+import { backend } from "../../../src/constants"
+import experimentsData from "../../testData/experiments.json"
+import Params from "../../../src/setUp/containers/params"
+import nodesData from "../../testData/nodes.json"
+import pointsData from "../../testData/points.json"
+import { addParam } from "../../helpers/appHelpers"
+import { getNodes, setNode } from "../../../src/setUp/actions/nodesActions"
+import { checkProps } from "../../helpers/propsHelpers"
+const experimentsActions = require("../../../src/setUp/actions/experimentsActions")
+const nodesActions = require("../../../src/setUp/actions/nodesActions")
+const pointsActions = require("../../../src/setUp/actions/pointsActions")
 
 
 describe("App Nodes", () => {
@@ -28,19 +28,19 @@ describe("App Nodes", () => {
     getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
       .resolves(experimentsData)
     proxyquire(
-      "../../src/setUp/containers/app",
+      "../../../src/setUp/containers/app",
       { getExperiments: getMockExperiments }
     )
     getMockNodes = sinon.stub(nodesActions, "getNodes")
       .resolves(nodesData)
     proxyquire(
-      "../../src/setUp/containers/app",
+      "../../../src/setUp/containers/app",
       { getNodes: getMockNodes }
     )
     getMockPoints = sinon.stub(pointsActions, "getPoints")
       .resolves(pointsData)
     proxyquire(
-      "../../src/setUp/containers/app",
+      "../../../src/setUp/containers/app",
       { getPoints: getMockPoints }
     )
   })
@@ -79,7 +79,7 @@ describe("App Nodes", () => {
           type: "quuppa"
         })
       proxyquire(
-        "../../src/setUp/containers/app",
+        "../../../src/setUp/containers/app",
         { setNode: setMockNode }
       )
     })
