@@ -65,7 +65,6 @@ export function acknowledgeRetrieval(mountedComponent, getMock, done) {
 export function activateOnSelect(mountedComponent, stateKey, buttonName, done) {
   expect(mountedComponent.state(stateKey)).to.equal(false)
   setImmediate(() => {
-    expect(mountedComponent.state("loaded")).to.equal(true)
     findButtonByName(mountedComponent, buttonName).simulate("click")
     expect(mountedComponent.state(stateKey)).to.equal(true)
     done()
