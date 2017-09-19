@@ -39,7 +39,5 @@ export default class Run extends React.Component {
 
   async onSubmitted() {
     this.setState({ showForm: false })
-    const getArgs = { backend: this.props.backend, experimentName: this.props.experiment }
-    await this.props.get(getArgs)
   }
 }

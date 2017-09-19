@@ -182,8 +182,7 @@ describe("App Run", () => {
           interval: 2
         }
         setImmediate(() => {
-          const run = app
-              .find(Run)
+          const run = app.find(Run)
           findButtonByName(run, "Set Up").simulate("click")
           const form = run.find(Form)
           inputData(form, data)
