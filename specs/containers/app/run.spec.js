@@ -8,6 +8,8 @@ import { shallow, mount } from "enzyme"
 import App from "../../../src/setUp/containers/app"
 import { backend } from "../../../src/constants"
 import experimentsData from "../../testData/experiments.json"
+import Form from "../../../src/setUp/components/form"
+import inputData from "../../helpers/inputData"
 import nodesData from "../../testData/nodes.json"
 import pointsData from "../../testData/points.json"
 import Run from "../../../src/setUp/containers/run"
@@ -19,7 +21,7 @@ const nodesActions = require("../../../src/setUp/actions/nodesActions")
 const pointsActions = require("../../../src/setUp/actions/pointsActions")
 
 
-describe("App", () => {
+describe("App Run", () => {
   let getMockExperiments
   let getMockNodes
   let getMockPoints
@@ -112,10 +114,16 @@ describe("App", () => {
     })
 
     it("sends expected props to Run", done => {
+      const runFields = [
+        { name: "Quuppa", type: "checkBox" },
+        { name: "repeats", type: "number" },
+        { name: "interval", type: "number" }
+      ]
       const props = {
         title: "Set up \"fake-experiment1\":",
-        experiment: "fake-experiment1"
+        experiment: "fake-experiment1",
       }
+      const copyProps = { fields: runFields }
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
         app.setState({ show: "run", selectedExperiment: "fake-experiment1" })
@@ -124,6 +132,7 @@ describe("App", () => {
         expect(app.state("show")).to.equal("run")
         expect(run).to.have.length(1)
         checkProps({ mountedComponent: run, props })
+        checkProps({ mountedComponent: run, props: copyProps, copy: true })
         done()
       })
     })
@@ -162,5 +171,32 @@ describe("App", () => {
         })
       }
     )
+
+    it("when set up form is filled and submitted set function is called", done => {
+      const app = mount(<App backend={ backend } />)
+      setImmediate(() => {
+        app.setState({ show: "run", selectedExperiment: "fake-experiment1" })
+        const data = {
+          Quuppa: true,
+          repeats: 4,
+          interval: 2
+        }
+        setImmediate(() => {
+          const run = app
+              .find(Run)
+          findButtonByName(run, "Set Up").simulate("click")
+          const form = run.find(Form)
+          inputData(form, data)
+          form.simulate("submit")
+
+          sinon.assert.calledOnce(runMockExperiment)
+          sinon.assert.calledWith(
+            runMockExperiment,
+            { backend, experimentName: "fake-experiment1", run: data }
+          )
+          done()
+        })
+      })
+    })
   })
 })

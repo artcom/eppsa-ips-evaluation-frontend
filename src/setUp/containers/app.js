@@ -8,7 +8,12 @@ import Params from "./params"
 import Run from "./run"
 import SelectExperiment from "../components/selectExperiment"
 import TabBar from "../components/tabBar"
-import { deleteExperiment, getExperiments, setExperiment } from "../actions/experimentsActions"
+import {
+  deleteExperiment,
+  getExperiments,
+  setExperiment,
+  runExperiment
+} from "../actions/experimentsActions"
 import { deleteNode, getNodes, setNode } from "../actions/nodesActions"
 import { getNodePositions, setNodePosition } from "../actions/nodePositionsActions"
 import { deletePoint, getPoints, setPoint } from "../actions/pointsActions"
@@ -70,6 +75,11 @@ export default class App extends React.Component {
       { name: "nodeName", type: "select", options: this.state.nodes.map(node => node.name) },
       { name: "pointName", type: "select", options: this.state.points.map(point => point.name) },
       { name: "experimentName", type: "text", value: this.state.selectedExperiment, readOnly: true }
+    ]
+    const runFields = [
+      { name: "Quuppa", type: "checkBox" },
+      { name: "repeats", type: "number" },
+      { name: "interval", type: "number" }
     ]
     return (
       <Container>
@@ -158,7 +168,10 @@ export default class App extends React.Component {
           <div>
             <Run
               experiment={ this.state.selectedExperiment }
-              title={ `Set up "${this.state.selectedExperiment}":` } />
+              title={ `Set up "${this.state.selectedExperiment}":` }
+              fields={ runFields }
+              paramName="run"
+              set={ runExperiment } />
             <Button
               onClick={ () => this.onSelectExperiment({ name: null }) }>
               Select Other Experiment

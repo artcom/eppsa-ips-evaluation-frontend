@@ -1,12 +1,14 @@
 import React from "react"
 import { describe, it } from "mocha"
 import { expect } from "chai"
+import sinon from "sinon"
 import { shallow, mount } from "enzyme"
+import { backend } from "../../src/constants"
 import Button from "../../src/setUp/components/button"
 import Form from "../../src/setUp/components/form"
 import Run from "../../src/setUp/containers/run"
 import Title from "../../src/setUp/components/title"
-import { activateOnSelect, showForm } from "../helpers/paramsHelpers"
+import { activateOnSelect, showForm, submitData } from "../helpers/paramsHelpers"
 
 
 describe("Run", () => {
@@ -28,13 +30,37 @@ describe("Run", () => {
 
   describe("does", () => {
     it("sets showForm state to true when create param button is pushed", done => {
-      const run = mount(<Run title="Run Title" />)
+      const run = mount(<Run title="Run Title" fields={ [] } />)
       activateOnSelect(run, "showForm", "Set Up", done)
     })
 
     it("displays a set up form when create param button is pushed", done => {
-      const run = mount(<Run title="Run Title" />)
+      const run = mount(<Run title="Run Title" fields={ [] } />)
       showForm(run, Form, "Set Up", done)
+    })
+
+    it("submits run parameters to backend when filled form is submitted", done => {
+      const setStub = sinon.stub().resolves("")
+      const fields = [{ name: "field1", type: "checkBox" }, { name: "field2", type: "text" }]
+      const run = mount(
+        <Run
+          title="Run Title"
+          fields={ fields }
+          set={ setStub }
+          paramName="run"
+          experiment="fake-experiment" />
+      )
+      const submitParam = { field1: true, field2: "value2" }
+      const callArgs = { backend, experimentName: "fake-experiment", run: submitParam }
+      submitData(
+        run,
+        Form,
+        "Set Up",
+        submitParam,
+        setStub,
+        callArgs,
+        done
+      )
     })
   })
 })

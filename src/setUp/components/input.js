@@ -17,7 +17,7 @@ export const InputField = styled.input`
 `
 
 export default function Input({ field, onInput }) {
-  const { name, type, value } = field
+  const { name, type, value, checked } = field
   return (
     <Container>
       <InputLabel>
@@ -28,6 +28,7 @@ export default function Input({ field, onInput }) {
             : <InputField
               type={ type }
               value={ value }
+              checked={ checked }
               onChange={ event => onInput(event, name) }
               readOnly={ field.readOnly != null ? field.readOnly : false } />
         }

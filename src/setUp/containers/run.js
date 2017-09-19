@@ -15,18 +15,13 @@ export default class Run extends React.Component {
   }
 
   render() {
-    const { title } = this.props
-    const fields = [
-      { name: "experimentTypes" },
-      { name: "repeats", type: "number" },
-      { name: "interval", type: "number" }
-    ]
+    const { title, fields, set, paramName, experiment } = this.props
     return (
       <div>
         <Title>{ title }</Title>
         {
           this.state.showForm &&
-            <Form fields={ fields } />
+            <Form fields={ fields } set={ set } paramName={ paramName } experiment={ experiment } />
         }
         <Button onClick={ this.onSetUp }>Set Up</Button>
       </div>

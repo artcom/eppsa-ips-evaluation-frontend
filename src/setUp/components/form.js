@@ -60,11 +60,11 @@ export function setInitialValues(fields) {
 function getValue(field) {
   if (field.type === "select") {
     return field.options[0]
+  } else if (field.value) {
+    return field.value
+  } else if (field.type === "checkBox") {
+    return false
   } else {
-    if (field.value) {
-      return field.value
-    } else {
-      return ""
-    }
+    return ""
   }
 }
