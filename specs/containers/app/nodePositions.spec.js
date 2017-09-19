@@ -63,7 +63,7 @@ describe("App", () => {
         .resolves(nodePositionsData)
       proxyquire(
         "../../../src/setUp/containers/app",
-        { getNodePositions: { getNodePositions: getMockNodePositions } }
+        { getNodePositions: getMockNodePositions }
       )
     })
 
@@ -132,7 +132,7 @@ describe("App", () => {
         .resolves(nodePositionsData)
       proxyquire(
         "../../../src/setUp/containers/app",
-        { getNodePositions: { getNodePositions: getMockNodePositions } }
+        { getNodePositions: getMockNodePositions }
       )
       setMockNodePosition = sinon.stub(nodePositionsActions, "setNodePosition")
         .resolves({
@@ -142,7 +142,7 @@ describe("App", () => {
         })
       proxyquire(
         "../../../src/setUp/containers/app",
-        { setNodePosition: { setNodePosition: setMockNodePosition } }
+        { setNodePosition: setMockNodePosition }
       )
     })
 

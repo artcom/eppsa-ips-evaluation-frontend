@@ -5,6 +5,7 @@ import styled from "styled-components"
 import { assignIn, zipObject } from "lodash"
 import Button from "../components/button"
 import Params from "./params"
+import Run from "../components/run"
 import SelectExperiment from "../components/selectExperiment"
 import TabBar from "../components/tabBar"
 import { deleteExperiment, getExperiments, setExperiment } from "../actions/experimentsActions"
@@ -144,6 +145,28 @@ export default class App extends React.Component {
         }
         {
           this.state.show === "nodePositions" &&
+          this.state.loaded &&
+          !this.state.selectedExperiment &&
+          <SelectExperiment
+            experiments={ this.state.experiments }
+            onSelect={ this.onSelectExperiment } />
+        }
+        {
+          this.state.show === "run" &&
+          this.state.loaded &&
+          this.state.selectedExperiment &&
+          <div>
+            <Run
+              experiment={ this.state.selectedExperiment }
+              title={ `Set up "${this.state.selectedExperiment}":` } />
+            <Button
+              onClick={ () => this.onSelectExperiment({ name: null }) }>
+              Select Other Experiment
+            </Button>
+          </div>
+        }
+        {
+          this.state.show === "run" &&
           this.state.loaded &&
           !this.state.selectedExperiment &&
           <SelectExperiment
