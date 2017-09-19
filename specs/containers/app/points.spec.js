@@ -83,12 +83,7 @@ describe("App Points", () => {
           Z: 5
         })
       proxyquire("../../../src/setUp/containers/app", { setPoint: setMockPoint })
-      deleteMockPoint = sinon.stub(pointsActions, "deletePoint").resolves({
-        name: "point1",
-        X: 1,
-        Y: 1,
-        Z: 2
-      })
+      deleteMockPoint = sinon.stub(pointsActions, "deletePoint").resolves("point1")
       proxyquire("../../../src/setUp/containers/app", { deletePoint: deleteMockPoint })
     })
 

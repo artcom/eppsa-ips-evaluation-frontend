@@ -10,8 +10,8 @@ import TabBar from "../components/tabBar"
 import { deleteExperiment, getExperiments, setExperiment } from "../actions/experimentsActions"
 import { getNodes, setNode } from "../actions/nodesActions"
 import { getNodePositions, setNodePosition } from "../actions/nodePositionsActions"
-import { getPoints, setPoint, deletePoint } from "../actions/pointsActions"
-import { getZones, setZone } from "../actions/zoneActions"
+import { deletePoint, getPoints, setPoint } from "../actions/pointsActions"
+import { deleteZone, getZones, setZone } from "../actions/zoneActions"
 
 
 const Container = styled.div`
@@ -104,6 +104,7 @@ export default class App extends React.Component {
             fields={ zoneFields }
             get={ getZones }
             set={ setZone }
+            delete={ deleteZone }
             paramName="zone"
             createText="Add Zone"
             backend={ this.props.backend } />

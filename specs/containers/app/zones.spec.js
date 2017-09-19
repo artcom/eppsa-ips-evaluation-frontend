@@ -7,12 +7,14 @@ import proxyquire from "proxyquire"
 import { shallow, mount } from "enzyme"
 import App from "../../../src/setUp/containers/app"
 import { backend } from "../../../src/constants"
+import DataTable from "../../../src/setUp/components/dataTable"
 import experimentsData from "../../testData/experiments.json"
 import Params from "../../../src/setUp/containers/params"
 import nodesData from "../../testData/nodes.json"
 import pointsData from "../../testData/points.json"
 import zonesData from "../../testData/zones.json"
 import { addParam } from "../../helpers/appHelpers"
+import { findButtonByName } from "../../helpers/findElements"
 import { getZones, setZone } from "../../../src/setUp/actions/zoneActions"
 import { checkProps } from "../../helpers/propsHelpers"
 const experimentsActions = require("../../../src/setUp/actions/experimentsActions")
@@ -73,6 +75,7 @@ describe("App Zones", () => {
   describe("when zones tab is active", () => {
     let getMockZones
     let setMockZone
+    let deleteMockZone
 
     beforeEach(() => {
       getMockZones = sinon.stub(zonesActions, "getZones")
@@ -95,11 +98,13 @@ describe("App Zones", () => {
         "../../../src/setUp/containers/app",
         { setZone: setMockZone }
       )
+      deleteMockZone = sinon.stub(zonesActions, "deleteZone").resolves("zone1")
     })
 
     afterEach(() => {
       getMockZones.restore()
       setMockZone.restore()
+      deleteMockZone.restore()
     })
 
     it("expected props are sent to params", done => {
@@ -165,6 +170,34 @@ describe("App Zones", () => {
           sinon.assert.calledWith(setMockZone, { backend, zone: data })
           done()
         })
+      })
+    })
+
+    it("when a zone is deleted delete function is called", done => {
+      const app = mount(<App backend={ backend } />)
+      const callArgs = {
+        backend,
+        zone: {
+          name: "zone1",
+          xMin: 2,
+          xMax: 4,
+          yMin: 2,
+          yMax: 5,
+          zMin: 1,
+          zMax: 4
+        }
+      }
+      const dataTable = app
+      app.setState({ show: "zones" })
+      app.find(Params)
+        .filterWhere(params => params.props().paramName === "zone")
+        .find(DataTable)
+      setImmediate(() => {
+        const param1Row = dataTable.find("tbody").find("tr").at(0)
+        findButtonByName(param1Row, "Delete").simulate("click")
+        sinon.assert.calledOnce(deleteMockZone)
+        sinon.assert.calledWith(deleteMockZone, callArgs)
+        done()
       })
     })
   })

@@ -15,3 +15,15 @@ export async function setZone({ backend, zone }) {
   )
   return response.data
 }
+
+export async function deleteZone({ backend, zone }) {
+  const zoneName = zone.name
+  try {
+    const response = await rest.del(
+      `http://${backend}/zones/${zoneName}`
+    )
+    return response.data
+  } catch (error) {
+    return error
+  }
+}
