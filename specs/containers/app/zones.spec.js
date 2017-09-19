@@ -187,9 +187,8 @@ describe("App Zones", () => {
           zMax: 4
         }
       }
-      const dataTable = app
       app.setState({ show: "zones" })
-      app.find(Params)
+      const dataTable = app.find(Params)
         .filterWhere(params => params.props().paramName === "zone")
         .find(DataTable)
       setImmediate(() => {

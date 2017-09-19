@@ -163,9 +163,8 @@ describe("App Points", () => {
           Z: 2
         }
       }
-      const dataTable = app
       app.setState({ show: "points" })
-      app.find(Params)
+      const dataTable = app.find(Params)
         .filterWhere(params => params.props().paramName === "point")
         .find(DataTable)
       setImmediate(() => {

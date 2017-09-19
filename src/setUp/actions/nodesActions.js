@@ -15,3 +15,15 @@ export async function setNode({ backend, node }) {
   )
   return response.data
 }
+
+export async function deleteNode({ backend, node }) {
+  const nodeName = node.name
+  try {
+    const response = await rest.del(
+      `http://${backend}/nodes/${nodeName}`
+    )
+    return response.data
+  } catch (error) {
+    return error
+  }
+}

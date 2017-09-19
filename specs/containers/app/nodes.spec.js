@@ -7,11 +7,13 @@ import proxyquire from "proxyquire"
 import { shallow, mount } from "enzyme"
 import App from "../../../src/setUp/containers/app"
 import { backend } from "../../../src/constants"
+import DataTable from "../../../src/setUp/components/dataTable"
 import experimentsData from "../../testData/experiments.json"
 import Params from "../../../src/setUp/containers/params"
 import nodesData from "../../testData/nodes.json"
 import pointsData from "../../testData/points.json"
 import { addParam } from "../../helpers/appHelpers"
+import { findButtonByName } from "../../helpers/findElements"
 import { getNodes, setNode } from "../../../src/setUp/actions/nodesActions"
 import { checkProps } from "../../helpers/propsHelpers"
 const experimentsActions = require("../../../src/setUp/actions/experimentsActions")
@@ -70,6 +72,7 @@ describe("App Nodes", () => {
 
   describe("when nodes tab is active", () => {
     let setMockNode
+    let deleteMockNode
 
     beforeEach(() => {
       setMockNode = sinon.stub(nodesActions, "setNode")
@@ -78,14 +81,14 @@ describe("App Nodes", () => {
           name: "Node3",
           type: "quuppa"
         })
-      proxyquire(
-        "../../../src/setUp/containers/app",
-        { setNode: setMockNode }
-      )
+      proxyquire("../../../src/setUp/containers/app", { setNode: setMockNode })
+      deleteMockNode = sinon.stub(nodesActions, "deleteNode").resolves("node1")
+      proxyquire("../../../src/setUp/containers/app", { deleteNode: deleteMockNode })
     })
 
     afterEach(() => {
       setMockNode.restore()
+      deleteMockNode.restore()
     })
 
     it("sends expected props to params", done => {
@@ -143,6 +146,29 @@ describe("App Nodes", () => {
           sinon.assert.calledWith(setMockNode, { backend, node: data })
           done()
         })
+      })
+    })
+
+    it("when a node is deleted delete function is called", done => {
+      const app = mount(<App backend={ backend } />)
+      const callArgs = {
+        backend,
+        node: {
+          name: "Node1",
+          id: "node1",
+          type: "quuppa"
+        }
+      }
+      app.setState({ show: "nodes" })
+      const dataTable = app.find(Params)
+        .filterWhere(params => params.props().paramName === "node")
+        .find(DataTable)
+      setImmediate(() => {
+        const param1Row = dataTable.find("tbody").find("tr").at(0)
+        findButtonByName(param1Row, "Delete").simulate("click")
+        sinon.assert.calledOnce(deleteMockNode)
+        sinon.assert.calledWith(deleteMockNode, callArgs)
+        done()
       })
     })
   })

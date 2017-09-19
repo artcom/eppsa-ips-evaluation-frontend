@@ -8,7 +8,7 @@ import Params from "./params"
 import SelectExperiment from "../components/selectExperiment"
 import TabBar from "../components/tabBar"
 import { deleteExperiment, getExperiments, setExperiment } from "../actions/experimentsActions"
-import { getNodes, setNode } from "../actions/nodesActions"
+import { deleteNode, getNodes, setNode } from "../actions/nodesActions"
 import { getNodePositions, setNodePosition } from "../actions/nodePositionsActions"
 import { deletePoint, getPoints, setPoint } from "../actions/pointsActions"
 import { deleteZone, getZones, setZone } from "../actions/zoneActions"
@@ -116,6 +116,7 @@ export default class App extends React.Component {
             fields={ nodeFields }
             get={ getNodes }
             set={ setNode }
+            delete={ deleteNode }
             paramName="node"
             createText="Add Node"
             backend={ this.props.backend } />

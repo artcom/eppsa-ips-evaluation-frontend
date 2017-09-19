@@ -160,9 +160,8 @@ describe("App Experiment", () => {
     it("when an experiment is deleted delete function is called", done => {
       const app = mount(<App backend={ backend } />)
       const callArgs = { backend, experiment: { name: "fake-experiment1" } }
-      const dataTable = app
       app.setState({ show: "experiments" })
-        .find(Params)
+      const dataTable = app.find(Params)
         .filterWhere(params => params.props().paramName === "experiment")
         .find(DataTable)
       setImmediate(() => {
