@@ -8,7 +8,7 @@ import Button from "../../src/setUp/components/button"
 import Form from "../../src/setUp/components/form"
 import Run from "../../src/setUp/containers/run"
 import Title from "../../src/setUp/components/title"
-import { activateOnSelect, showForm, submitData } from "../helpers/paramsHelpers"
+import { activateOnSelect, hideForm, showForm, submitData } from "../helpers/paramsHelpers"
 
 
 describe("Run", () => {
@@ -59,6 +59,29 @@ describe("Run", () => {
         submitParam,
         setStub,
         callArgs,
+        done
+      )
+    })
+
+    it("hides run form when onSubmitted is called", done => {
+      const setStub = sinon.stub().resolves([])
+      const fields = [{ name: "field1", type: "checkBox" }, { name: "field2", type: "text" }]
+      const run = mount(
+        <Run
+          title="Run Title"
+          fields={ fields }
+          set={ setStub }
+          paramName="run"
+          experiment="fake-experiment" />
+      )
+      const submitParam = { field1: true, field2: "value2" }
+      hideForm(
+        run,
+        Form,
+        submitParam,
+        "showForm",
+        "Set Up",
+        setStub,
         done
       )
     })

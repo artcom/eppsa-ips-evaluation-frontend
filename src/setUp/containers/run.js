@@ -21,7 +21,12 @@ export default class Run extends React.Component {
         <Title>{ title }</Title>
         {
           this.state.showForm &&
-            <Form fields={ fields } set={ set } paramName={ paramName } experiment={ experiment } />
+            <Form
+              fields={ fields }
+              set={ set }
+              paramName={ paramName }
+              experiment={ experiment }
+              onSubmitted={ this.onSubmitted } />
         }
         <Button onClick={ this.onSetUp }>Set Up</Button>
       </div>
@@ -30,5 +35,11 @@ export default class Run extends React.Component {
 
   onSetUp() {
     this.setState({ showForm: true })
+  }
+
+  async onSubmitted() {
+    this.setState({ showForm: false })
+    const getArgs = { backend: this.props.backend, experimentName: this.props.experiment }
+    await this.props.get(getArgs)
   }
 }
