@@ -56,7 +56,7 @@ describe("App", () => {
     })
 
     it("tabs", () => {
-      const tabs = ["Experiments", "Points", "Zones", "Nodes", "NodePositions"]
+      const tabs = ["Experiments", "Points", "Zones", "Nodes", "NodePositions", "Run"]
       const app = mount(<App />)
       expect(app.find(TabBar).find(Tab)).to.have.length(tabs.length)
       expect(app.find(TabBar).find(Tab).map(tab => tab.text())).to.deep.equal(tabs)
@@ -154,6 +154,18 @@ describe("App", () => {
         nodesTab.simulate("click")
         expect(nodesTab.props().highlight).to.equal(true)
         expect(app.state("show")).to.equal("nodePositions")
+        done()
+      })
+    })
+
+    it("Run when run tab is clicked", done => {
+      const app = mount(<App backend={ backend } />)
+      setImmediate(() => {
+        expect(app.state("show")).to.equal("experiments")
+        const nodesTab = app.find(Tab).filterWhere(tab => tab.text() === "Run")
+        nodesTab.simulate("click")
+        expect(nodesTab.props().highlight).to.equal(true)
+        expect(app.state("show")).to.equal("run")
         done()
       })
     })
