@@ -94,6 +94,7 @@ describe("App Points", () => {
 
     afterEach(() => {
       setMockPoint.restore()
+      deleteMockPoint.restore()
     })
 
     it("expected props are sent to params", done => {
