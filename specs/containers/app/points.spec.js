@@ -7,11 +7,13 @@ import proxyquire from "proxyquire"
 import { shallow, mount } from "enzyme"
 import App from "../../../src/setUp/containers/app"
 import { backend } from "../../../src/constants"
+import DataTable from "../../../src/setUp/components/dataTable"
 import experimentsData from "../../testData/experiments.json"
 import Params from "../../../src/setUp/containers/params"
 import nodesData from "../../testData/nodes.json"
 import pointsData from "../../testData/points.json"
 import { addParam } from "../../helpers/appHelpers"
+import { findButtonByName } from "../../helpers/findElements"
 import { getPoints, setPoint } from "../../../src/setUp/actions/pointsActions"
 import { checkProps } from "../../helpers/propsHelpers"
 const experimentsActions = require("../../../src/setUp/actions/experimentsActions")
@@ -70,6 +72,7 @@ describe("App Points", () => {
 
   describe("when points tab is active", () => {
     let setMockPoint
+    let deleteMockPoint
 
     beforeEach(() => {
       setMockPoint = sinon.stub(pointsActions, "setPoint")
@@ -79,10 +82,14 @@ describe("App Points", () => {
           Y: 4,
           Z: 5
         })
-      proxyquire(
-        "../../../src/setUp/containers/app",
-        { setPoint: setMockPoint }
-      )
+      proxyquire("../../../src/setUp/containers/app", { setPoint: setMockPoint })
+      deleteMockPoint = sinon.stub(pointsActions, "deletePoint").resolves({
+        name: "point1",
+        X: 1,
+        Y: 1,
+        Z: 2
+      })
+      proxyquire("../../../src/setUp/containers/app", { deletePoint: deleteMockPoint })
     })
 
     afterEach(() => {
@@ -146,6 +153,31 @@ describe("App Points", () => {
           sinon.assert.calledWith(setMockPoint, { backend, point: data })
           done()
         })
+      })
+    })
+
+    it("when a point is deleted delete function is called", done => {
+      const app = mount(<App backend={ backend } />)
+      const callArgs = {
+        backend,
+        point: {
+          name: "point1",
+          X: 1,
+          Y: 1,
+          Z: 2
+        }
+      }
+      const dataTable = app
+      app.setState({ show: "points" })
+      app.find(Params)
+        .filterWhere(params => params.props().paramName === "point")
+        .find(DataTable)
+      setImmediate(() => {
+        const param1Row = dataTable.find("tbody").find("tr").at(0)
+        findButtonByName(param1Row, "Delete").simulate("click")
+        sinon.assert.calledOnce(deleteMockPoint)
+        sinon.assert.calledWith(deleteMockPoint, callArgs)
+        done()
       })
     })
   })

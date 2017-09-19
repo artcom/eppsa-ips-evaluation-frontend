@@ -10,7 +10,7 @@ import TabBar from "../components/tabBar"
 import { deleteExperiment, getExperiments, setExperiment } from "../actions/experimentsActions"
 import { getNodes, setNode } from "../actions/nodesActions"
 import { getNodePositions, setNodePosition } from "../actions/nodePositionsActions"
-import { getPoints, setPoint } from "../actions/pointsActions"
+import { getPoints, setPoint, deletePoint } from "../actions/pointsActions"
 import { getZones, setZone } from "../actions/zoneActions"
 
 
@@ -92,6 +92,7 @@ export default class App extends React.Component {
             fields={ pointFields }
             get={ getPoints }
             set={ setPoint }
+            delete={ deletePoint }
             paramName="point"
             createText="Add Point"
             backend={ this.props.backend } />

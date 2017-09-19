@@ -16,6 +16,17 @@ export async function setPoint({ backend, point }) {
   return response.data
 }
 
+export async function deletePoint({ backend, point }) {
+  const pointName = point.name
+  try {
+    return await rest.del(
+      `http://${backend}/points/${pointName}`
+    )
+  } catch (error) {
+    return error
+  }
+}
+
 export function processReceivedData(data) {
   return data.map(datum => ({
     name: datum.name,
