@@ -40,7 +40,10 @@ export default class Params extends React.Component {
     const data = this.state.data.map(datum => headers.map(header => datum[header]))
     return <div>
       <Title>{ title }</Title>
-      <DataTable headers={ headers } data={ data } onDelete={ this.onDelete } />
+      <DataTable
+        headers={ headers }
+        data={ data }
+        onDelete={ this.props.delete && this.onDelete } />
       {
         this.state.showForm &&
         <Form

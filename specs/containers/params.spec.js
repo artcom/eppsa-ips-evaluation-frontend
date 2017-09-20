@@ -76,11 +76,27 @@ describe("Params", () => {
       const getStub = sinon.stub().resolves(data)
       const fields = [{ name: "field1", type: "text" }, { name: "field2", type: "text" }]
       const params = mount(
-        <Params backend={ backend } fields={ fields } get={ getStub } />
+        <Params backend={ backend } fields={ fields } get={ getStub } delete={ a => a } />
       )
       const expectedRows = [["value1", "value2", "Delete"], ["value3", "value4", "Delete"]]
       displayInTable(params, { data }, expectedRows)
     })
+
+    it("renders params that are present in state with no delete button when delete is not defined",
+      () => {
+        const data = [
+          { field1: "value1", field2: "value2" },
+          { field1: "value3", field2: "value4" }
+        ]
+        const getStub = sinon.stub().resolves(data)
+        const fields = [{ name: "field1", type: "text" }, { name: "field2", type: "text" }]
+        const params = mount(
+          <Params backend={ backend } fields={ fields } get={ getStub } />
+        )
+        const expectedRows = [["value1", "value2"], ["value3", "value4"]]
+        displayInTable(params, { data }, expectedRows)
+      }
+    )
 
     it("sets loaded state to true when params have been retrieved from the backend", done => {
       const getStub = sinon.stub().resolves([])

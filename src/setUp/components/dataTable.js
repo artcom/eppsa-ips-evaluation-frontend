@@ -19,7 +19,10 @@ export default function DataTable({ headers, data, onDelete }) {
           {
             datum.map((d, i) => <td key={ i }>{ d }</td>)
           }
-          <td><Button onClick={ () => onDelete(zipObject(headers, datum)) }>Delete</Button></td>
+          {
+            onDelete &&
+              <td><Button onClick={ () => onDelete(zipObject(headers, datum)) }>Delete</Button></td>
+          }
         </tr>)
       }
       </tbody>

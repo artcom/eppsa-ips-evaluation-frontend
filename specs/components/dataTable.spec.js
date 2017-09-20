@@ -6,6 +6,7 @@ import { slice } from "lodash"
 import { shallow, mount } from "enzyme"
 import Button from "../../src/setUp/components/button"
 import DataTable from "../../src/setUp/components/dataTable"
+import { findButtonByName } from "../helpers/findElements"
 
 
 describe("DataTable component", () => {
@@ -26,18 +27,26 @@ describe("DataTable component", () => {
   it("contains the expected data", () => {
     const headers = ["field1", "field2"]
     const data = [[1, 2], [3, 4]]
-    const table = shallow(<DataTable headers={ headers } data={ data } />)
+    const table = shallow(<DataTable headers={ headers } data={ data } onDelete={ a => a } />)
     const tableData = slice(table.find("tr").map(row => row.find("td").map(data => data.text())), 1)
     expect(tableData.map(r => slice(r, 0, r.length - 1).map(d => Number(d)))).to.deep.equal(data)
   })
 
-  it("contains a delete button for each data point", () => {
+  it("contains a delete button for each data point when onDelete is defined", () => {
     const headers = ["field1", "field2"]
     const data = [[1, 2], [3, 4]]
-    const table = shallow(<DataTable headers={ headers } data={ data } />)
-    const tableDeleteButtons = slice(table.find("tr").map(row => row.find(Button)), 1)
-    expect(tableDeleteButtons.map(button => button.childAt(0).text()))
-      .to.deep.equal(new Array(2).fill("Delete"))
+    const table = mount(<DataTable headers={ headers } data={ data } />)
+    const rowsDeleteButtons = table
+      .find("tbody")
+      .find("tr").map(row => findButtonByName(row, "Delete"))
+    expect(rowsDeleteButtons).to.have.length(2)
+  })
+
+  it("contains no delete button for each data point when onDelete is not defined", () => {
+    const headers = ["field1", "field2"]
+    const data = [[1, 2], [3, 4]]
+    const table = mount(<DataTable headers={ headers } data={ data } />)
+    expect(findButtonByName(table, "Delete")).to.have.length(0)
   })
 
   it("calls delete function with the expected arguments", () => {
