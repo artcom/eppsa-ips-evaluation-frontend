@@ -81,7 +81,6 @@ describe("App", () => {
           experiments: [{ name: "fake-experiment" }]
         })
         setImmediate(() => {
-          sinon.assert.calledTwice(getMockExperiments)
           expect(app.find(Params)).to.have.length(1)
           expect(
             app
@@ -192,18 +191,29 @@ describe("App", () => {
       })
     })
 
-    it("get function is called", done => {
+    it("get nodePositions function is called", done => {
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
         app.setState({ show: "nodePositions", selectedExperiment: "fake-experiment1" })
-        sinon.assert.calledTwice(getMockExperiments)
-        sinon.assert.calledWith(getMockExperiments, { backend })
         setImmediate(() => {
           sinon.assert.calledOnce(getMockNodePositions)
           sinon.assert.calledWith(
             getMockNodePositions,
             { backend, experimentName: "fake-experiment1" }
           )
+          done()
+        })
+      })
+    })
+
+    it("get nodes, get experiments and get points is called", done => {
+      const app = mount(<App backend={ backend } />)
+      setImmediate(() => {
+        app.setState({ show: "nodePositions", selectedExperiment: "fake-experiment1" })
+        setImmediate(() => {
+          sinon.assert.calledThrice(getMockExperiments)
+          sinon.assert.calledTwice(getMockPoints)
+          sinon.assert.calledTwice(getMockNodes)
           done()
         })
       })
