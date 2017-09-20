@@ -18,7 +18,7 @@ export default class Form extends React.Component {
   }
 
   render() {
-    const { fields } = this.props
+    const { fields, submitName } = this.props
     const fieldsWithValues = fields.map(field => field.type === "checkBox"
       ? { ...field, checked: this.state[field.name] }
       : { ...field, value: this.state[field.name] }
@@ -31,7 +31,7 @@ export default class Form extends React.Component {
             <Input key={ i } field={ field } onInput={ this.onInput } />
           )
         }
-        <InputField type="submit" value="Create" />
+        <InputField type="submit" value={ submitName } />
       </StyledForm>
     )
   }

@@ -26,6 +26,7 @@ export default class Run extends React.Component {
               set={ set }
               paramName={ paramName }
               experiment={ experiment }
+              submitName="Run"
               onSubmitted={ this.onSubmitted } />
         }
         <Button onClick={ this.onSetUp }>Set Up</Button>

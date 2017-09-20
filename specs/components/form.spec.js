@@ -23,9 +23,9 @@ describe("Form component", () => {
   })
 
   describe("contains", () => {
-    it("a Create submit input", () => {
+    it("a submit input", () => {
       const fields = [{ name: "field1", type: "text" }, { name: "field2", type: "text" }]
-      hasSubmit(shallow(<Form fields={ fields } />), "Create")
+      hasSubmit(shallow(<Form fields={ fields } submitName="Submit" />), "Submit")
     })
 
     it("the expected Input components", () => {

@@ -25,7 +25,7 @@ import {
   storeDataInState,
   submitData
 } from "../helpers/paramsHelpers"
-
+import { checkProps } from "../helpers/propsHelpers"
 
 describe("Params", () => {
   describe("contains", () => {
@@ -126,6 +126,25 @@ describe("Params", () => {
           get={ getStub }
           createText="Create Param" />)
       showForm(params, Form, "Create Param", done)
+    })
+
+    it("passes the expected props to the param form", () => {
+      const getStub = sinon.stub().resolves([])
+      const set = a => a
+      const fields = [{ name: "field1", type: "text" }, { name: "field2", type: "text" }]
+      const paramsProps = {
+        backend,
+        fields,
+        get: getStub,
+        set,
+        paramName: "param",
+        createText: "Create Param"
+      }
+      const formProps = { fields, set, paramName: "param", submitName: "Create" }
+      const params = mount(<Params { ...paramsProps } />)
+      params.setState({ showForm: true })
+      const form = params.find(Form)
+      checkProps({ mountedComponent: form, props: formProps })
     })
 
     it("submits new param to backend when filled form is submitted", done => {

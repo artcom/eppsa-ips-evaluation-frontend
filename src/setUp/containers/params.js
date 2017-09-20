@@ -51,6 +51,7 @@ export default class Params extends React.Component {
           set={ set }
           paramName={ paramName }
           experiment={ this.props.experiment }
+          submitName="Create"
           onSubmitted={ this.onSubmitted } />
       }
       {

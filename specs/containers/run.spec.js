@@ -9,6 +9,7 @@ import Form from "../../src/setUp/components/form"
 import Run from "../../src/setUp/containers/run"
 import Title from "../../src/setUp/components/title"
 import { activateOnSelect, hideForm, showForm, submitData } from "../helpers/paramsHelpers"
+import { checkProps } from "../helpers/propsHelpers"
 
 
 describe("Run", () => {
@@ -37,6 +38,19 @@ describe("Run", () => {
     it("displays a set up form when create param button is pushed", done => {
       const run = mount(<Run title="Run Title" fields={ [] } />)
       showForm(run, Form, "Set Up", done)
+    })
+
+    it("passes the expected props to the param form", () => {
+      const set = a => a
+      const paramName = "run"
+      const experiment = "fake-experiment"
+      const fields = [{ name: "field1", type: "checkBox" }, { name: "field2", type: "text" }]
+      const runProps = { title: "Run Title", fields, set, paramName, experiment }
+      const formProps = { fields, set, paramName, experiment, submitName: "Run" }
+      const run = mount(<Run { ...runProps } />)
+      run.setState({ showForm: true })
+      const form = run.find(Form)
+      checkProps({ mountedComponent: form, props: formProps })
     })
 
     it("submits run parameters to backend when filled form is submitted", done => {
