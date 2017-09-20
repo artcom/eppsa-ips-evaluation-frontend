@@ -27,6 +27,14 @@ describe("Run", () => {
         .filterWhere(button => button.childAt(0).text() === "Set Up")
       expect(setUpButton).to.have.length(1)
     })
+
+    it("no set up button when set up form is showing", () => {
+      const run = shallow(<Run title="Run Title" />)
+      run.setState({ showForm: true })
+      const setUpButton = run.find(Button)
+        .filterWhere(button => button.childAt(0).text() === "Set Up")
+      expect(setUpButton).to.have.length(0)
+    })
   })
 
   describe("does", () => {

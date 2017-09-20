@@ -29,7 +29,10 @@ export default class Run extends React.Component {
               submitName="Run"
               onSubmitted={ this.onSubmitted } />
         }
-        <Button onClick={ this.onSetUp }>Set Up</Button>
+        {
+          !this.state.showForm &&
+          <Button onClick={ this.onSetUp }>Set Up</Button>
+        }
       </div>
     )
   }
