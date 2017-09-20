@@ -2,18 +2,26 @@ import rest from "restling"
 
 
 export async function getNodePositions({ backend, experimentName }) {
-  const response = await rest.get(
-    `http://${backend}/experiments/${experimentName}/node-positions`
-  )
-  return processReceivedData(response.data)
+  try {
+    const response = await rest.get(
+      `http://${backend}/experiments/${experimentName}/node-positions`
+    )
+    return processReceivedData(response.data)
+  } catch (error) {
+    return error
+  }
 }
 
 export async function setNodePosition({ backend, experimentName, nodePosition }) {
-  const response = await rest.post(
-    `http://${backend}/experiments/${experimentName}/node-positions`,
-    { data: processSendData(nodePosition) }
-  )
-  return response.data
+  try {
+    const response = await rest.post(
+      `http://${backend}/experiments/${experimentName}/node-positions`,
+      { data: processSendData(nodePosition) }
+    )
+    return response.data
+  } catch (error) {
+    return error
+  }
 }
 
 export function processReceivedData(data) {
