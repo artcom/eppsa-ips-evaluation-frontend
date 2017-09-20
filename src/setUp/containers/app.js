@@ -17,7 +17,7 @@ import {
 import { deleteNode, getNodes, setNode } from "../actions/nodesActions"
 import { getNodePositions, setNodePosition } from "../actions/nodePositionsActions"
 import { deletePoint, getPoints, setPoint } from "../actions/pointsActions"
-import { deleteZone, getZones, setZone } from "../actions/zoneActions"
+import { deleteZone, getZones, setZone } from "../actions/zonesActions"
 
 
 const Container = styled.div`
