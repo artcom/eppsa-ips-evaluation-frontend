@@ -209,6 +209,9 @@ describe("App", () => {
     it("get nodes, get experiments and get points is called", done => {
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
+        sinon.assert.calledTwice(getMockExperiments)
+        sinon.assert.calledOnce(getMockPoints)
+        sinon.assert.calledOnce(getMockNodes)
         app.setState({ show: "nodePositions", selectedExperiment: "fake-experiment1" })
         setImmediate(() => {
           sinon.assert.calledThrice(getMockExperiments)
