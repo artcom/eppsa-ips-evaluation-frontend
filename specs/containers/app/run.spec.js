@@ -116,6 +116,7 @@ describe("App Run", () => {
     it("sends expected props to Run", done => {
       const runFields = [
         { name: "Quuppa", type: "checkBox" },
+        { name: "GoIndoor", type: "checkBox" },
         { name: "repeats", type: "number" },
         { name: "interval", type: "number" }
       ]
@@ -178,6 +179,7 @@ describe("App Run", () => {
         app.setState({ show: "run", selectedExperiment: "fake-experiment1" })
         const data = {
           Quuppa: true,
+          GoIndoor: true,
           repeats: 4,
           interval: 2
         }
