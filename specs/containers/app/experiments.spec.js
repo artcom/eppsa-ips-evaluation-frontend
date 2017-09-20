@@ -11,7 +11,7 @@ import DataTable from "../../../src/setUp/components/dataTable"
 import experimentsData from "../../testData/experiments.json"
 import nodesData from "../../testData/nodes.json"
 import Params from "../../../src/setUp/containers/params"
-import pointsData from "../../testData/points.json"
+import pointsData from "../../testData/pointsFrontend.json"
 import { addParam } from "../../helpers/appHelpers"
 import {
   deleteExperiment,

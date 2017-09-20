@@ -9,7 +9,7 @@ import App from "../../../src/setUp/containers/app"
 import { backend } from "../../../src/constants"
 import experimentsData from "../../testData/experiments.json"
 import nodesData from "../../testData/nodes.json"
-import pointsData from "../../testData/points.json"
+import pointsData from "../../testData/pointsFrontend.json"
 import Tab from "../../../src/setUp/components/tab"
 import TabBar from "../../../src/setUp/components/tabBar"
 const experimentsActions = require("../../../src/setUp/actions/experimentsActions")

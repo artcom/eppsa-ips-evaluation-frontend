@@ -1,0 +1,4 @@
+[
+  { "nodeName": "Node1", "pointName": "point1", "experimentName": "fake-experiment1" },
+  { "nodeName": "Node2", "pointName": "point2", "experimentName": "fake-experiment1" }
+]
