@@ -3,10 +3,14 @@ import { keys, omit, pick, pickBy } from "lodash"
 
 
 export async function getExperiments({ backend }) {
-  const response = await rest.get(
-    `http://${backend}/experiments`
-  )
-  return response.data
+  try {
+    const response = await rest.get(
+      `http://${backend}/experiments`
+    )
+    return response.data
+  } catch (error) {
+    return error
+  }
 }
 
 export async function setExperiment({ backend, experiment }) {
