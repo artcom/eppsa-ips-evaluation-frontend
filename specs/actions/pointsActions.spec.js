@@ -5,6 +5,8 @@ import rest from "restling"
 import sinon from "sinon"
 import proxyquire from "proxyquire"
 import { backend } from "../../src/constants"
+import pointsFrontend from "../testData/points.json"
+import pointsBackend from "../testData/pointsBackend.json"
 import {
   getPoints,
   setPoint,
@@ -15,21 +17,15 @@ import {
 
 
 describe("pointsActions", () => {
-  const backendPoints = [
-    { name: "point1", trueCoordinateX: 2, trueCoordinateY: 3, trueCoordinateZ: 0 }
-  ]
-  const frontendPoints = [
-    { name: "point1", X: 2, Y: 3, Z: 0 }
-  ]
   describe("processSendData", () => {
     it("should process data to be sent", () => {
-      expect(isEqual(processSendData(frontendPoints[0]), backendPoints[0])).to.equal(true)
+      expect(isEqual(processSendData(pointsFrontend[0]), pointsBackend[0])).to.equal(true)
     })
   })
 
   describe("processReceiveData", () => {
     it("should process data to be sent", () => {
-      expect(isEqual(processReceivedData(backendPoints), frontendPoints)).to.equal(true)
+      expect(isEqual(processReceivedData(pointsBackend), pointsFrontend)).to.equal(true)
     })
   })
 
@@ -55,7 +51,7 @@ describe("pointsActions", () => {
 
     describe("getPoints", () => {
       beforeEach(() => {
-        getMock.resolves({ data: backendPoints })
+        getMock.resolves({ data: pointsBackend })
       })
 
       it("should send a GET request to the expected URL", async () => {
@@ -67,47 +63,47 @@ describe("pointsActions", () => {
 
       it("should return the experiments it got from the backend", async () => {
         const result = await getPoints({ backend })
-        expect(isEqual(result, frontendPoints))
+        expect(isEqual(result, pointsFrontend))
       })
     })
 
     describe("setPoint", () => {
       beforeEach(() => {
-        postMock.resolves({ data: backendPoints[0].name })
+        postMock.resolves({ data: pointsBackend[0].name })
       })
 
       it("should POST the expected data to the expected URL", async () => {
         const url = `http://${backend}/points`
-        const point = frontendPoints[0]
+        const point = pointsFrontend[0]
         await setPoint({ backend, point })
         sinon.assert.calledOnce(postMock)
-        sinon.assert.calledWith(postMock, url, { data: backendPoints[0] })
+        sinon.assert.calledWith(postMock, url, { data: pointsBackend[0] })
       })
 
       it("should return the server response data", async () => {
-        const point = frontendPoints[0]
+        const point = pointsFrontend[0]
         const result = await setPoint({ backend, point })
-        expect(isEqual(result, backendPoints[0].name))
+        expect(isEqual(result, pointsBackend[0].name))
       })
     })
 
     describe("deletePoint", () => {
       beforeEach(() => {
-        delMock.resolves({ data: backendPoints[0].name })
+        delMock.resolves({ data: pointsBackend[0].name })
       })
 
       it("should send a DELETE request to the expected URL", async () => {
-        const url = `http://${backend}/points/${backendPoints[0].name}`
-        const point = frontendPoints[0]
+        const url = `http://${backend}/points/${pointsBackend[0].name}`
+        const point = pointsFrontend[0]
         await deletePoint({ backend, point })
         sinon.assert.calledOnce(delMock)
         sinon.assert.calledWith(delMock, url)
       })
 
       it("should return the server response data", async () => {
-        const point = frontendPoints[0]
+        const point = pointsFrontend[0]
         const result = await deletePoint({ backend, point })
-        expect(isEqual(result, backendPoints[0].name))
+        expect(isEqual(result, pointsBackend[0].name))
       })
     })
   })
