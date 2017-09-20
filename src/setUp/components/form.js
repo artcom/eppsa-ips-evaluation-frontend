@@ -1,6 +1,6 @@
 import React from "react"
 import autoBind from "react-autobind"
-import { zipObject } from "lodash"
+import { find, zipObject } from "lodash"
 import styled from "styled-components"
 import { backend } from "../../constants"
 import Input, { InputField } from "../components/input"
@@ -19,7 +19,10 @@ export default class Form extends React.Component {
 
   render() {
     const { fields } = this.props
-    const fieldsWithValues = fields.map(field => ({ ...field, value: this.state[field.name] }))
+    const fieldsWithValues = fields.map(field => field.type === "checkBox"
+      ? { ...field, checked: this.state[field.name] }
+      : { ...field, value: this.state[field.name] }
+    )
 
     return (
       <StyledForm onSubmit={ this.onSubmit }>
@@ -35,7 +38,8 @@ export default class Form extends React.Component {
 
   onInput(event, name) {
     const data = {}
-    data[name] = event.target.value
+    const type = find(this.props.fields, field => field.name === name).type
+    data[name] = type === "checkBox" ? event.target.checked : event.target.value
     this.setState(data)
   }
 

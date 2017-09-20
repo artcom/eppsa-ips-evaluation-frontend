@@ -11,6 +11,7 @@ import {
   isAForm,
   storeInput
 } from "../helpers/formHelpers"
+import { findInputField } from "../helpers/findElements"
 import Form, { setInitialValues } from "../../src/setUp/components/form"
 import { StyledSelect } from "../../src/setUp/components/select"
 
@@ -64,6 +65,17 @@ describe("Form component", () => {
       const form = mount(<Form fields={ fields } />)
       form.find(StyledSelect).simulate("change", { target: { value: "option2" } })
       expect(form.state("field1")).to.equal("option2")
+    })
+
+    it("store param data in state when changed in checkbox field", () => {
+      const fields = [{ name: "field1", type: "checkBox" }]
+      const form = mount(<Form fields={ fields } />)
+      expect(form.state("field1")).to.equal(false)
+      const checkBox = findInputField(form, "field1")
+      expect(checkBox.props().checked).to.equal(false)
+      checkBox.simulate("change", { target: { checked: true } })
+      expect(checkBox.props().checked).to.equal(true)
+      expect(form.state("field1")).to.equal(true)
     })
 
     it("sets initial value to first option for select fields and empty string for other inputs",

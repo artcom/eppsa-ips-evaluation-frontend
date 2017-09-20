@@ -30,6 +30,6 @@ export async function deleteExperiment({ backend, experiment }) {
   }
 }
 
-export async function runExperiment() {
-
+export async function runExperiment(args) {
+  console.error(args)
 }
