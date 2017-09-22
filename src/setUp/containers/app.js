@@ -39,6 +39,7 @@ export default class App extends React.Component {
   }
 
   async componentDidMount() {
+    console.debug(`using backend: ${this.props.backend}`)
     const params = ["experiments", "nodes", "points"]
     const data = await Promise.all([
       getExperiments({ backend: this.props.backend }),
