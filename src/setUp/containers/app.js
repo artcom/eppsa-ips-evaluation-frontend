@@ -93,8 +93,8 @@ export default class App extends React.Component {
     const runFields = [
       { name: "Quuppa", type: "checkBox" },
       { name: "GoIndoor", type: "checkBox" },
-      { name: "repeats", type: "number" },
-      { name: "interval", type: "number" }
+      { name: "repeats", type: "text" },
+      { name: "interval", type: "text" }
     ]
     return (
       <Container>

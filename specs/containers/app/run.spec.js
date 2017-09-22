@@ -117,8 +117,8 @@ describe("App Run", () => {
       const runFields = [
         { name: "Quuppa", type: "checkBox" },
         { name: "GoIndoor", type: "checkBox" },
-        { name: "repeats", type: "number" },
-        { name: "interval", type: "number" }
+        { name: "repeats", type: "text" },
+        { name: "interval", type: "text" }
       ]
       const props = {
         title: "Set up \"fake-experiment1\":",
