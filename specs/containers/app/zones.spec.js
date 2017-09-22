@@ -110,12 +110,12 @@ describe("App Zones", () => {
     it("expected props are sent to params", done => {
       const zoneFields = [
         { name: "name", type: "text" },
-        { name: "xMin", type: "number" },
-        { name: "xMax", type: "number" },
-        { name: "yMin", type: "number" },
-        { name: "yMax", type: "number" },
-        { name: "zMin", type: "number" },
-        { name: "zMax", type: "number" }
+        { name: "xMin", type: "text" },
+        { name: "xMax", type: "text" },
+        { name: "yMin", type: "text" },
+        { name: "yMax", type: "text" },
+        { name: "zMin", type: "text" },
+        { name: "zMax", type: "text" }
       ]
       const props = {
         backend,

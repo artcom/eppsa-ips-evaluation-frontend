@@ -95,9 +95,9 @@ describe("App Points", () => {
     it("expected props are sent to params", done => {
       const pointFields = [
         { name: "name", type: "text" },
-        { name: "X", type: "number" },
-        { name: "Y", type: "number" },
-        { name: "Z", type: "number" }
+        { name: "X", type: "text" },
+        { name: "Y", type: "text" },
+        { name: "Z", type: "text" }
       ]
       const props = {
         backend,

@@ -67,18 +67,18 @@ export default class App extends React.Component {
     const experimentFields = [{ name: "name", type: "text" }]
     const pointFields = [
       { name: "name", type: "text" },
-      { name: "X", type: "number" },
-      { name: "Y", type: "number" },
-      { name: "Z", type: "number" }
+      { name: "X", type: "text" },
+      { name: "Y", type: "text" },
+      { name: "Z", type: "text" }
     ]
     const zoneFields = [
       { name: "name", type: "text" },
-      { name: "xMin", type: "number" },
-      { name: "xMax", type: "number" },
-      { name: "yMin", type: "number" },
-      { name: "yMax", type: "number" },
-      { name: "zMin", type: "number" },
-      { name: "zMax", type: "number" }
+      { name: "xMin", type: "text" },
+      { name: "xMax", type: "text" },
+      { name: "yMin", type: "text" },
+      { name: "yMax", type: "text" },
+      { name: "zMin", type: "text" },
+      { name: "zMax", type: "text" }
     ]
     const nodeFields = [
       { name: "id", type: "text" },
