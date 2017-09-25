@@ -17,7 +17,7 @@ export default function TabBar({ tabs, highlight, onActivate }) {
           <Tab
             key={ i }
             highlight={ tab === highlight }
-            onClick={ () => onActivate(tab) }>
+            onClick={ async () => await onActivate(tab) }>
             {
               upperFirst(tab)
             }

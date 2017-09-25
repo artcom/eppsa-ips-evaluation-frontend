@@ -49,19 +49,6 @@ export default class App extends React.Component {
     this.setState(assignIn(zipObject(params, data), { loaded: true }))
   }
 
-  async componentWillUpdate(nextProps, nextState) {
-    if (nextState.show === "nodePositions" && this.state.show !== nextState.show) {
-      await Promise.all([
-        getExperiments({ backend: this.props.backend }),
-        getNodes({ backend: this.props.backend }),
-        getPoints({ backend: this.props.backend })
-      ])
-    }
-    if (nextState.show === "run" && this.state.show !== nextState.show) {
-      await getExperiments({ backend: this.props.backend })
-    }
-  }
-
   render() {
     const tabs = ["experiments", "points", "zones", "nodes", "nodePositions", "run"]
     const experimentFields = [{ name: "name", type: "text" }]
@@ -205,8 +192,21 @@ export default class App extends React.Component {
     )
   }
 
-  onActivate(tab) {
-    this.setState({ show: tab })
+  async onActivate(tab) {
+    if (tab === "nodePositions" && this.state.show !== tab) {
+      const params = ["experiments", "nodes", "points"]
+      const data = await Promise.all([
+        getExperiments({ backend: this.props.backend }),
+        getNodes({ backend: this.props.backend }),
+        getPoints({ backend: this.props.backend })
+      ])
+      this.setState(assignIn(zipObject(params, data), { show: tab }))
+    } else if (tab === "run" && this.state.show !== tab) {
+      const data = await getExperiments({ backend: this.props.backend })
+      this.setState({ experiments: data, show: tab })
+    } else {
+      this.setState({ show: tab })
+    }
   }
 
   onSelectExperiment(experiment) {
