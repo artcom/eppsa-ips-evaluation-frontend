@@ -66,18 +66,21 @@ export default class Params extends React.Component {
 
   async onSubmitted() {
     this.setState({ showForm: false })
-    const getArgs = this.props.experiment
-      ? { backend: this.props.backend, experimentName: this.props.experiment }
-      : { backend: this.props.backend }
-    const data = await this.props.get(getArgs)
-    this.setState({ data })
+    await this.reloadData()
   }
 
   async onDelete(deleteData) {
     const deleteArgs = { backend: this.props.backend }
     deleteArgs[this.props.paramName] = deleteData
     await this.props.delete(deleteArgs)
-    const data = await this.props.get({ backend: this.props.backend })
+    await this.reloadData()
+  }
+
+  async reloadData() {
+    const getArgs = this.props.experiment
+      ? { backend: this.props.backend, experimentName: this.props.experiment }
+      : { backend: this.props.backend }
+    const data = await this.props.get(getArgs)
     this.setState({ data })
   }
 }

@@ -15,7 +15,11 @@ import {
   runExperiment
 } from "../actions/experimentsActions"
 import { deleteNode, getNodes, setNode } from "../actions/nodesActions"
-import { getNodePositions, setNodePosition } from "../actions/nodePositionsActions"
+import {
+  deleteNodePosition,
+  getNodePositions,
+  setNodePosition
+} from "../actions/nodePositionsActions"
 import { deletePoint, getPoints, setPoint } from "../actions/pointsActions"
 import { deleteZone, getZones, setZone } from "../actions/zonesActions"
 
@@ -145,6 +149,7 @@ export default class App extends React.Component {
               fields={ nodePositionsFields }
               get={ getNodePositions }
               set={ setNodePosition }
+              delete={ deleteNodePosition }
               paramName="nodePosition"
               createText={ `Set Node Position in "${this.state.selectedExperiment}"` }
               experiment={ this.state.selectedExperiment }

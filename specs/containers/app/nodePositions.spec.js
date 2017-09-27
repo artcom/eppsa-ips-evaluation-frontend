@@ -7,10 +7,11 @@ import proxyquire from "proxyquire"
 import { shallow, mount } from "enzyme"
 import App from "../../../src/setUp/containers/app"
 import { backend } from "../../../src/constants"
+import DataTable from "../../../src/setUp/components/dataTable"
 import experimentsData from "../../testData/experiments.json"
 import Params from "../../../src/setUp/containers/params"
 import nodesData from "../../testData/nodes.json"
-import nodePositionsData from "../../testData/nodePositionsBackend.json"
+import nodePositionsData from "../../testData/nodePositionsFrontend.json"
 import pointsData from "../../testData/pointsFrontend.json"
 import SelectExperiment from "../../../src/setUp/components/selectExperiment"
 import Tab from "../../../src/setUp/components/tab"
@@ -28,6 +29,7 @@ describe("App", () => {
   let getMockExperiments
   let getMockNodes
   let getMockPoints
+  let getMockNodePositions
 
   beforeEach(() => {
     getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
@@ -48,30 +50,22 @@ describe("App", () => {
       "../../../src/setUp/containers/app",
       { getPoints: getMockPoints }
     )
+    getMockNodePositions = sinon.stub(nodePositionsActions, "getNodePositions")
+      .resolves(nodePositionsData)
+    proxyquire(
+      "../../../src/setUp/containers/app",
+      { getNodePositions: getMockNodePositions }
+    )
   })
 
   afterEach(() => {
     getMockExperiments.restore()
     getMockNodes.restore()
     getMockPoints.restore()
+    getMockNodePositions.restore()
   })
 
   describe("contains", () => {
-    let getMockNodePositions
-
-    beforeEach(() => {
-      getMockNodePositions = sinon.stub(nodePositionsActions, "getNodePositions")
-        .resolves(nodePositionsData)
-      proxyquire(
-        "../../../src/setUp/containers/app",
-        { getNodePositions: getMockNodePositions }
-      )
-    })
-
-    afterEach(() => {
-      getMockNodePositions.restore()
-    })
-
     it("node positions when show state is \"nodePositions\" and an experiment is selected",
       done => {
         const app = mount(<App />)
@@ -124,16 +118,10 @@ describe("App", () => {
   })
 
   describe("when nodePositions tab is active", () => {
-    let getMockNodePositions
     let setMockNodePosition
+    let deleteMockNodePosition
 
     beforeEach(() => {
-      getMockNodePositions = sinon.stub(nodePositionsActions, "getNodePositions")
-        .resolves(nodePositionsData)
-      proxyquire(
-        "../../../src/setUp/containers/app",
-        { getNodePositions: getMockNodePositions }
-      )
       setMockNodePosition = sinon.stub(nodePositionsActions, "setNodePosition")
         .resolves({
           nodeName: "Node3",
@@ -144,11 +132,18 @@ describe("App", () => {
         "../../../src/setUp/containers/app",
         { setNodePosition: setMockNodePosition }
       )
+      deleteMockNodePosition = sinon.stub(nodePositionsActions, "deleteNodePosition")
+        .resolves("Node1")
+      proxyquire(
+        "../../../src/setUp/containers/app",
+        { deleteNodePosition: deleteMockNodePosition }
+      )
     })
 
     afterEach(() => {
       getMockNodePositions.restore()
       setMockNodePosition.restore()
+      deleteMockNodePosition.restore()
     })
 
     it("sends expected props to params", done => {
@@ -306,6 +301,55 @@ describe("App", () => {
             )
             done()
           })
+        })
+      })
+    })
+
+    it("when a node position is deleted, delete function is called", done => {
+      const app = mount(<App backend={ backend } />)
+      const callArgs = {
+        backend,
+        nodePosition: {
+          nodeName: "Node1",
+          pointName: "point1",
+          experimentName: "fake-experiment1"
+        }
+      }
+      app.setState({ show: "nodePositions", selectedExperiment: "fake-experiment1" })
+      setImmediate(() => {
+        const dataTable = app.find(Params)
+          .filterWhere(params => params.props().paramName === "nodePosition")
+          .find(DataTable)
+        const param1Row = dataTable.find("tbody").find("tr").at(0)
+        findButtonByName(param1Row, "Delete").simulate("click")
+        setImmediate(() => {
+          sinon.assert.calledOnce(deleteMockNodePosition)
+          sinon.assert.calledWith(deleteMockNodePosition, callArgs)
+          done()
+        })
+      })
+    })
+
+    it("when a node position is deleted, get function is called", done => {
+      const app = mount(<App backend={ backend } />)
+      const callArgs = {
+        backend,
+        experimentName: "fake-experiment1"
+      }
+      app.setState({ show: "nodePositions", selectedExperiment: "fake-experiment1" })
+      setImmediate(() => {
+        const dataTable = app.find(Params)
+          .filterWhere(params => params.props().paramName === "nodePosition")
+          .find(DataTable)
+        const param1Row = dataTable.find("tbody").find("tr").at(0)
+        findButtonByName(param1Row, "Delete").simulate("click")
+        setImmediate(() => {
+          sinon.assert.calledTwice(getMockNodePositions)
+          sinon.assert.callOrder(
+            getMockNodePositions.withArgs(callArgs),
+            getMockNodePositions.withArgs(callArgs)
+          )
+          done()
         })
       })
     })
