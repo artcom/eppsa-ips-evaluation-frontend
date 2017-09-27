@@ -199,5 +199,23 @@ describe("App Zones", () => {
         done()
       })
     })
+
+    it("when a zone is deleted, get function is called", done => {
+      const app = mount(<App backend={ backend } />)
+      const callArgs = { backend }
+      app.setState({ show: "zones" })
+      setImmediate(() => {
+        const dataTable = app.find(Params)
+          .filterWhere(params => params.props().paramName === "zone")
+          .find(DataTable)
+        const param1Row = dataTable.find("tbody").find("tr").at(0)
+        findButtonByName(param1Row, "Delete").simulate("click")
+        setImmediate(() => {
+          sinon.assert.calledTwice(getMockZones)
+          sinon.assert.alwaysCalledWith(getMockZones, callArgs)
+          done()
+        })
+      })
+    })
   })
 })

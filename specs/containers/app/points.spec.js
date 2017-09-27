@@ -152,7 +152,7 @@ describe("App Points", () => {
       })
     })
 
-    it("when a point is deleted delete function is called", done => {
+    it("when a point is deleted, delete function is called", done => {
       const app = mount(<App backend={ backend } />)
       const callArgs = {
         backend,
@@ -172,6 +172,25 @@ describe("App Points", () => {
         findButtonByName(param1Row, "Delete").simulate("click")
         sinon.assert.calledOnce(deleteMockPoint)
         sinon.assert.calledWith(deleteMockPoint, callArgs)
+        done()
+      })
+    })
+
+    it("when a point is deleted, get function is called", done => {
+      const app = mount(<App backend={ backend } />)
+      const callArgs = { backend }
+      app.setState({ show: "points" })
+      const dataTable = app.find(Params)
+        .filterWhere(params => params.props().paramName === "point")
+        .find(DataTable)
+      setImmediate(() => {
+        const param1Row = dataTable.find("tbody").find("tr").at(0)
+        findButtonByName(param1Row, "Delete").simulate("click")
+        sinon.assert.calledTwice(getMockPoints)
+        sinon.assert.callOrder(
+          getMockPoints.withArgs(callArgs),
+          getMockPoints.withArgs(callArgs)
+        )
         done()
       })
     })

@@ -149,7 +149,7 @@ describe("App Nodes", () => {
       })
     })
 
-    it("when a node is deleted delete function is called", done => {
+    it("when a node is deleted, delete function is called", done => {
       const app = mount(<App backend={ backend } />)
       const callArgs = {
         backend,
@@ -168,6 +168,22 @@ describe("App Nodes", () => {
         findButtonByName(param1Row, "Delete").simulate("click")
         sinon.assert.calledOnce(deleteMockNode)
         sinon.assert.calledWith(deleteMockNode, callArgs)
+        done()
+      })
+    })
+
+    it("when a node is deleted, get function is called", done => {
+      const app = mount(<App backend={ backend } />)
+      const callArgs = { backend }
+      app.setState({ show: "nodes" })
+      const dataTable = app.find(Params)
+        .filterWhere(params => params.props().paramName === "node")
+        .find(DataTable)
+      setImmediate(() => {
+        const param1Row = dataTable.find("tbody").find("tr").at(0)
+        findButtonByName(param1Row, "Delete").simulate("click")
+        sinon.assert.calledTwice(getMockNodes)
+        sinon.assert.alwaysCalledWith(getMockNodes, callArgs)
         done()
       })
     })

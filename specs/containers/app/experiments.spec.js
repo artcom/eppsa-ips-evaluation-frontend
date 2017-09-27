@@ -157,7 +157,7 @@ describe("App Experiment", () => {
       })
     })
 
-    it("when an experiment is deleted delete function is called", done => {
+    it("when an experiment is deleted, delete function is called", done => {
       const app = mount(<App backend={ backend } />)
       const callArgs = { backend, experiment: { name: "fake-experiment1" } }
       app.setState({ show: "experiments" })
@@ -170,6 +170,24 @@ describe("App Experiment", () => {
         sinon.assert.calledOnce(deleteMockExperiment)
         sinon.assert.calledWith(deleteMockExperiment, callArgs)
         done()
+      })
+    })
+
+    it("when an experiment is deleted, get function is called", done => {
+      const app = mount(<App backend={ backend } />)
+      const callArgs = { backend }
+      app.setState({ show: "experiments" })
+      setImmediate(() => {
+        const dataTable = app.find(Params)
+          .filterWhere(params => params.props().paramName === "experiment")
+          .find(DataTable)
+        const param1Row = dataTable.find("tbody").find("tr").at(0)
+        findButtonByName(param1Row, "Delete").simulate("click")
+        setImmediate(() => {
+          sinon.assert.calledThrice(getMockExperiments)
+          sinon.assert.alwaysCalledWith(getMockExperiments, callArgs)
+          done()
+        })
       })
     })
   })
