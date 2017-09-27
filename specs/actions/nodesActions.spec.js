@@ -44,7 +44,7 @@ describe("nodesActions", () => {
 
       it("should return the experiments it got from the backend", async () => {
         const result = await getNodes({ backend })
-        expect(isEqual(result, nodes))
+        expect(isEqual(result, nodes)).to.equal(true)
       })
     })
 
@@ -64,7 +64,7 @@ describe("nodesActions", () => {
       it("should return the server response data", async () => {
         const node = nodes[0]
         const result = await setNode({ backend, node })
-        expect(isEqual(result, nodes[0].name))
+        expect(isEqual(result, nodes[0].name)).to.equal(true)
       })
     })
 
@@ -84,7 +84,7 @@ describe("nodesActions", () => {
       it("should return the server response data", async () => {
         const node = nodes[0]
         const result = await deleteNode({ backend, node })
-        expect(isEqual(result, nodes[0].name))
+        expect(isEqual(result, nodes[0].name)).to.equal(true)
       })
     })
   })

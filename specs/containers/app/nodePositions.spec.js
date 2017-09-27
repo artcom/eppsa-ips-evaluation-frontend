@@ -13,6 +13,7 @@ import nodesData from "../../testData/nodes.json"
 import nodePositionsData from "../../testData/nodePositionsBackend.json"
 import pointsData from "../../testData/pointsFrontend.json"
 import SelectExperiment from "../../../src/setUp/components/selectExperiment"
+import Tab from "../../../src/setUp/components/tab"
 import { addParam } from "../../helpers/appHelpers"
 import { findButtonByName } from "../../helpers/findElements"
 import { getNodePositions, setNodePosition } from "../../../src/setUp/actions/nodePositionsActions"
@@ -212,8 +213,11 @@ describe("App", () => {
         sinon.assert.calledTwice(getMockExperiments)
         sinon.assert.calledOnce(getMockPoints)
         sinon.assert.calledOnce(getMockNodes)
-        app.setState({ show: "nodePositions", selectedExperiment: "fake-experiment1" })
+        expect(app.state("show")).to.equal("experiments")
+        const nodesTab = app.find(Tab).filterWhere(tab => tab.text() === "NodePositions")
+        nodesTab.simulate("click")
         setImmediate(() => {
+          expect(app.state("show")).to.equal("nodePositions")
           sinon.assert.calledThrice(getMockExperiments)
           sinon.assert.calledTwice(getMockPoints)
           sinon.assert.calledTwice(getMockNodes)

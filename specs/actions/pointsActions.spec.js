@@ -63,7 +63,7 @@ describe("pointsActions", () => {
 
       it("should return the experiments it got from the backend", async () => {
         const result = await getPoints({ backend })
-        expect(isEqual(result, pointsFrontend))
+        expect(isEqual(result, pointsFrontend)).to.equal(true)
       })
     })
 
@@ -83,7 +83,7 @@ describe("pointsActions", () => {
       it("should return the server response data", async () => {
         const point = pointsFrontend[0]
         const result = await setPoint({ backend, point })
-        expect(isEqual(result, pointsBackend[0].name))
+        expect(isEqual(result, pointsBackend[0].name)).to.equal(true)
       })
     })
 
@@ -103,7 +103,7 @@ describe("pointsActions", () => {
       it("should return the server response data", async () => {
         const point = pointsFrontend[0]
         const result = await deletePoint({ backend, point })
-        expect(isEqual(result, pointsBackend[0].name))
+        expect(isEqual(result, pointsBackend[0].name)).to.equal(true)
       })
     })
   })

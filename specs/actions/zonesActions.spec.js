@@ -44,7 +44,7 @@ describe("nodesActions", () => {
 
       it("should return the zones it got from the backend", async () => {
         const result = await getZones({ backend })
-        expect(isEqual(result, zones))
+        expect(isEqual(result, zones)).to.equal(true)
       })
     })
 
@@ -64,7 +64,7 @@ describe("nodesActions", () => {
       it("should return the server response data", async () => {
         const zone = zones[0]
         const result = await setZone({ backend, zone })
-        expect(isEqual(result, zones[0].name))
+        expect(isEqual(result, zones[0].name)).to.equal(true)
       })
     })
 
@@ -84,7 +84,7 @@ describe("nodesActions", () => {
       it("should return the server response data", async () => {
         const zone = zones[0]
         const result = await deleteZone({ backend, zone })
-        expect(isEqual(result, zones[0].name))
+        expect(isEqual(result, zones[0].name)).to.equal(true)
       })
     })
   })

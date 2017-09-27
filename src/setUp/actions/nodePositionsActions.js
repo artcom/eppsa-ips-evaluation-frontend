@@ -24,6 +24,18 @@ export async function setNodePosition({ backend, experimentName, nodePosition })
   }
 }
 
+export async function deleteNodePosition({ backend, experimentName, nodePosition }) {
+  const nodeName = nodePosition.nodeName
+  try {
+    const response = await rest.del(
+      `http://${backend}/experiments/${experimentName}/node-positions/${nodeName}`
+    )
+    return response.data
+  } catch (error) {
+    return error
+  }
+}
+
 export function processReceivedData(data) {
   return data.map(datum => ({
     nodeName: datum.localizedNodeName,

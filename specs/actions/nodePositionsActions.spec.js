@@ -10,6 +10,7 @@ import nodePositionsFrontend from "../testData/nodePositionsFrontend.json"
 import {
   getNodePositions,
   setNodePosition,
+  deleteNodePosition,
   processReceivedData,
   processSendData
 } from "../../src/setUp/actions/nodePositionsActions"
@@ -65,7 +66,7 @@ describe("nodesActions", () => {
 
       it("should return the experiments it got from the backend", async () => {
         const result = await getNodePositions({ backend, experimentName })
-        expect(isEqual(result, nodePositionsFrontend))
+        expect(isEqual(result, nodePositionsFrontend)).to.equal(true)
       })
     })
 
@@ -85,7 +86,33 @@ describe("nodesActions", () => {
       it("should return the server response data", async () => {
         const nodePosition = nodePositionsFrontend[0]
         const result = await setNodePosition({ backend, experimentName, nodePosition })
-        expect(isEqual(result, nodePositionsFrontend[0].localizedNodeName))
+        expect(isEqual(result, nodePositionsBackend[0].localizedNodeName)).to.equal(true)
+      })
+    })
+
+    describe("deleteNodePosition", () => {
+      beforeEach(() => {
+        delMock.resolves({ data: nodePositionsBackend[0].localizedNodeName })
+      })
+
+      it("should send a DELETE request to the expected URL", async () => {
+        const url = `http://${
+          backend
+        }/experiments/${
+          experimentName
+        }/node-positions/${
+          nodePositionsBackend[0].localizedNodeName
+        }`
+        const nodePosition = nodePositionsFrontend[0]
+        await deleteNodePosition({ backend, experimentName, nodePosition })
+        sinon.assert.calledOnce(delMock)
+        sinon.assert.calledWith(delMock, url)
+      })
+
+      it("should return the server response data", async () => {
+        const nodePosition = nodePositionsFrontend[0]
+        const result = await deleteNodePosition({ backend, experimentName, nodePosition })
+        expect(isEqual(result, nodePositionsBackend[0].localizedNodeName)).to.equal(true)
       })
     })
   })
