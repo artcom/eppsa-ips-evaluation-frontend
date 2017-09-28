@@ -2,3 +2,4 @@
 .idea/
 public/*.js
 public/*.js.map
+.config.json

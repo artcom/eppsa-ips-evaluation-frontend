@@ -4,7 +4,7 @@ import { isEqual } from "lodash"
 import rest from "restling"
 import sinon from "sinon"
 import proxyquire from "proxyquire"
-import { backend } from "../../src/constants"
+import config from "../../src/constants"
 import nodePositionsBackend from "../testData/nodePositionsBackend.json"
 import nodePositionsFrontend from "../testData/nodePositionsFrontend.json"
 import {
@@ -17,6 +17,8 @@ import {
 
 
 describe("nodesActions", () => {
+  const backend = config.backend
+
   describe("processSendData", () => {
     it("should process data to be sent", () => {
       expect(isEqual(processSendData(nodePositionsFrontend[0]), nodePositionsBackend[0]))

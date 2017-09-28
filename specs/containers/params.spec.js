@@ -5,7 +5,7 @@ import { expect } from "chai"
 import { concat } from "lodash"
 import sinon from "sinon"
 import { mount, shallow } from "enzyme"
-import { backend } from "../../src/constants"
+import config from "../../src/constants"
 import Button from "../../src/setUp/components/button"
 import Params from "../../src/setUp/containers/params"
 import Form from "../../src/setUp/components/form"
@@ -28,6 +28,8 @@ import {
 import { checkProps } from "../helpers/propsHelpers"
 
 describe("Params", () => {
+  const backend = config.backend
+
   describe("contains", () => {
     it("a title", () => {
       hasTitle(shallow(<Params title="Params:" fields={ [] } />), "Params:")

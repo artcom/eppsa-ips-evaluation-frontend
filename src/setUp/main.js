@@ -1,8 +1,9 @@
 import React from "react"
 import { render } from "react-dom"
-import { backend } from "../constants"
+import config from "../constants"
 import App from "./containers/app"
 
 
 const element = document.getElementById("app")
-render(<App backend={ backend } />, element)
+console.log(`Using backend: ${config.backend}`)
+render(<App backend={ config.backend } />, element)

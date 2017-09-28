@@ -3,7 +3,7 @@ import { describe, it } from "mocha"
 import { expect } from "chai"
 import { shallow, mount } from "enzyme"
 import sinon from "sinon"
-import { backend } from "../../src/constants"
+import config from "../../src/constants"
 import {
   callSubmitFunctions,
   hasInputs,
@@ -17,6 +17,8 @@ import { StyledSelect } from "../../src/setUp/components/select"
 
 
 describe("Form component", () => {
+  const backend = config.backend
+
   it("is a form", () => {
     const fields = [{ name: "field1", type: "text" }, { name: "field2", type: "text" }]
     isAForm(shallow(<Form fields={ fields } />))

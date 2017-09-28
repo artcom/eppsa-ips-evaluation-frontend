@@ -2,7 +2,7 @@ import React from "react"
 import autoBind from "react-autobind"
 import { find, zipObject } from "lodash"
 import styled from "styled-components"
-import { backend } from "../../constants"
+import config from "../../constants"
 import Input, { InputField } from "../components/input"
 
 
@@ -46,8 +46,8 @@ export default class Form extends React.Component {
   async onSubmit(event) {
     event.preventDefault()
     const setArgs = this.props.experiment
-      ? { backend, experimentName: this.props.experiment }
-      : { backend }
+      ? { backend: config.backend, experimentName: this.props.experiment }
+      : { backend: config.backend }
     setArgs[this.props.paramName] = this.state
     await this.props.set(setArgs)
     this.props.onSubmitted()

@@ -6,7 +6,7 @@ import sinon from "sinon"
 import proxyquire from "proxyquire"
 import { shallow, mount } from "enzyme"
 import App from "../../../src/setUp/containers/app"
-import { backend } from "../../../src/constants"
+import config from "../../../src/constants"
 import DataTable from "../../../src/setUp/components/dataTable"
 import experimentsData from "../../testData/experiments.json"
 import Params from "../../../src/setUp/containers/params"
@@ -24,6 +24,7 @@ const zonesActions = require("../../../src/setUp/actions/zonesActions")
 
 
 describe("App Zones", () => {
+  const backend = config.backend
   let getMockExperiments
   let getMockNodes
   let getMockPoints

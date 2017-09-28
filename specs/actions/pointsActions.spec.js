@@ -4,7 +4,7 @@ import { isEqual } from "lodash"
 import rest from "restling"
 import sinon from "sinon"
 import proxyquire from "proxyquire"
-import { backend } from "../../src/constants"
+import config from "../../src/constants"
 import pointsFrontend from "../testData/pointsFrontend.json"
 import pointsBackend from "../testData/pointsBackend.json"
 import {
@@ -17,6 +17,8 @@ import {
 
 
 describe("pointsActions", () => {
+  const backend = config.backend
+
   describe("processSendData", () => {
     it("should process data to be sent", () => {
       expect(isEqual(processSendData(pointsFrontend[0]), pointsBackend[0])).to.equal(true)

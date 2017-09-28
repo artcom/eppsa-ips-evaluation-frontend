@@ -6,7 +6,7 @@ import { describe, it, beforeEach, afterEach } from "mocha"
 import proxyquire from "proxyquire"
 import sinon from "sinon"
 import App from "../../../src/setUp/containers/app"
-import { backend } from "../../../src/constants"
+import config from "../../../src/constants"
 import DataTable from "../../../src/setUp/components/dataTable"
 import experimentsData from "../../testData/experiments.json"
 import nodesData from "../../testData/nodes.json"
@@ -26,6 +26,7 @@ const pointsActions = require("../../../src/setUp/actions/pointsActions")
 
 
 describe("App Experiment", () => {
+  const backend = config.backend
   let getMockExperiments
   let getMockNodes
   let getMockPoints

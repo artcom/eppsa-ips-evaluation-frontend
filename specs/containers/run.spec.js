@@ -3,7 +3,7 @@ import { describe, it } from "mocha"
 import { expect } from "chai"
 import sinon from "sinon"
 import { shallow, mount } from "enzyme"
-import { backend } from "../../src/constants"
+import config from "../../src/constants"
 import Button from "../../src/setUp/components/button"
 import Form from "../../src/setUp/components/form"
 import Run from "../../src/setUp/containers/run"
@@ -13,6 +13,8 @@ import { checkProps } from "../helpers/propsHelpers"
 
 
 describe("Run", () => {
+  const backend = config.backend
+
   describe("contains", () => {
     it("a title", () => {
       const run = shallow(<Run title="Run Title" />)

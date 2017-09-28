@@ -4,12 +4,14 @@ import { isEqual } from "lodash"
 import rest from "restling"
 import sinon from "sinon"
 import proxyquire from "proxyquire"
-import { backend } from "../../src/constants"
+import config from "../../src/constants"
 import nodes from "../testData/nodes.json"
 import { getNodes, setNode, deleteNode } from "../../src/setUp/actions/nodesActions"
 
 
 describe("nodesActions", () => {
+  const backend = config.backend
+
   describe("actions", () => {
     let delMock
     let getMock
