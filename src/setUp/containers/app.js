@@ -22,6 +22,7 @@ import {
 } from "../actions/nodePositionsActions"
 import { deletePoint, getPoints, setPoint } from "../actions/pointsActions"
 import { deleteZone, getZones, setZone } from "../actions/zonesActions"
+import { getZoneSets, setZoneSet } from "../actions/zoneSetsActions"
 
 
 const Container = styled.div`
@@ -62,6 +63,7 @@ export default class App extends React.Component {
       { name: "Y", type: "text" },
       { name: "Z", type: "text" }
     ]
+    const zoneSetFields = [{ name: "name", type: "text" }]
     const zoneFields = [
       { name: "name", type: "text" },
       { name: "xMin", type: "text" },
@@ -113,6 +115,17 @@ export default class App extends React.Component {
             paramName="point"
             createText="Add Point"
             backend={ this.props.backend } />
+        }
+        {
+          this.state.show === "zoneSets" &&
+            <Params
+              title="ZoneSets:"
+              fields={ zoneSetFields }
+              get={ getZoneSets }
+              set={ setZoneSet }
+              paramName="zoneSet"
+              createText="Create Zone Set"
+              backend={ this.props.backend } />
         }
         {
           this.state.show === "zones" &&
