@@ -22,7 +22,7 @@ import {
 } from "../actions/nodePositionsActions"
 import { deletePoint, getPoints, setPoint } from "../actions/pointsActions"
 import { deleteZone, getZones, setZone } from "../actions/zonesActions"
-import { getZoneSets, setZoneSet } from "../actions/zoneSetsActions"
+import { getZoneSets, setZoneSet, deleteZoneSet } from "../actions/zoneSetsActions"
 
 
 const Container = styled.div`
@@ -123,6 +123,7 @@ export default class App extends React.Component {
               fields={ zoneSetFields }
               get={ getZoneSets }
               set={ setZoneSet }
+              delete={ deleteZoneSet }
               paramName="zoneSet"
               createText="Create Zone Set"
               backend={ this.props.backend } />

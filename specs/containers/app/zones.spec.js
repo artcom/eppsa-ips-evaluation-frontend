@@ -100,6 +100,10 @@ describe("App Zones", () => {
         { setZone: setMockZone }
       )
       deleteMockZone = sinon.stub(zonesActions, "deleteZone").resolves("zone1")
+      proxyquire(
+        "../../../src/setUp/containers/app",
+        { deleteZone: deleteMockZone }
+      )
     })
 
     afterEach(() => {
