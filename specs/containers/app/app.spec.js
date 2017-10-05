@@ -57,7 +57,7 @@ describe("App", () => {
     })
 
     it("tabs", () => {
-      const tabs = ["Experiments", "Points", "Zones", "Nodes", "NodePositions", "Run"]
+      const tabs = ["Experiments", "Points", "ZoneSets", "Zones", "Nodes", "NodePositions", "Run"]
       const app = mount(<App />)
       expect(app.find(TabBar).find(Tab)).to.have.length(tabs.length)
       expect(app.find(TabBar).find(Tab).map(tab => tab.text())).to.deep.equal(tabs)
@@ -131,6 +131,18 @@ describe("App", () => {
         pointsTab.simulate("click")
         expect(pointsTab.props().highlight).to.equal(true)
         expect(app.state("show")).to.equal("zones")
+        done()
+      })
+    })
+
+    it("ZoneSets when zoneSets tab is clicked", done => {
+      const app = mount(<App backend={ backend } />)
+      setImmediate(() => {
+        expect(app.state("show")).to.equal("experiments")
+        const pointsTab = app.find(Tab).filterWhere(tab => tab.text() === "ZoneSets")
+        pointsTab.simulate("click")
+        expect(pointsTab.props().highlight).to.equal(true)
+        expect(app.state("show")).to.equal("zoneSets")
         done()
       })
     })

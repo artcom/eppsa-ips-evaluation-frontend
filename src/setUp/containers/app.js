@@ -54,7 +54,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    const tabs = ["experiments", "points", "zones", "nodes", "nodePositions", "run"]
+    const tabs = ["experiments", "points", "zoneSets", "zones", "nodes", "nodePositions", "run"]
     const experimentFields = [{ name: "name", type: "text" }]
     const pointFields = [
       { name: "name", type: "text" },
