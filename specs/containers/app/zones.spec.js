@@ -166,7 +166,7 @@ describe("App Zones", () => {
       ]
       const props = {
         backend,
-        title: "Zones:",
+        title: "Zones for set1:",
         get: getZones,
         set: setZone,
         paramName: "zone",

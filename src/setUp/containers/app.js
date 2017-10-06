@@ -137,7 +137,7 @@ export default class App extends React.Component {
           this.state.selectedZoneSet &&
           <div>
             <Params
-              title="Zones:"
+              title={ `Zones for ${this.state.selectedZoneSet}:` }
               fields={ zoneFields }
               get={ getZones }
               set={ setZone }
