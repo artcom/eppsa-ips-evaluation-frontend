@@ -101,6 +101,7 @@ describe("Form component", () => {
           <Form
             fields={ fields }
             set={ setSpy }
+            backend={ backend }
             paramName={ "param" }
             onSubmitted={ onSubmittedSpy } />
         )
@@ -120,8 +121,9 @@ describe("Form component", () => {
           <Form
             fields={ fields }
             set={ setSpy }
+            backend={ backend }
             paramName={ "param" }
-            experiment={ "fake-experiment" }
+            experimentName={ "fake-experiment" }
             onSubmitted={ onSubmittedSpy } />
         )
         const input = { field1: "value1", field2: "value2" }

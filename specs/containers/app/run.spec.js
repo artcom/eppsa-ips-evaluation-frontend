@@ -132,7 +132,7 @@ describe("App Run", () => {
       ]
       const props = {
         title: "Set up \"fake-experiment1\":",
-        experiment: "fake-experiment1",
+        experimentName: "fake-experiment1",
       }
       const copyProps = { fields: runFields }
       const app = mount(<App backend={ backend } />)

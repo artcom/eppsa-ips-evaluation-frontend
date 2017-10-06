@@ -53,10 +53,10 @@ describe("Run", () => {
     it("passes the expected props to the param form", () => {
       const set = a => a
       const paramName = "run"
-      const experiment = "fake-experiment"
+      const experimentName = "fake-experiment"
       const fields = [{ name: "field1", type: "checkBox" }, { name: "field2", type: "text" }]
-      const runProps = { title: "Run Title", fields, set, paramName, experiment }
-      const formProps = { fields, set, paramName, experiment, submitName: "Run" }
+      const runProps = { title: "Run Title", fields, set, paramName, experimentName }
+      const formProps = { fields, set, paramName, experimentName, submitName: "Run" }
       const run = mount(<Run { ...runProps } />)
       run.setState({ showForm: true })
       const form = run.find(Form)
@@ -72,7 +72,8 @@ describe("Run", () => {
           fields={ fields }
           set={ setStub }
           paramName="run"
-          experiment="fake-experiment" />
+          backend={ backend }
+          experimentName="fake-experiment" />
       )
       const submitParam = { field1: true, field2: "value2" }
       const callArgs = { backend, experimentName: "fake-experiment", run: submitParam }

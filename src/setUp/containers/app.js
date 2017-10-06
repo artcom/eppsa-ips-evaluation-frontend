@@ -208,11 +208,12 @@ export default class App extends React.Component {
           this.state.selectedExperiment &&
           <div>
             <Run
-              experiment={ this.state.selectedExperiment }
+              experimentName={ this.state.selectedExperiment }
               title={ `Set up "${this.state.selectedExperiment}":` }
               fields={ runFields }
               paramName="run"
-              set={ runExperiment } />
+              set={ runExperiment }
+              backend={ this.props.backend } />
             <Button
               onClick={ () => this.onSelectExperiment({ name: null }) }>
               Select Other Experiment

@@ -260,7 +260,7 @@ describe("App Zones", () => {
         setImmediate(() => {
           addParam({ mountedComponent: app, paramName: "zone", createText: "Add Zone", data })
           sinon.assert.calledOnce(setMockZone)
-          sinon.assert.calledWith(setMockZone, { backend, zone: data })
+          sinon.assert.calledWith(setMockZone, { backend, zone: data, zoneSetName: "set1" })
           done()
         })
       })

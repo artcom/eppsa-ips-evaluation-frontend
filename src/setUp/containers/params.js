@@ -32,7 +32,16 @@ export default class Params extends React.Component {
   }
 
   render() {
-    const { title, fields, createText, set, paramName } = this.props
+    const {
+      title,
+      fields,
+      createText,
+      set,
+      paramName,
+      backend,
+      experimentName,
+      zoneSetName
+    } = this.props
     const headers = fields.map(field => field.name)
     const data = this.state.data.map(datum => headers.map(header => datum[header]))
     return <div>
@@ -46,9 +55,10 @@ export default class Params extends React.Component {
         <Form
           fields={ fields }
           set={ set }
+          backend={ backend }
           paramName={ paramName }
-          experiment={ this.props.experimentName }
-          zoneSet={ this.props.zoneSet }
+          experimentName={ experimentName }
+          zoneSetName={ zoneSetName }
           submitName="Create"
           onSubmitted={ this.onSubmitted } />
       }

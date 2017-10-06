@@ -15,7 +15,7 @@ export default class Run extends React.Component {
   }
 
   render() {
-    const { title, fields, set, paramName, experiment } = this.props
+    const { title, fields, set, paramName, backend, experimentName } = this.props
     return (
       <div>
         <Title>{ title }</Title>
@@ -24,8 +24,9 @@ export default class Run extends React.Component {
             <Form
               fields={ fields }
               set={ set }
+              backend={ backend }
               paramName={ paramName }
-              experiment={ experiment }
+              experimentName={ experimentName }
               submitName="Run"
               onSubmitted={ this.onSubmitted } />
         }
