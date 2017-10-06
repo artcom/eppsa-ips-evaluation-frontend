@@ -169,7 +169,7 @@ describe("App NodePositions", () => {
         set: setNodePosition,
         paramName: "nodePosition",
         createText: "Set Node Position in \"fake-experiment1\"",
-        experiment: "fake-experiment1"
+        experimentName: "fake-experiment1"
       }
       const copyProps = { fields: nodePositionsFields }
 
@@ -269,7 +269,7 @@ describe("App NodePositions", () => {
           addParam({
             mountedComponent: app,
             paramName: "nodePosition",
-            experiment: "fake-experiment1",
+            experimentName: "fake-experiment1",
             createText: "Set Node Position in \"fake-experiment1\"",
             data
           })
@@ -299,7 +299,7 @@ describe("App NodePositions", () => {
           addParam({
             mountedComponent: app,
             paramName: "nodePosition",
-            experiment: "fake-experiment1",
+            experimentName: "fake-experiment1",
             createText: "Set Node Position in \"fake-experiment1\"",
             data
           })

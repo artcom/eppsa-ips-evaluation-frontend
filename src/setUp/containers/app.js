@@ -144,6 +144,7 @@ export default class App extends React.Component {
               delete={ deleteZone }
               paramName="zone"
               createText="Add Zone"
+              zoneSetName={ this.state.selectedZoneSet }
               backend={ this.props.backend } />
             <Button
               onClick={ () => this.onSelectZoneSet({ name: null }) }>
@@ -185,7 +186,7 @@ export default class App extends React.Component {
               delete={ deleteNodePosition }
               paramName="nodePosition"
               createText={ `Set Node Position in "${this.state.selectedExperiment}"` }
-              experiment={ this.state.selectedExperiment }
+              experimentName={ this.state.selectedExperiment }
               backend={ this.props.backend } />
             <Button
               onClick={ () => this.onSelectExperiment({ name: null }) }>

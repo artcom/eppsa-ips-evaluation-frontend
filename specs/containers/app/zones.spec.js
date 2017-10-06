@@ -198,7 +198,7 @@ describe("App Zones", () => {
           loaded: true,
           selectedZoneSet: "set1" })
         sinon.assert.calledOnce(getMockZones)
-        sinon.assert.calledWith(getMockZones, { backend })
+        sinon.assert.calledWith(getMockZones, { backend, zoneSetName: "set1" })
         done()
       })
     })
@@ -298,7 +298,7 @@ describe("App Zones", () => {
 
     it("when a zone is deleted, get function is called", done => {
       const app = mount(<App backend={ backend } />)
-      const callArgs = { backend }
+      const callArgs = { backend, zoneSetName: "set1" }
       app.setState({
         show: "zones",
         loaded: true,

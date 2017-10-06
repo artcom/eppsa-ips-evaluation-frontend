@@ -21,10 +21,7 @@ export default class Params extends React.Component {
 
   async componentDidMount() {
     this.mounted = true
-    const getArgs = this.props.experiment
-      ? { backend: this.props.backend, experimentName: this.props.experiment }
-      : { backend: this.props.backend }
-    const data = await this.props.get(getArgs)
+    const data = await this.props.get(getArgs(this.props))
     if (this.mounted) {
       this.setState({ data, loaded: true })
     }
@@ -50,7 +47,8 @@ export default class Params extends React.Component {
           fields={ fields }
           set={ set }
           paramName={ paramName }
-          experiment={ this.props.experiment }
+          experiment={ this.props.experimentName }
+          zoneSet={ this.props.zoneSet }
           submitName="Create"
           onSubmitted={ this.onSubmitted } />
       }
@@ -77,10 +75,17 @@ export default class Params extends React.Component {
   }
 
   async reloadData() {
-    const getArgs = this.props.experiment
-      ? { backend: this.props.backend, experimentName: this.props.experiment }
-      : { backend: this.props.backend }
-    const data = await this.props.get(getArgs)
+    const data = await this.props.get(getArgs(this.props))
     this.setState({ data })
+  }
+}
+
+function getArgs({ backend, experimentName, zoneSetName }) {
+  if (experimentName) {
+    return { backend, experimentName }
+  } else if (zoneSetName) {
+    return { backend, zoneSetName }
+  } else {
+    return { backend }
   }
 }
