@@ -12,7 +12,9 @@ import experimentsData from "../../testData/experiments.json"
 import Params from "../../../src/setUp/containers/params"
 import nodesData from "../../testData/nodes.json"
 import pointsData from "../../testData/pointsFrontend.json"
+import SelectCategory from "../../../src/setUp/components/selectCategory"
 import zonesData from "../../testData/zones.json"
+import zoneSets from "../../testData/zoneSets.json"
 import { addParam } from "../../helpers/appHelpers"
 import { findButtonByName } from "../../helpers/findElements"
 import { getZones, setZone } from "../../../src/setUp/actions/zonesActions"
@@ -21,11 +23,13 @@ const experimentsActions = require("../../../src/setUp/actions/experimentsAction
 const nodesActions = require("../../../src/setUp/actions/nodesActions")
 const pointsActions = require("../../../src/setUp/actions/pointsActions")
 const zonesActions = require("../../../src/setUp/actions/zonesActions")
+const zoneSetsActions = require("../../../src/setUp/actions/zoneSetsActions")
 
 
 describe("App Zones", () => {
   const backend = config.backend
   let getMockExperiments
+  let getMockZoneSets
   let getMockNodes
   let getMockPoints
 
@@ -35,6 +39,11 @@ describe("App Zones", () => {
     proxyquire(
       "../../../src/setUp/containers/app",
       { getExperiments: getMockExperiments }
+    )
+    getMockZoneSets = sinon.stub(zoneSetsActions, "getZoneSets").resolves(zoneSets)
+    proxyquire(
+      "../../../src/setUp/containers/app",
+      { getZoneSets: getMockZoneSets }
     )
     getMockNodes = sinon.stub(nodesActions, "getNodes")
       .resolves(nodesData)
@@ -52,18 +61,50 @@ describe("App Zones", () => {
 
   afterEach(() => {
     getMockExperiments.restore()
+    getMockZoneSets.restore()
     getMockNodes.restore()
     getMockPoints.restore()
   })
 
   describe("contains", () => {
-    it("zones when show state is \"zones\"", () => {
-      const app = shallow(<App />)
-      app.setState({ show: "zones" })
-      expect(app.find(Params)).to.have.length(1)
-      expect(app.find(Params).filterWhere(params => params.props().paramName === "zone"))
-        .to.have.length(1)
+    it("zones when show state is \"zones\" and a zone set is selected", done => {
+      const app = mount(<App />)
+      app.setState({
+        show: "zones",
+        loaded: true,
+        selectedZoneSet: "set1",
+        zoneSets: [{ name: "set1" }]
+      })
+      setImmediate(() => {
+        expect(app.find(Params)).to.have.length(1)
+        expect(app.find(Params).filterWhere(params => params.props().paramName === "zone"))
+          .to.have.length(1)
+      })
+      done()
     })
+
+    it("no zones when show state is \"zones\" but no zone set is selected", () => {
+      const app = shallow(<App />)
+      app.setState({
+        show: "zones",
+        loaded: true,
+        selectedZoneSet: false
+      })
+      expect(app.find(Params).filterWhere(params => params.props().paramName === "zone"))
+        .to.have.length(0)
+    })
+
+    it("a zone set selection component when show state is \"zones\" but no zone set" +
+      " is selected",
+      done => {
+        const app = shallow(<App />)
+        setImmediate(() => {
+          app.setState({ show: "zones", loaded: true, selectedZoneSet: false })
+          expect(app.find(SelectCategory)).to.have.length(1)
+          done()
+        })
+      }
+    )
 
     it("no zones when show state is not \"zones\"", () => {
       const app = shallow(<App />)
@@ -134,7 +175,10 @@ describe("App Zones", () => {
 
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
-        app.setState({ show: "zones" })
+        app.setState({
+          show: "zones",
+          loaded: true,
+          selectedZoneSet: "set1" })
         const params = app.find(Params)
 
         expect(app.state("show")).to.equal("zones")
@@ -148,7 +192,10 @@ describe("App Zones", () => {
     it("get function is called", done => {
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
-        app.setState({ show: "zones" })
+        app.setState({
+          show: "zones",
+          loaded: true,
+          selectedZoneSet: "set1" })
         sinon.assert.calledOnce(getMockZones)
         sinon.assert.calledWith(getMockZones, { backend })
         done()
@@ -158,7 +205,10 @@ describe("App Zones", () => {
     it("when a point is added set function is called", done => {
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
-        app.setState({ show: "zones" })
+        app.setState({
+          show: "zones",
+          loaded: true,
+          selectedZoneSet: "set1" })
         sinon.assert.calledOnce(getMockZones)
         const data = {
           name: "zone3",
@@ -192,7 +242,10 @@ describe("App Zones", () => {
           zMax: 4
         }
       }
-      app.setState({ show: "zones" })
+      app.setState({
+        show: "zones",
+        loaded: true,
+        selectedZoneSet: "set1" })
       const dataTable = app.find(Params)
         .filterWhere(params => params.props().paramName === "zone")
         .find(DataTable)
@@ -208,7 +261,10 @@ describe("App Zones", () => {
     it("when a zone is deleted, get function is called", done => {
       const app = mount(<App backend={ backend } />)
       const callArgs = { backend }
-      app.setState({ show: "zones" })
+      app.setState({
+        show: "zones",
+        loaded: true,
+        selectedZoneSet: "set1" })
       setImmediate(() => {
         const dataTable = app.find(Params)
           .filterWhere(params => params.props().paramName === "zone")

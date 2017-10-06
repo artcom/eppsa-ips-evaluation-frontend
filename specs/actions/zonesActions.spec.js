@@ -9,7 +9,7 @@ import zones from "../testData/zones.json"
 import { getZones, setZone, deleteZone } from "../../src/setUp/actions/zonesActions"
 
 
-describe("nodesActions", () => {
+describe("zonesActions", () => {
   const backend = config.backend
 
   describe("actions", () => {

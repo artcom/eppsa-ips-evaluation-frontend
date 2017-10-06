@@ -95,6 +95,7 @@ describe("App ZoneSets", () => {
     afterEach(() => {
       getMockZoneSets.restore()
       setMockZoneSet.restore()
+      deleteMockZoneSet.restore()
     })
 
     it("sends expected props to params", done => {
@@ -129,7 +130,7 @@ describe("App ZoneSets", () => {
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
         app.setState({ show: "zoneSets" })
-        sinon.assert.calledOnce(getMockZoneSets)
+        sinon.assert.calledTwice(getMockZoneSets)
         sinon.assert.calledWith(getMockZoneSets, { backend })
         done()
       })
@@ -186,7 +187,7 @@ describe("App ZoneSets", () => {
         const param1Row = dataTable.find("tbody").find("tr").at(0)
         findButtonByName(param1Row, "Delete").simulate("click")
         setImmediate(() => {
-          sinon.assert.calledTwice(getMockZoneSets)
+          sinon.assert.calledThrice(getMockZoneSets)
           sinon.assert.alwaysCalledWith(getMockZoneSets, callArgs)
           done()
         })

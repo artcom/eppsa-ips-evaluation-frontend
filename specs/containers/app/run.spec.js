@@ -13,17 +13,20 @@ import inputData from "../../helpers/inputData"
 import nodesData from "../../testData/nodes.json"
 import pointsData from "../../testData/pointsFrontend.json"
 import Run from "../../../src/setUp/containers/run"
-import SelectExperiment from "../../../src/setUp/components/selectExperiment"
+import SelectCategory from "../../../src/setUp/components/selectCategory"
+import zoneSets from "../../testData/zoneSets.json"
 import { findButtonByName } from "../../helpers/findElements"
 import { checkProps } from "../../helpers/propsHelpers"
 const experimentsActions = require("../../../src/setUp/actions/experimentsActions")
 const nodesActions = require("../../../src/setUp/actions/nodesActions")
 const pointsActions = require("../../../src/setUp/actions/pointsActions")
+const zoneSetsActions = require("../../../src/setUp/actions/zoneSetsActions")
 
 
 describe("App Run", () => {
   const backend = config.backend
   let getMockExperiments
+  let getMockZoneSets
   let getMockNodes
   let getMockPoints
 
@@ -33,6 +36,11 @@ describe("App Run", () => {
     proxyquire(
       "../../../src/setUp/containers/app",
       { getExperiments: getMockExperiments }
+    )
+    getMockZoneSets = sinon.stub(zoneSetsActions, "getZoneSets").resolves(zoneSets)
+    proxyquire(
+      "../../../src/setUp/containers/app",
+      { getZoneSets: getMockZoneSets }
     )
     getMockNodes = sinon.stub(nodesActions, "getNodes")
       .resolves(nodesData)
@@ -50,6 +58,7 @@ describe("App Run", () => {
 
   afterEach(() => {
     getMockExperiments.restore()
+    getMockZoneSets.restore()
     getMockNodes.restore()
     getMockPoints.restore()
   })
@@ -85,7 +94,7 @@ describe("App Run", () => {
         const app = shallow(<App />)
         setImmediate(() => {
           app.setState({ show: "run", loaded: true, selectedExperiment: false })
-          expect(app.find(SelectExperiment)).to.have.length(1)
+          expect(app.find(SelectCategory)).to.have.length(1)
           done()
         })
       }
@@ -140,11 +149,11 @@ describe("App Run", () => {
     })
 
     it("sends expected props to selectExperiment", done => {
-      const props = { experiments: experimentsData }
+      const props = { categories: experimentsData }
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
         app.setState({ show: "run" })
-        const selectExperiment = app.find(SelectExperiment)
+        const selectExperiment = app.find(SelectCategory)
         checkProps({ mountedComponent: selectExperiment, props })
         done()
       })
@@ -154,7 +163,7 @@ describe("App Run", () => {
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
         app.setState({ show: "run" })
-        const selectExperiment = app.find(SelectExperiment)
+        const selectExperiment = app.find(SelectCategory)
         findButtonByName(selectExperiment, "fake-experiment1").simulate("click")
         expect(app.state("selectedExperiment")).to.equal("fake-experiment1")
         done()

@@ -13,8 +13,9 @@ import Params from "../../../src/setUp/containers/params"
 import nodesData from "../../testData/nodes.json"
 import nodePositionsData from "../../testData/nodePositionsFrontend.json"
 import pointsData from "../../testData/pointsFrontend.json"
-import SelectExperiment from "../../../src/setUp/components/selectExperiment"
+import SelectCategory from "../../../src/setUp/components/selectCategory"
 import Tab from "../../../src/setUp/components/tab"
+import zoneSets from "../../testData/zoneSets.json"
 import { addParam } from "../../helpers/appHelpers"
 import { findButtonByName } from "../../helpers/findElements"
 import { getNodePositions, setNodePosition } from "../../../src/setUp/actions/nodePositionsActions"
@@ -23,14 +24,16 @@ const experimentsActions = require("../../../src/setUp/actions/experimentsAction
 const nodesActions = require("../../../src/setUp/actions/nodesActions")
 const nodePositionsActions = require("../../../src/setUp/actions/nodePositionsActions")
 const pointsActions = require("../../../src/setUp/actions/pointsActions")
+const zoneSetsActions = require("../../../src/setUp/actions/zoneSetsActions")
 
 
-describe("App", () => {
+describe("App NodePositions", () => {
   const backend = config.backend
   let getMockExperiments
   let getMockNodes
   let getMockPoints
   let getMockNodePositions
+  let getMockZoneSets
 
   beforeEach(() => {
     getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
@@ -38,6 +41,11 @@ describe("App", () => {
     proxyquire(
       "../../../src/setUp/containers/app",
       { getExperiments: getMockExperiments }
+    )
+    getMockZoneSets = sinon.stub(zoneSetsActions, "getZoneSets").resolves(zoneSets)
+    proxyquire(
+      "../../../src/setUp/containers/app",
+      { getZoneSets: getMockZoneSets }
     )
     getMockNodes = sinon.stub(nodesActions, "getNodes")
       .resolves(nodesData)
@@ -61,6 +69,7 @@ describe("App", () => {
 
   afterEach(() => {
     getMockExperiments.restore()
+    getMockZoneSets.restore()
     getMockNodes.restore()
     getMockPoints.restore()
     getMockNodePositions.restore()
@@ -104,7 +113,7 @@ describe("App", () => {
         const app = shallow(<App />)
         setImmediate(() => {
           app.setState({ show: "nodePositions", loaded: true, selectedExperiment: false })
-          expect(app.find(SelectExperiment)).to.have.length(1)
+          expect(app.find(SelectCategory)).to.have.length(1)
           done()
         })
       }
@@ -177,12 +186,12 @@ describe("App", () => {
       })
     })
 
-    it("sends expected props to selectExperiment", done => {
-      const props = { experiments: experimentsData }
+    it("sends expected props to selectCategory", done => {
+      const props = { categories: experimentsData }
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
         app.setState({ show: "nodePositions" })
-        const selectExperiment = app.find(SelectExperiment)
+        const selectExperiment = app.find(SelectCategory)
         checkProps({ mountedComponent: selectExperiment, props })
         done()
       })
@@ -226,7 +235,7 @@ describe("App", () => {
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
         app.setState({ show: "nodePositions" })
-        const selectExperiment = app.find(SelectExperiment)
+        const selectExperiment = app.find(SelectCategory)
         findButtonByName(selectExperiment, "fake-experiment1").simulate("click")
         expect(app.state("selectedExperiment")).to.equal("fake-experiment1")
         done()

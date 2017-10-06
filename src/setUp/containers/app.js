@@ -6,7 +6,7 @@ import { assignIn, zipObject } from "lodash"
 import Button from "../components/button"
 import Params from "./params"
 import Run from "./run"
-import SelectExperiment from "../components/selectExperiment"
+import SelectCategory from "../components/selectCategory"
 import TabBar from "../components/tabBar"
 import {
   deleteExperiment,
@@ -36,18 +36,21 @@ export default class App extends React.Component {
     this.state = {
       show: "experiments",
       experiments: [],
+      zoneSets: [],
       nodes: [],
       points: [],
       loaded: false,
       selectedExperiment: null,
+      selectedZoneSet: null
     }
   }
 
   async componentDidMount() {
     console.debug(`using backend: ${this.props.backend}`)
-    const params = ["experiments", "nodes", "points"]
+    const params = ["experiments", "zoneSets", "nodes", "points"]
     const data = await Promise.all([
       getExperiments({ backend: this.props.backend }),
+      getZoneSets({ backend: this.props.backend }),
       getNodes({ backend: this.props.backend }),
       getPoints({ backend: this.props.backend })
     ])
@@ -130,6 +133,8 @@ export default class App extends React.Component {
         }
         {
           this.state.show === "zones" &&
+          this.state.loaded &&
+          this.state.selectedZoneSet &&
           <Params
             title="Zones:"
             fields={ zoneFields }
@@ -139,6 +144,14 @@ export default class App extends React.Component {
             paramName="zone"
             createText="Add Zone"
             backend={ this.props.backend } />
+        }
+        {
+          this.state.show === "zones" &&
+          this.state.loaded &&
+          !this.state.selectedZoneSet &&
+          <SelectCategory
+            categories={ this.state.zoneSets }
+            onSelect={ this.onSelectZoneSet } />
         }
         {
           this.state.show === "nodes" &&
@@ -178,8 +191,8 @@ export default class App extends React.Component {
           this.state.show === "nodePositions" &&
           this.state.loaded &&
           !this.state.selectedExperiment &&
-          <SelectExperiment
-            experiments={ this.state.experiments }
+          <SelectCategory
+            categories={ this.state.experiments }
             onSelect={ this.onSelectExperiment } />
         }
         {
@@ -203,8 +216,8 @@ export default class App extends React.Component {
           this.state.show === "run" &&
           this.state.loaded &&
           !this.state.selectedExperiment &&
-          <SelectExperiment
-            experiments={ this.state.experiments }
+          <SelectCategory
+            categories={ this.state.experiments }
             onSelect={ this.onSelectExperiment } />
         }
       </Container>
@@ -230,5 +243,9 @@ export default class App extends React.Component {
 
   onSelectExperiment(experiment) {
     this.setState({ selectedExperiment: experiment.name })
+  }
+
+  onSelectZoneSet(zoneSet) {
+    this.setState({ selectedZoneSet: zoneSet.name })
   }
 }

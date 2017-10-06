@@ -12,14 +12,17 @@ import nodesData from "../../testData/nodes.json"
 import pointsData from "../../testData/pointsFrontend.json"
 import Tab from "../../../src/setUp/components/tab"
 import TabBar from "../../../src/setUp/components/tabBar"
+import zoneSets from "../../testData/zoneSets.json"
 const experimentsActions = require("../../../src/setUp/actions/experimentsActions")
 const nodesActions = require("../../../src/setUp/actions/nodesActions")
 const pointsActions = require("../../../src/setUp/actions/pointsActions")
+const zoneSetsActions = require("../../../src/setUp/actions/zoneSetsActions")
 
 
 describe("App", () => {
   const backend = config.backend
   let getMockExperiments
+  let getMockZoneSets
   let getMockNodes
   let getMockPoints
 
@@ -29,6 +32,11 @@ describe("App", () => {
     proxyquire(
       "../../../src/setUp/containers/app",
       { getExperiments: getMockExperiments }
+    )
+    getMockZoneSets = sinon.stub(zoneSetsActions, "getZoneSets").resolves(zoneSets)
+    proxyquire(
+      "../../../src/setUp/containers/app",
+      { getZoneSets: getMockZoneSets }
     )
     getMockNodes = sinon.stub(nodesActions, "getNodes")
       .resolves(nodesData)
@@ -46,6 +54,7 @@ describe("App", () => {
 
   afterEach(() => {
     getMockExperiments.restore()
+    getMockZoneSets.restore()
     getMockNodes.restore()
     getMockPoints.restore()
   })

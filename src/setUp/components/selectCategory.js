@@ -9,17 +9,17 @@ const Container = styled.div`
   flex-direction: column;
 `
 
-export default function SelectExperiment({ experiments, onSelect }) {
+export default function SelectCategory({ title, categories, onSelect }) {
   return (
     <Container>
-      <Title>Select Experiment:</Title>
+      <Title>{ title }</Title>
       {
-        experiments && experiments.map(experiment =>
+        categories && categories.map(category =>
           <Button
-            key={ experiment.name }
-            onClick={ () => onSelect(experiment) }>
+            key={ category.name }
+            onClick={ () => onSelect(category) }>
             {
-              experiment.name
+              category.name
             }
           </Button>
         )
