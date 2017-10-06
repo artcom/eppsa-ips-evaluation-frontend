@@ -136,11 +136,13 @@ describe("App", () => {
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
         expect(app.state("show")).to.equal("experiments")
-        const pointsTab = app.find(Tab).filterWhere(tab => tab.text() === "Zones")
-        pointsTab.simulate("click")
-        expect(pointsTab.props().highlight).to.equal(true)
-        expect(app.state("show")).to.equal("zones")
-        done()
+        const zonesTab = app.find(Tab).filterWhere(tab => tab.text() === "Zones")
+        zonesTab.simulate("click")
+        setImmediate(() => {
+          expect(zonesTab.props().highlight).to.equal(true)
+          expect(app.state("show")).to.equal("zones")
+          done()
+        })
       })
     })
 

@@ -13,6 +13,7 @@ import Params from "../../../src/setUp/containers/params"
 import nodesData from "../../testData/nodes.json"
 import pointsData from "../../testData/pointsFrontend.json"
 import SelectCategory from "../../../src/setUp/components/selectCategory"
+import Tab from "../../../src/setUp/components/tab"
 import zonesData from "../../testData/zones.json"
 import zoneSets from "../../testData/zoneSets.json"
 import { addParam } from "../../helpers/appHelpers"
@@ -202,7 +203,20 @@ describe("App Zones", () => {
       })
     })
 
-    it("when a point is added set function is called", done => {
+    it("getZoneSets is called", done => {
+      const app = mount(<App backend={ backend } />)
+      setImmediate(() => {
+        expect(app.state("show")).to.equal("experiments")
+        const zonesTab = app.find(Tab).filterWhere(tab => tab.text() === "Zones")
+        zonesTab.simulate("click")
+        setImmediate(() => {
+          sinon.assert.calledTwice(getMockZoneSets)
+          done()
+        })
+      })
+    })
+
+    it("when a zone is added set function is called", done => {
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
         app.setState({

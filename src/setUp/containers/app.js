@@ -236,6 +236,9 @@ export default class App extends React.Component {
     } else if (tab === "run" && this.state.show !== tab) {
       const data = await getExperiments({ backend: this.props.backend })
       this.setState({ experiments: data, show: tab })
+    } else if (tab === "zones" && this.state.show !== tab) {
+      const data = await getZoneSets({ backend: this.props.backend })
+      this.setState({ experiments: data, show: tab })
     } else {
       this.setState({ show: tab })
     }
