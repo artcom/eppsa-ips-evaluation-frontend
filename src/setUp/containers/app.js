@@ -135,15 +135,21 @@ export default class App extends React.Component {
           this.state.show === "zones" &&
           this.state.loaded &&
           this.state.selectedZoneSet &&
-          <Params
-            title="Zones:"
-            fields={ zoneFields }
-            get={ getZones }
-            set={ setZone }
-            delete={ deleteZone }
-            paramName="zone"
-            createText="Add Zone"
-            backend={ this.props.backend } />
+          <div>
+            <Params
+              title="Zones:"
+              fields={ zoneFields }
+              get={ getZones }
+              set={ setZone }
+              delete={ deleteZone }
+              paramName="zone"
+              createText="Add Zone"
+              backend={ this.props.backend } />
+            <Button
+              onClick={ () => this.onSelectZoneSet({ name: null }) }>
+              Select Other Zone Set
+            </Button>
+          </div>
         }
         {
           this.state.show === "zones" &&

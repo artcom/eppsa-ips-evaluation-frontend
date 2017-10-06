@@ -216,6 +216,30 @@ describe("App Zones", () => {
       })
     })
 
+    it("when a zone set is selected it is set in state", done => {
+      const app = mount(<App backend={ backend } />)
+      setImmediate(() => {
+        app.setState({ show: "zones" })
+        const selectZoneSet = app.find(SelectCategory)
+        findButtonByName(selectZoneSet, "set1").simulate("click")
+        expect(app.state("selectedZoneSet")).to.equal("set1")
+        done()
+      })
+    })
+
+    it("sets selectedZoneSet state to null when select other zone set button is pushed",
+      done => {
+        const app = mount(<App backend={ backend } />)
+        setImmediate(() => {
+          app.setState({ show: "zones", selectedZoneSet: "set1" })
+          expect(app.state("selectedZoneSet")).to.equal("set1")
+          findButtonByName(app, "Select Other Zone Set").simulate("click")
+          expect(app.state("selectedZoneSet")).to.equal(null)
+          done()
+        })
+      }
+    )
+
     it("when a zone is added set function is called", done => {
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
