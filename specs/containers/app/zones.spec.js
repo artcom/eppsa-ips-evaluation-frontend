@@ -33,6 +33,7 @@ describe("App Zones", () => {
   let getMockZoneSets
   let getMockNodes
   let getMockPoints
+  let getMockZones
 
   beforeEach(() => {
     getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
@@ -58,6 +59,12 @@ describe("App Zones", () => {
       "../../../src/setUp/containers/app",
       { getPoints: getMockPoints }
     )
+    getMockZones = sinon.stub(zonesActions, "getZones")
+      .resolves(zonesData)
+    proxyquire(
+      "../../../src/setUp/containers/app",
+      { getZones: getMockZones }
+    )
   })
 
   afterEach(() => {
@@ -65,6 +72,7 @@ describe("App Zones", () => {
     getMockZoneSets.restore()
     getMockNodes.restore()
     getMockPoints.restore()
+    getMockZones.restore()
   })
 
   describe("contains", () => {
@@ -116,17 +124,10 @@ describe("App Zones", () => {
   })
 
   describe("when zones tab is active", () => {
-    let getMockZones
     let setMockZone
     let deleteMockZone
 
     beforeEach(() => {
-      getMockZones = sinon.stub(zonesActions, "getZones")
-        .resolves(zonesData)
-      proxyquire(
-        "../../../src/setUp/containers/app",
-        { getZones: getMockZones }
-      )
       setMockZone = sinon.stub(zonesActions, "setZone")
         .resolves({
           name: "zone3",
@@ -149,7 +150,6 @@ describe("App Zones", () => {
     })
 
     afterEach(() => {
-      getMockZones.restore()
       setMockZone.restore()
       deleteMockZone.restore()
     })
