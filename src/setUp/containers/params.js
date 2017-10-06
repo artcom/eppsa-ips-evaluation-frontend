@@ -78,7 +78,7 @@ export default class Params extends React.Component {
   }
 
   async onDelete(deleteData) {
-    const deleteArgs = { backend: this.props.backend }
+    const deleteArgs = getArgs(this.props)
     deleteArgs[this.props.paramName] = deleteData
     await this.props.delete(deleteArgs)
     await this.reloadData()

@@ -25,8 +25,7 @@ export async function setExperiment({ backend, experiment }) {
   }
 }
 
-export async function deleteExperiment({ backend, experiment }) {
-  const experimentName = experiment.name
+export async function deleteExperiment({ backend, experimentName }) {
   try {
     const response = await rest.del(
       `http://${backend}/experiments/${experimentName}`

@@ -319,6 +319,7 @@ describe("App NodePositions", () => {
       const app = mount(<App backend={ backend } />)
       const callArgs = {
         backend,
+        experimentName: "fake-experiment1",
         nodePosition: {
           nodeName: "Node1",
           pointName: "point1",

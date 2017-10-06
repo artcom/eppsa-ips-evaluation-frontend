@@ -91,9 +91,9 @@ describe("experimentsActions", () => {
       })
 
       it("should send a get request to the expected URL", async () => {
-        const experiment = experiments[0]
+        const experimentName = experiments[0].name
         const url = `http://${backend}/experiments/fake-experiment1`
-        await deleteExperiment({ backend, experiment })
+        await deleteExperiment({ backend, experimentName })
         sinon.assert.calledOnce(delMock)
         sinon.assert.calledWith(delMock, url)
       })

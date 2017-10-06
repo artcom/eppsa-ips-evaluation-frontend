@@ -278,7 +278,8 @@ describe("App Zones", () => {
           yMax: 5,
           zMin: 1,
           zMax: 4
-        }
+        },
+        zoneSetName: "set1"
       }
       app.setState({
         show: "zones",
