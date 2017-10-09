@@ -13,23 +13,15 @@ describe("positionDataActions", () => {
   const backend = config.backend
   const experimentName = "test-experiment"
 
-  let delMock
   let getMock
-  let postMock
 
   beforeEach(() => {
-    delMock = sinon.stub(rest, "del")
     getMock = sinon.stub(rest, "get")
-    postMock = sinon.stub(rest, "post")
-    proxyquire("../../../src/analyze/actions/positionDataActions", { rest: { del: delMock } })
     proxyquire("../../../src/analyze/actions/positionDataActions", { rest: { get: getMock } })
-    proxyquire("../../../src/analyze/actions/positionDataActions", { rest: { post: postMock } })
   })
 
   afterEach(() => {
-    delMock.restore()
     getMock.restore()
-    postMock.restore()
   })
 
   describe("getPositionData", () => {
