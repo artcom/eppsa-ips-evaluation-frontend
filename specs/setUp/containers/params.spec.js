@@ -6,7 +6,7 @@ import { concat } from "lodash"
 import sinon from "sinon"
 import { mount, shallow } from "enzyme"
 import config from "../../../src/constants"
-import Button from "../../../src/setUp/components/button"
+import Button from "../../../src/shared/components/button"
 import Params from "../../../src/setUp/containers/params"
 import Form from "../../../src/setUp/components/form"
 import {

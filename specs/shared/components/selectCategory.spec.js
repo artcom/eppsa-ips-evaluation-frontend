@@ -3,7 +3,7 @@ import { describe, it } from "mocha"
 import { expect } from "chai"
 import { shallow } from "enzyme"
 import sinon from "sinon"
-import Button from "../../../src/setUp/components/button"
+import Button from "../../../src/shared/components/button"
 import { hasTitle } from "../../helpers/paramsHelpers"
 import SelectCategory from "../../../src/shared/components/selectCategory"
 

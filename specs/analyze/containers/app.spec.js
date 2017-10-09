@@ -42,10 +42,26 @@ describe("App NodePositions", () => {
   })
 
   describe("contains", () => {
-    it("an experiment selection component", done => {
+    it("an experiment selection component when loaded and no experiment is selected", done => {
       const app = shallow(<App />)
       setImmediate(() => {
-        expect(app.find(SelectCategory)).to.have.length(1)
+        app.setState({ loaded: true, selectedExperiment: false })
+        expect(
+          app.find(SelectCategory)
+            .filterWhere(select => select.props().title === "Select Experiment:")
+        ).to.have.length(1)
+        done()
+      })
+    })
+
+    it("no experiment selection component when loaded and an experiment is selected", done => {
+      const app = shallow(<App />)
+      setImmediate(() => {
+        app.setState({ loaded: true, selectedExperiment: true })
+        expect(
+          app.find(SelectCategory)
+            .filterWhere(select => select.props().title === "Select Experiment:")
+        ).to.have.length(0)
         done()
       })
     })
@@ -76,12 +92,24 @@ describe("App NodePositions", () => {
     it("set the selected experiment in state when an experiment is selected", done => {
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
-        app.setState({ show: "nodePositions" })
         const selectExperiment = app.find(SelectCategory)
         findButtonByName(selectExperiment, "fake-experiment1").simulate("click")
         expect(app.state("selectedExperiment")).to.equal("fake-experiment1")
         done()
       })
     })
+
+    it("sets selectedExperiment state to null when select other experiment button is pushed",
+      done => {
+        const app = mount(<App backend={ backend } />)
+        setImmediate(() => {
+          app.setState({ selectedExperiment: "fake-experiment1" })
+          expect(app.state("selectedExperiment")).to.equal("fake-experiment1")
+          findButtonByName(app, "Select Other Experiment").simulate("click")
+          expect(app.state("selectedExperiment")).to.equal(null)
+          done()
+        })
+      }
+    )
   })
 })

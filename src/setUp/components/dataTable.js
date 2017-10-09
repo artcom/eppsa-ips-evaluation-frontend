@@ -1,6 +1,6 @@
 import React from "react"
 import { zipObject } from "lodash"
-import Button from "./button"
+import Button from "../../shared/components/button"
 
 
 export default function DataTable({ headers, data, onDelete }) {

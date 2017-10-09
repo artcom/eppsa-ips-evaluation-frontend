@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components"
-import Button from "../../setUp/components/button"
+import Button from "./button"
 import Title from "../../setUp/components/title"
 
 

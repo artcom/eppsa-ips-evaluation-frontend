@@ -2,7 +2,7 @@ import React from "react"
 import { describe, it } from "mocha"
 import { expect } from "chai"
 import { shallow } from "enzyme"
-import Button from "../../../src/setUp/components/button"
+import Button from "../../../src/shared/components/button"
 
 
 describe("Button component", () => {

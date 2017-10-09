@@ -4,7 +4,7 @@ import { expect } from "chai"
 import sinon from "sinon"
 import { slice } from "lodash"
 import { shallow, mount } from "enzyme"
-import Button from "../../../src/setUp/components/button"
+import Button from "../../../src/shared/components/button"
 import DataTable from "../../../src/setUp/components/dataTable"
 import { findButtonByName } from "../../helpers/findElements"
 
