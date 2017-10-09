@@ -16,7 +16,7 @@ import { addParam } from "../../../helpers/appHelpers"
 import { findButtonByName } from "../../../helpers/findElements"
 import { getPoints, setPoint } from "../../../../src/setUp/actions/pointsActions"
 import { checkProps } from "../../../helpers/propsHelpers"
-const experimentsActions = require("../../../../src/setUp/actions/experimentsActions")
+const experimentsActions = require("../../../../src/shared/actions/experimentsActions")
 const nodesActions = require("../../../../src/setUp/actions/nodesActions")
 const pointsActions = require("../../../../src/setUp/actions/pointsActions")
 

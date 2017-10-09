@@ -11,7 +11,7 @@ import {
   processParams,
   runExperiment,
   setExperiment
-} from "../../../src/setUp/actions/experimentsActions"
+} from "../../../src/shared/actions/experimentsActions"
 
 
 describe("experimentsActions", () => {
@@ -35,9 +35,9 @@ describe("experimentsActions", () => {
       delStub = sinon.stub(rest, "del")
       getStub = sinon.stub(rest, "get")
       postStub = sinon.stub(rest, "post")
-      proxyquire("../../../src/setUp/actions/experimentsActions", { rest: { del: delStub } })
-      proxyquire("../../../src/setUp/actions/experimentsActions", { rest: { get: getStub } })
-      proxyquire("../../../src/setUp/actions/experimentsActions", { rest: { post: postStub } })
+      proxyquire("../../../src/shared/actions/experimentsActions", { rest: { del: delStub } })
+      proxyquire("../../../src/shared/actions/experimentsActions", { rest: { get: getStub } })
+      proxyquire("../../../src/shared/actions/experimentsActions", { rest: { post: postStub } })
     })
 
     afterEach(() => {

@@ -23,7 +23,7 @@ import {
   setNodePosition
 } from "../../../../src/setUp/actions/nodePositionsActions"
 import { checkProps } from "../../../helpers/propsHelpers"
-const experimentsActions = require("../../../../src/setUp/actions/experimentsActions")
+const experimentsActions = require("../../../../src/shared/actions/experimentsActions")
 const nodesActions = require("../../../../src/setUp/actions/nodesActions")
 const nodePositionsActions = require("../../../../src/setUp/actions/nodePositionsActions")
 const pointsActions = require("../../../../src/setUp/actions/pointsActions")

@@ -13,7 +13,7 @@ import pointsData from "../../../testData/pointsFrontend.json"
 import Tab from "../../../../src/setUp/components/tab"
 import TabBar from "../../../../src/setUp/components/tabBar"
 import zoneSets from "../../../testData/zoneSets.json"
-const experimentsActions = require("../../../../src/setUp/actions/experimentsActions")
+const experimentsActions = require("../../../../src/shared/actions/experimentsActions")
 const nodesActions = require("../../../../src/setUp/actions/nodesActions")
 const pointsActions = require("../../../../src/setUp/actions/pointsActions")
 const zoneSetsActions = require("../../../../src/setUp/actions/zoneSetsActions")

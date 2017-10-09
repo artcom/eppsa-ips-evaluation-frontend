@@ -17,7 +17,7 @@ import SelectCategory from "../../../../src/shared/components/selectCategory"
 import zoneSets from "../../../testData/zoneSets.json"
 import { findButtonByName } from "../../../helpers/findElements"
 import { checkProps } from "../../../helpers/propsHelpers"
-const experimentsActions = require("../../../../src/setUp/actions/experimentsActions")
+const experimentsActions = require("../../../../src/shared/actions/experimentsActions")
 const nodesActions = require("../../../../src/setUp/actions/nodesActions")
 const pointsActions = require("../../../../src/setUp/actions/pointsActions")
 const zoneSetsActions = require("../../../../src/setUp/actions/zoneSetsActions")

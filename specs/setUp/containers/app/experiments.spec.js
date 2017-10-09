@@ -17,10 +17,10 @@ import {
   deleteExperiment,
   getExperiments,
   setExperiment
-} from "../../../../src/setUp/actions/experimentsActions"
+} from "../../../../src/shared/actions/experimentsActions"
 import { findButtonByName } from "../../../helpers/findElements"
 import { checkProps } from "../../../helpers/propsHelpers"
-const experimentsActions = require("../../../../src/setUp/actions/experimentsActions")
+const experimentsActions = require("../../../../src/shared/actions/experimentsActions")
 const nodesActions = require("../../../../src/setUp/actions/nodesActions")
 const pointsActions = require("../../../../src/setUp/actions/pointsActions")
 

@@ -13,7 +13,7 @@ import {
   getExperiments,
   setExperiment,
   runExperiment
-} from "../actions/experimentsActions"
+} from "../../shared/actions/experimentsActions"
 import { deleteNode, getNodes, setNode } from "../actions/nodesActions"
 import {
   deleteNodePosition,
