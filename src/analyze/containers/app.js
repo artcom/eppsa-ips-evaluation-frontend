@@ -1,11 +1,16 @@
 /* eslint-disable react/no-did-mount-set-state */
 import autoBind from "react-autobind"
+import createPlotlyComponent from "react-plotlyjs"
+import Plotly from "plotly.js/dist/plotly-gl3d"
 import React from "react"
 import Button from "../../shared/components/button"
 import SelectCategory from "../../shared/components/selectCategory"
 import { getExperiments } from "../../shared/actions/experimentsActions"
 import { getPositionData } from "../actions/positionDataActions"
+import { positionData3D } from "../processData"
 
+
+const PlotlyComponent = createPlotlyComponent(Plotly)
 
 export default class App extends React.Component {
   constructor(props) {
@@ -25,6 +30,9 @@ export default class App extends React.Component {
   }
 
   render() {
+    const data = this.state.positionData.length > 0 ? [{
+      ...positionData3D(this.state.positionData),
+      type: "surface" }] : []
     return (
       <div>
         {
@@ -38,10 +46,13 @@ export default class App extends React.Component {
         {
           this.state.loaded &&
           this.state.selectedExperiment &&
-          <Button
-            onClick={ async () => await this.onSelectExperiment({ name: null }) }>
-            Select Other Experiment
-          </Button>
+          <div>
+            <PlotlyComponent data={ data } />
+            <Button
+              onClick={ async () => await this.onSelectExperiment({ name: null }) }>
+              Select Other Experiment
+            </Button>
+          </div>
         }
       </div>
     )

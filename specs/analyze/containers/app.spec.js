@@ -128,18 +128,5 @@ describe("App NodePositions", () => {
         })
       }
     )
-
-    it("set selectedExperiment state to null when select other experiment button is pushed",
-      done => {
-        const app = mount(<App backend={ backend } />)
-        setImmediate(() => {
-          app.setState({ selectedExperiment: experiments[0].name })
-          expect(app.state("selectedExperiment")).to.equal(experiments[0].name)
-          findButtonByName(app, "Select Other Experiment").simulate("click")
-          expect(app.state("selectedExperiment")).to.equal(null)
-          done()
-        })
-      }
-    )
   })
 })
