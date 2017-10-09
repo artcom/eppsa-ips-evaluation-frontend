@@ -4,8 +4,8 @@ import { expect } from "chai"
 import { shallow } from "enzyme"
 import sinon from "sinon"
 import Button from "../../../src/setUp/components/button"
-import { hasTitle } from "../helpers/paramsHelpers"
-import SelectCategory from "../../../src/setUp/components/selectCategory"
+import { hasTitle } from "../../helpers/paramsHelpers"
+import SelectCategory from "../../../src/shared/components/selectCategory"
 
 
 describe("SelectCategory", () => {

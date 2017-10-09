@@ -12,9 +12,9 @@ import experimentsData from "../../../testData/experiments.json"
 import nodesData from "../../../testData/nodes.json"
 import Params from "../../../../src/setUp/containers/params"
 import pointsData from "../../../testData/pointsFrontend.json"
-import { addParam } from "../../helpers/appHelpers"
-import { findButtonByName } from "../../helpers/findElements"
-import { checkProps } from "../../helpers/propsHelpers"
+import { addParam } from "../../../helpers/appHelpers"
+import { findButtonByName } from "../../../helpers/findElements"
+import { checkProps } from "../../../helpers/propsHelpers"
 import {
   getZoneSets,
   setZoneSet,
@@ -29,35 +29,35 @@ const zoneSetsActions = require("../../../../src/setUp/actions/zoneSetsActions")
 
 describe("App ZoneSets", () => {
   const backend = config.backend
-  let getMockExperiments
-  let getMockNodes
-  let getMockPoints
+  let getExperimentsStub
+  let getNodesStub
+  let getPointsStub
 
   beforeEach(() => {
-    getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
+    getExperimentsStub = sinon.stub(experimentsActions, "getExperiments")
       .resolves(experimentsData)
     proxyquire(
       "../../../../src/setUp/containers/app",
-      { getExperiments: getMockExperiments }
+      { getExperiments: getExperimentsStub }
     )
-    getMockNodes = sinon.stub(nodesActions, "getNodes")
+    getNodesStub = sinon.stub(nodesActions, "getNodes")
       .resolves(nodesData)
     proxyquire(
       "../../../../src/setUp/containers/app",
-      { getNodes: getMockNodes }
+      { getNodes: getNodesStub }
     )
-    getMockPoints = sinon.stub(pointsActions, "getPoints")
+    getPointsStub = sinon.stub(pointsActions, "getPoints")
       .resolves(pointsData)
     proxyquire(
       "../../../../src/setUp/containers/app",
-      { getPoints: getMockPoints }
+      { getPoints: getPointsStub }
     )
   })
 
   afterEach(() => {
-    getMockExperiments.restore()
-    getMockNodes.restore()
-    getMockPoints.restore()
+    getExperimentsStub.restore()
+    getNodesStub.restore()
+    getPointsStub.restore()
   })
 
   describe("contains", () => {
@@ -79,27 +79,27 @@ describe("App ZoneSets", () => {
   })
 
   describe("when zoneSets tab is active", () => {
-    let getMockZoneSets
-    let setMockZoneSet
-    let deleteMockZoneSet
+    let getZoneSetsStub
+    let setZoneSetStub
+    let deleteZoneSetStub
 
     beforeEach(() => {
-      getMockZoneSets = sinon.stub(zoneSetsActions, "getZoneSets")
+      getZoneSetsStub = sinon.stub(zoneSetsActions, "getZoneSets")
         .resolves(zoneSets)
       proxyquire(
         "../../../../src/setUp/containers/app",
-        { getZoneSets: getMockZoneSets }
+        { getZoneSets: getZoneSetsStub }
       )
-      setMockZoneSet = sinon.stub(zoneSetsActions, "setZoneSet").resolves({ name: "set3" })
-      proxyquire("../../../../src/setUp/containers/app", { setZoneSet: setMockZoneSet })
-      deleteMockZoneSet = sinon.stub(zoneSetsActions, "deleteZoneSet").resolves({ name: "set1" })
-      proxyquire("../../../../src/setUp/containers/app", { deleteZoneSet: deleteMockZoneSet })
+      setZoneSetStub = sinon.stub(zoneSetsActions, "setZoneSet").resolves({ name: "set3" })
+      proxyquire("../../../../src/setUp/containers/app", { setZoneSet: setZoneSetStub })
+      deleteZoneSetStub = sinon.stub(zoneSetsActions, "deleteZoneSet").resolves({ name: "set1" })
+      proxyquire("../../../../src/setUp/containers/app", { deleteZoneSet: deleteZoneSetStub })
     })
 
     afterEach(() => {
-      getMockZoneSets.restore()
-      setMockZoneSet.restore()
-      deleteMockZoneSet.restore()
+      getZoneSetsStub.restore()
+      setZoneSetStub.restore()
+      deleteZoneSetStub.restore()
     })
 
     it("sends expected props to params", done => {
@@ -134,8 +134,8 @@ describe("App ZoneSets", () => {
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
         app.setState({ show: "zoneSets" })
-        sinon.assert.calledTwice(getMockZoneSets)
-        sinon.assert.calledWith(getMockZoneSets, { backend })
+        sinon.assert.calledTwice(getZoneSetsStub)
+        sinon.assert.calledWith(getZoneSetsStub, { backend })
         done()
       })
     })
@@ -154,8 +154,8 @@ describe("App ZoneSets", () => {
             createText: "Create Zone Set",
             data
           })
-          sinon.assert.calledOnce(setMockZoneSet)
-          sinon.assert.calledWith(setMockZoneSet, { backend, zoneSet: data })
+          sinon.assert.calledOnce(setZoneSetStub)
+          sinon.assert.calledWith(setZoneSetStub, { backend, zoneSet: data })
           done()
         })
       })
@@ -174,8 +174,8 @@ describe("App ZoneSets", () => {
       setImmediate(() => {
         const param1Row = dataTable.find("tbody").find("tr").at(0)
         findButtonByName(param1Row, "Delete").simulate("click")
-        sinon.assert.calledOnce(deleteMockZoneSet)
-        sinon.assert.calledWith(deleteMockZoneSet, callArgs)
+        sinon.assert.calledOnce(deleteZoneSetStub)
+        sinon.assert.calledWith(deleteZoneSetStub, callArgs)
         done()
       })
     })
@@ -191,8 +191,8 @@ describe("App ZoneSets", () => {
         const param1Row = dataTable.find("tbody").find("tr").at(0)
         findButtonByName(param1Row, "Delete").simulate("click")
         setImmediate(() => {
-          sinon.assert.calledThrice(getMockZoneSets)
-          sinon.assert.alwaysCalledWith(getMockZoneSets, callArgs)
+          sinon.assert.calledThrice(getZoneSetsStub)
+          sinon.assert.alwaysCalledWith(getZoneSetsStub, callArgs)
           done()
         })
       })

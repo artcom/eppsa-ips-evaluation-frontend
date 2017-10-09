@@ -27,35 +27,35 @@ describe("experimentsActions", () => {
 
   describe("actions", () => {
     const experiments = [{ name: "fake-experiment1" }]
-    let delMock
-    let getMock
-    let postMock
+    let delStub
+    let getStub
+    let postStub
 
     beforeEach(() => {
-      delMock = sinon.stub(rest, "del")
-      getMock = sinon.stub(rest, "get")
-      postMock = sinon.stub(rest, "post")
-      proxyquire("../../../src/setUp/actions/experimentsActions", { rest: { del: delMock } })
-      proxyquire("../../../src/setUp/actions/experimentsActions", { rest: { get: getMock } })
-      proxyquire("../../../src/setUp/actions/experimentsActions", { rest: { post: postMock } })
+      delStub = sinon.stub(rest, "del")
+      getStub = sinon.stub(rest, "get")
+      postStub = sinon.stub(rest, "post")
+      proxyquire("../../../src/setUp/actions/experimentsActions", { rest: { del: delStub } })
+      proxyquire("../../../src/setUp/actions/experimentsActions", { rest: { get: getStub } })
+      proxyquire("../../../src/setUp/actions/experimentsActions", { rest: { post: postStub } })
     })
 
     afterEach(() => {
-      delMock.restore()
-      getMock.restore()
-      postMock.restore()
+      delStub.restore()
+      getStub.restore()
+      postStub.restore()
     })
 
     describe("getExperiments", () => {
       beforeEach(() => {
-        getMock.resolves({ data: experiments })
+        getStub.resolves({ data: experiments })
       })
 
       it("should send a get request to the expected URL", async () => {
         const url = `http://${backend}/experiments`
         await getExperiments({ backend })
-        sinon.assert.calledOnce(getMock)
-        sinon.assert.calledWith(getMock, url)
+        sinon.assert.calledOnce(getStub)
+        sinon.assert.calledWith(getStub, url)
       })
 
       it("should return the experiments it got from the backend", async () => {
@@ -66,15 +66,15 @@ describe("experimentsActions", () => {
 
     describe("setExperiment", () => {
       beforeEach(() => {
-        postMock.resolves({ data: experiments[0].name })
+        postStub.resolves({ data: experiments[0].name })
       })
 
       it("should post the expected data to the expected URL", async () => {
         const url = `http://${backend}/experiments`
         const experiment = experiments[0]
         await setExperiment({ backend, experiment })
-        sinon.assert.calledOnce(postMock)
-        sinon.assert.calledWith(postMock, url, { data: experiment })
+        sinon.assert.calledOnce(postStub)
+        sinon.assert.calledWith(postStub, url, { data: experiment })
       })
 
       it("should return the server response data", async () => {
@@ -87,15 +87,15 @@ describe("experimentsActions", () => {
 
     describe("deleteExperiment", () => {
       beforeEach(() => {
-        delMock.resolves({ data: experiments[0].name })
+        delStub.resolves({ data: experiments[0].name })
       })
 
       it("should send a get request to the expected URL", async () => {
         const experimentName = experiments[0].name
         const url = `http://${backend}/experiments/fake-experiment1`
         await deleteExperiment({ backend, experimentName })
-        sinon.assert.calledOnce(delMock)
-        sinon.assert.calledWith(delMock, url)
+        sinon.assert.calledOnce(delStub)
+        sinon.assert.calledWith(delStub, url)
       })
 
       it("should return the server response data", async () => {
@@ -108,7 +108,7 @@ describe("experimentsActions", () => {
 
     describe("runExperiment", () => {
       beforeEach(() => {
-        postMock.resolves({ data: "started Quuppa, GoIndoor experiment" })
+        postStub.resolves({ data: "started Quuppa, GoIndoor experiment" })
       })
 
       it("should post the expected data to the expected URL", async () => {
@@ -122,8 +122,8 @@ describe("experimentsActions", () => {
         const postData = { experimentTypes: ["Quuppa", "GoIndoor"], repeats: 4, interval: 2 }
         const url = `http://${backend}/experiments/fake-experiment1/run`
         await runExperiment(runArgs)
-        sinon.assert.calledOnce(postMock)
-        sinon.assert.calledWith(postMock, url, { data: postData })
+        sinon.assert.calledOnce(postStub)
+        sinon.assert.calledWith(postStub, url, { data: postData })
       })
 
       it("should return the server response data", async () => {

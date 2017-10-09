@@ -3,10 +3,10 @@ import { mount } from "enzyme"
 import { slice } from "lodash"
 import React from "react"
 import sinon from "sinon"
-import DataTable from "../../../src/setUp/components/dataTable"
+import DataTable from "../../src/setUp/components/dataTable"
 import { findButtonByName } from "./findElements"
 import inputData from "./inputData"
-import Title from "../../../src/setUp/components/title"
+import Title from "../../src/setUp/components/title"
 
 
 export function hasTitle(shallowComponent, title) {

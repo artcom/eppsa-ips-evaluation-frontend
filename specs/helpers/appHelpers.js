@@ -1,5 +1,5 @@
-import Form from "../../../src/setUp/components/form"
-import Params from "../../../src/setUp/containers/params"
+import Form from "../../src/setUp/components/form"
+import Params from "../../src/setUp/containers/params"
 import { findButtonByName } from "./findElements"
 import inputData from "./inputData"
 

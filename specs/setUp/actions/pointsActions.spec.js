@@ -32,35 +32,35 @@ describe("pointsActions", () => {
   })
 
   describe("actions", () => {
-    let delMock
-    let getMock
-    let postMock
+    let delStub
+    let getStub
+    let postStub
 
     beforeEach(() => {
-      delMock = sinon.stub(rest, "del")
-      getMock = sinon.stub(rest, "get")
-      postMock = sinon.stub(rest, "post")
-      proxyquire("../../../src/setUp/actions/pointsActions", { rest: { del: delMock } })
-      proxyquire("../../../src/setUp/actions/pointsActions", { rest: { get: getMock } })
-      proxyquire("../../../src/setUp/actions/pointsActions", { rest: { post: postMock } })
+      delStub = sinon.stub(rest, "del")
+      getStub = sinon.stub(rest, "get")
+      postStub = sinon.stub(rest, "post")
+      proxyquire("../../../src/setUp/actions/pointsActions", { rest: { del: delStub } })
+      proxyquire("../../../src/setUp/actions/pointsActions", { rest: { get: getStub } })
+      proxyquire("../../../src/setUp/actions/pointsActions", { rest: { post: postStub } })
     })
 
     afterEach(() => {
-      delMock.restore()
-      getMock.restore()
-      postMock.restore()
+      delStub.restore()
+      getStub.restore()
+      postStub.restore()
     })
 
     describe("getPoints", () => {
       beforeEach(() => {
-        getMock.resolves({ data: pointsBackend })
+        getStub.resolves({ data: pointsBackend })
       })
 
       it("should send a GET request to the expected URL", async () => {
         const url = `http://${backend}/points`
         await getPoints({ backend })
-        sinon.assert.calledOnce(getMock)
-        sinon.assert.calledWith(getMock, url)
+        sinon.assert.calledOnce(getStub)
+        sinon.assert.calledWith(getStub, url)
       })
 
       it("should return the experiments it got from the backend", async () => {
@@ -71,15 +71,15 @@ describe("pointsActions", () => {
 
     describe("setPoint", () => {
       beforeEach(() => {
-        postMock.resolves({ data: pointsBackend[0].name })
+        postStub.resolves({ data: pointsBackend[0].name })
       })
 
       it("should POST the expected data to the expected URL", async () => {
         const url = `http://${backend}/points`
         const point = pointsFrontend[0]
         await setPoint({ backend, point })
-        sinon.assert.calledOnce(postMock)
-        sinon.assert.calledWith(postMock, url, { data: pointsBackend[0] })
+        sinon.assert.calledOnce(postStub)
+        sinon.assert.calledWith(postStub, url, { data: pointsBackend[0] })
       })
 
       it("should return the server response data", async () => {
@@ -91,15 +91,15 @@ describe("pointsActions", () => {
 
     describe("deletePoint", () => {
       beforeEach(() => {
-        delMock.resolves({ data: pointsBackend[0].name })
+        delStub.resolves({ data: pointsBackend[0].name })
       })
 
       it("should send a DELETE request to the expected URL", async () => {
         const url = `http://${backend}/points/${pointsBackend[0].name}`
         const point = pointsFrontend[0]
         await deletePoint({ backend, point })
-        sinon.assert.calledOnce(delMock)
-        sinon.assert.calledWith(delMock, url)
+        sinon.assert.calledOnce(delStub)
+        sinon.assert.calledWith(delStub, url)
       })
 
       it("should return the server response data", async () => {

@@ -8,8 +8,8 @@ import Button from "../../../src/setUp/components/button"
 import Form from "../../../src/setUp/components/form"
 import Run from "../../../src/setUp/containers/run"
 import Title from "../../../src/setUp/components/title"
-import { activateOnSelect, hideForm, showForm, submitData } from "../helpers/paramsHelpers"
-import { checkProps } from "../helpers/propsHelpers"
+import { activateOnSelect, hideForm, showForm, submitData } from "../../helpers/paramsHelpers"
+import { checkProps } from "../../helpers/propsHelpers"
 
 
 describe("Run", () => {

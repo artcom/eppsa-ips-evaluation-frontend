@@ -12,10 +12,10 @@ import experimentsData from "../../../testData/experiments.json"
 import Params from "../../../../src/setUp/containers/params"
 import nodesData from "../../../testData/nodes.json"
 import pointsData from "../../../testData/pointsFrontend.json"
-import { addParam } from "../../helpers/appHelpers"
-import { findButtonByName } from "../../helpers/findElements"
+import { addParam } from "../../../helpers/appHelpers"
+import { findButtonByName } from "../../../helpers/findElements"
 import { getPoints, setPoint } from "../../../../src/setUp/actions/pointsActions"
-import { checkProps } from "../../helpers/propsHelpers"
+import { checkProps } from "../../../helpers/propsHelpers"
 const experimentsActions = require("../../../../src/setUp/actions/experimentsActions")
 const nodesActions = require("../../../../src/setUp/actions/nodesActions")
 const pointsActions = require("../../../../src/setUp/actions/pointsActions")
@@ -23,35 +23,35 @@ const pointsActions = require("../../../../src/setUp/actions/pointsActions")
 
 describe("App Points", () => {
   const backend = config.backend
-  let getMockExperiments
-  let getMockNodes
-  let getMockPoints
+  let getExperimentsStub
+  let getNodesStub
+  let getPointsStub
 
   beforeEach(() => {
-    getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
+    getExperimentsStub = sinon.stub(experimentsActions, "getExperiments")
       .resolves(experimentsData)
     proxyquire(
       "../../../../src/setUp/containers/app",
-      { getExperiments: getMockExperiments }
+      { getExperiments: getExperimentsStub }
     )
-    getMockNodes = sinon.stub(nodesActions, "getNodes")
+    getNodesStub = sinon.stub(nodesActions, "getNodes")
       .resolves(nodesData)
     proxyquire(
       "../../../../src/setUp/containers/app",
-      { getNodes: getMockNodes }
+      { getNodes: getNodesStub }
     )
-    getMockPoints = sinon.stub(pointsActions, "getPoints")
+    getPointsStub = sinon.stub(pointsActions, "getPoints")
       .resolves(pointsData)
     proxyquire(
       "../../../../src/setUp/containers/app",
-      { getPoints: getMockPoints }
+      { getPoints: getPointsStub }
     )
   })
 
   afterEach(() => {
-    getMockExperiments.restore()
-    getMockNodes.restore()
-    getMockPoints.restore()
+    getExperimentsStub.restore()
+    getNodesStub.restore()
+    getPointsStub.restore()
   })
 
   describe("contains", () => {
@@ -72,25 +72,25 @@ describe("App Points", () => {
   })
 
   describe("when points tab is active", () => {
-    let setMockPoint
-    let deleteMockPoint
+    let setPointStub
+    let deletePointStub
 
     beforeEach(() => {
-      setMockPoint = sinon.stub(pointsActions, "setPoint")
+      setPointStub = sinon.stub(pointsActions, "setPoint")
         .resolves({
           name: "point3",
           X: 4,
           Y: 4,
           Z: 5
         })
-      proxyquire("../../../../src/setUp/containers/app", { setPoint: setMockPoint })
-      deleteMockPoint = sinon.stub(pointsActions, "deletePoint").resolves("point1")
-      proxyquire("../../../../src/setUp/containers/app", { deletePoint: deleteMockPoint })
+      proxyquire("../../../../src/setUp/containers/app", { setPoint: setPointStub })
+      deletePointStub = sinon.stub(pointsActions, "deletePoint").resolves("point1")
+      proxyquire("../../../../src/setUp/containers/app", { deletePoint: deletePointStub })
     })
 
     afterEach(() => {
-      setMockPoint.restore()
-      deleteMockPoint.restore()
+      setPointStub.restore()
+      deletePointStub.restore()
     })
 
     it("expected props are sent to params", done => {
@@ -127,8 +127,8 @@ describe("App Points", () => {
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
         app.setState({ show: "points" })
-        sinon.assert.calledTwice(getMockPoints)
-        sinon.assert.calledWith(getMockPoints, { backend })
+        sinon.assert.calledTwice(getPointsStub)
+        sinon.assert.calledWith(getPointsStub, { backend })
         done()
       })
     })
@@ -137,7 +137,7 @@ describe("App Points", () => {
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
         app.setState({ show: "points" })
-        sinon.assert.calledTwice(getMockPoints)
+        sinon.assert.calledTwice(getPointsStub)
         const data = {
           name: "point3",
           X: 4,
@@ -146,8 +146,8 @@ describe("App Points", () => {
         }
         setImmediate(() => {
           addParam({ mountedComponent: app, paramName: "point", createText: "Add Point", data })
-          sinon.assert.calledOnce(setMockPoint)
-          sinon.assert.calledWith(setMockPoint, { backend, point: data })
+          sinon.assert.calledOnce(setPointStub)
+          sinon.assert.calledWith(setPointStub, { backend, point: data })
           done()
         })
       })
@@ -171,8 +171,8 @@ describe("App Points", () => {
       setImmediate(() => {
         const param1Row = dataTable.find("tbody").find("tr").at(0)
         findButtonByName(param1Row, "Delete").simulate("click")
-        sinon.assert.calledOnce(deleteMockPoint)
-        sinon.assert.calledWith(deleteMockPoint, callArgs)
+        sinon.assert.calledOnce(deletePointStub)
+        sinon.assert.calledWith(deletePointStub, callArgs)
         done()
       })
     })
@@ -187,10 +187,10 @@ describe("App Points", () => {
       setImmediate(() => {
         const param1Row = dataTable.find("tbody").find("tr").at(0)
         findButtonByName(param1Row, "Delete").simulate("click")
-        sinon.assert.calledTwice(getMockPoints)
+        sinon.assert.calledTwice(getPointsStub)
         sinon.assert.callOrder(
-          getMockPoints.withArgs(callArgs),
-          getMockPoints.withArgs(callArgs)
+          getPointsStub.withArgs(callArgs),
+          getPointsStub.withArgs(callArgs)
         )
         done()
       })

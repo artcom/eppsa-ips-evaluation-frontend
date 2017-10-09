@@ -12,14 +12,14 @@ import experimentsData from "../../../testData/experiments.json"
 import nodesData from "../../../testData/nodes.json"
 import Params from "../../../../src/setUp/containers/params"
 import pointsData from "../../../testData/pointsFrontend.json"
-import { addParam } from "../../helpers/appHelpers"
+import { addParam } from "../../../helpers/appHelpers"
 import {
   deleteExperiment,
   getExperiments,
   setExperiment
 } from "../../../../src/setUp/actions/experimentsActions"
-import { findButtonByName } from "../../helpers/findElements"
-import { checkProps } from "../../helpers/propsHelpers"
+import { findButtonByName } from "../../../helpers/findElements"
+import { checkProps } from "../../../helpers/propsHelpers"
 const experimentsActions = require("../../../../src/setUp/actions/experimentsActions")
 const nodesActions = require("../../../../src/setUp/actions/nodesActions")
 const pointsActions = require("../../../../src/setUp/actions/pointsActions")
@@ -27,35 +27,35 @@ const pointsActions = require("../../../../src/setUp/actions/pointsActions")
 
 describe("App Experiment", () => {
   const backend = config.backend
-  let getMockExperiments
-  let getMockNodes
-  let getMockPoints
+  let getExperimentsStub
+  let getNodesStub
+  let getPointsStub
 
   beforeEach(() => {
-    getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
+    getExperimentsStub = sinon.stub(experimentsActions, "getExperiments")
       .resolves(experimentsData)
     proxyquire(
       "../../../../src/setUp/containers/app",
-      { getExperiments: getMockExperiments }
+      { getExperiments: getExperimentsStub }
     )
-    getMockNodes = sinon.stub(nodesActions, "getNodes")
+    getNodesStub = sinon.stub(nodesActions, "getNodes")
       .resolves(nodesData)
     proxyquire(
       "../../../../src/setUp/containers/app",
-      { getNodes: getMockNodes }
+      { getNodes: getNodesStub }
     )
-    getMockPoints = sinon.stub(pointsActions, "getPoints")
+    getPointsStub = sinon.stub(pointsActions, "getPoints")
       .resolves(pointsData)
     proxyquire(
       "../../../../src/setUp/containers/app",
-      { getPoints: getMockPoints }
+      { getPoints: getPointsStub }
     )
   })
 
   afterEach(() => {
-    getMockExperiments.restore()
-    getMockNodes.restore()
-    getMockPoints.restore()
+    getExperimentsStub.restore()
+    getNodesStub.restore()
+    getPointsStub.restore()
   })
 
   describe("contains", () => {
@@ -76,26 +76,26 @@ describe("App Experiment", () => {
   })
 
   describe("when experiments tab is active", () => {
-    let setMockExperiment
-    let deleteMockExperiment
+    let setExperimentStub
+    let deleteExperimentStub
 
     beforeEach(() => {
-      setMockExperiment = sinon.stub(experimentsActions, "setExperiment")
+      setExperimentStub = sinon.stub(experimentsActions, "setExperiment")
         .resolves({
           name: "fake-experiment3"
         })
       proxyquire(
         "../../../../src/setUp/containers/app",
-        { setExperiment: setMockExperiment }
+        { setExperiment: setExperimentStub }
       )
-      deleteMockExperiment = sinon.stub(experimentsActions, "deleteExperiment")
+      deleteExperimentStub = sinon.stub(experimentsActions, "deleteExperiment")
         .resolves("fake-experiment1")
-      proxyquire("../../../../src/setUp/containers/app", { deleteExperiment: deleteMockExperiment })
+      proxyquire("../../../../src/setUp/containers/app", { deleteExperiment: deleteExperimentStub })
     })
 
     afterEach(() => {
-      setMockExperiment.restore()
-      deleteMockExperiment.restore()
+      setExperimentStub.restore()
+      deleteExperimentStub.restore()
     })
 
     it("sends expected props to params", done => {
@@ -130,8 +130,8 @@ describe("App Experiment", () => {
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
         app.setState({ show: "experiments" })
-        sinon.assert.calledTwice(getMockExperiments)
-        sinon.assert.calledWith(getMockExperiments, { backend })
+        sinon.assert.calledTwice(getExperimentsStub)
+        sinon.assert.calledWith(getExperimentsStub, { backend })
         done()
       })
     })
@@ -140,7 +140,7 @@ describe("App Experiment", () => {
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
         app.setState({ show: "experiments" })
-        sinon.assert.calledTwice(getMockExperiments)
+        sinon.assert.calledTwice(getExperimentsStub)
         const data = {
           name: "fake-experiment3"
         }
@@ -151,8 +151,8 @@ describe("App Experiment", () => {
           data
         })
         setImmediate(() => {
-          sinon.assert.calledOnce(setMockExperiment)
-          sinon.assert.calledWith(setMockExperiment, { backend, experiment: data })
+          sinon.assert.calledOnce(setExperimentStub)
+          sinon.assert.calledWith(setExperimentStub, { backend, experiment: data })
           done()
         })
       })
@@ -168,8 +168,8 @@ describe("App Experiment", () => {
       setImmediate(() => {
         const param1Row = dataTable.find("tbody").find("tr").at(0)
         findButtonByName(param1Row, "Delete").simulate("click")
-        sinon.assert.calledOnce(deleteMockExperiment)
-        sinon.assert.calledWith(deleteMockExperiment, callArgs)
+        sinon.assert.calledOnce(deleteExperimentStub)
+        sinon.assert.calledWith(deleteExperimentStub, callArgs)
         done()
       })
     })
@@ -185,8 +185,8 @@ describe("App Experiment", () => {
         const param1Row = dataTable.find("tbody").find("tr").at(0)
         findButtonByName(param1Row, "Delete").simulate("click")
         setImmediate(() => {
-          sinon.assert.calledThrice(getMockExperiments)
-          sinon.assert.alwaysCalledWith(getMockExperiments, callArgs)
+          sinon.assert.calledThrice(getExperimentsStub)
+          sinon.assert.alwaysCalledWith(getExperimentsStub, callArgs)
           done()
         })
       })

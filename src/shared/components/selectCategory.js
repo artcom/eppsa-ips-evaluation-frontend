@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
-import Button from "./button"
-import Title from "./title"
+import Button from "../../setUp/components/button"
+import Title from "../../setUp/components/title"
 
 
 const Container = styled.div`

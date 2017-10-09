@@ -13,16 +13,16 @@ import Params from "../../../../src/setUp/containers/params"
 import nodesData from "../../../testData/nodes.json"
 import nodePositionsData from "../../../testData/nodePositionsFrontend.json"
 import pointsData from "../../../testData/pointsFrontend.json"
-import SelectCategory from "../../../../src/setUp/components/selectCategory"
+import SelectCategory from "../../../../src/shared/components/selectCategory"
 import Tab from "../../../../src/setUp/components/tab"
 import zoneSets from "../../../testData/zoneSets.json"
-import { addParam } from "../../helpers/appHelpers"
-import { findButtonByName } from "../../helpers/findElements"
+import { addParam } from "../../../helpers/appHelpers"
+import { findButtonByName } from "../../../helpers/findElements"
 import {
   getNodePositions,
   setNodePosition
 } from "../../../../src/setUp/actions/nodePositionsActions"
-import { checkProps } from "../../helpers/propsHelpers"
+import { checkProps } from "../../../helpers/propsHelpers"
 const experimentsActions = require("../../../../src/setUp/actions/experimentsActions")
 const nodesActions = require("../../../../src/setUp/actions/nodesActions")
 const nodePositionsActions = require("../../../../src/setUp/actions/nodePositionsActions")
@@ -32,50 +32,50 @@ const zoneSetsActions = require("../../../../src/setUp/actions/zoneSetsActions")
 
 describe("App NodePositions", () => {
   const backend = config.backend
-  let getMockExperiments
-  let getMockNodes
-  let getMockPoints
-  let getMockNodePositions
-  let getMockZoneSets
+  let getExperimentsStub
+  let getNodesStub
+  let getPointsStub
+  let getNodePositionsStub
+  let getZoneSetsStub
 
   beforeEach(() => {
-    getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
+    getExperimentsStub = sinon.stub(experimentsActions, "getExperiments")
       .resolves(experimentsData)
     proxyquire(
       "../../../../src/setUp/containers/app",
-      { getExperiments: getMockExperiments }
+      { getExperiments: getExperimentsStub }
     )
-    getMockZoneSets = sinon.stub(zoneSetsActions, "getZoneSets").resolves(zoneSets)
+    getZoneSetsStub = sinon.stub(zoneSetsActions, "getZoneSets").resolves(zoneSets)
     proxyquire(
       "../../../../src/setUp/containers/app",
-      { getZoneSets: getMockZoneSets }
+      { getZoneSets: getZoneSetsStub }
     )
-    getMockNodes = sinon.stub(nodesActions, "getNodes")
+    getNodesStub = sinon.stub(nodesActions, "getNodes")
       .resolves(nodesData)
     proxyquire(
       "../../../../src/setUp/containers/app",
-      { getNodes: getMockNodes }
+      { getNodes: getNodesStub }
     )
-    getMockPoints = sinon.stub(pointsActions, "getPoints")
+    getPointsStub = sinon.stub(pointsActions, "getPoints")
       .resolves(pointsData)
     proxyquire(
       "../../../../src/setUp/containers/app",
-      { getPoints: getMockPoints }
+      { getPoints: getPointsStub }
     )
-    getMockNodePositions = sinon.stub(nodePositionsActions, "getNodePositions")
+    getNodePositionsStub = sinon.stub(nodePositionsActions, "getNodePositions")
       .resolves(nodePositionsData)
     proxyquire(
       "../../../../src/setUp/containers/app",
-      { getNodePositions: getMockNodePositions }
+      { getNodePositions: getNodePositionsStub }
     )
   })
 
   afterEach(() => {
-    getMockExperiments.restore()
-    getMockZoneSets.restore()
-    getMockNodes.restore()
-    getMockPoints.restore()
-    getMockNodePositions.restore()
+    getExperimentsStub.restore()
+    getZoneSetsStub.restore()
+    getNodesStub.restore()
+    getPointsStub.restore()
+    getNodePositionsStub.restore()
   })
 
   describe("contains", () => {
@@ -131,11 +131,11 @@ describe("App NodePositions", () => {
   })
 
   describe("when nodePositions tab is active", () => {
-    let setMockNodePosition
-    let deleteMockNodePosition
+    let setNodePositionStub
+    let deleteNodePositionStub
 
     beforeEach(() => {
-      setMockNodePosition = sinon.stub(nodePositionsActions, "setNodePosition")
+      setNodePositionStub = sinon.stub(nodePositionsActions, "setNodePosition")
         .resolves({
           nodeName: "Node3",
           pointName: "point3",
@@ -143,20 +143,20 @@ describe("App NodePositions", () => {
         })
       proxyquire(
         "../../../../src/setUp/containers/app",
-        { setNodePosition: setMockNodePosition }
+        { setNodePosition: setNodePositionStub }
       )
-      deleteMockNodePosition = sinon.stub(nodePositionsActions, "deleteNodePosition")
+      deleteNodePositionStub = sinon.stub(nodePositionsActions, "deleteNodePosition")
         .resolves("Node1")
       proxyquire(
         "../../../../src/setUp/containers/app",
-        { deleteNodePosition: deleteMockNodePosition }
+        { deleteNodePosition: deleteNodePositionStub }
       )
     })
 
     afterEach(() => {
-      getMockNodePositions.restore()
-      setMockNodePosition.restore()
-      deleteMockNodePosition.restore()
+      getNodePositionsStub.restore()
+      setNodePositionStub.restore()
+      deleteNodePositionStub.restore()
     })
 
     it("sends expected props to params", done => {
@@ -190,7 +190,7 @@ describe("App NodePositions", () => {
     })
 
     it("sends expected props to selectCategory", done => {
-      const props = { categories: experimentsData }
+      const props = { categories: experimentsData, title: "Select Experiment:" }
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
         app.setState({ show: "nodePositions" })
@@ -205,9 +205,9 @@ describe("App NodePositions", () => {
       setImmediate(() => {
         app.setState({ show: "nodePositions", selectedExperiment: "fake-experiment1" })
         setImmediate(() => {
-          sinon.assert.calledOnce(getMockNodePositions)
+          sinon.assert.calledOnce(getNodePositionsStub)
           sinon.assert.calledWith(
-            getMockNodePositions,
+            getNodePositionsStub,
             { backend, experimentName: "fake-experiment1" }
           )
           done()
@@ -218,17 +218,17 @@ describe("App NodePositions", () => {
     it("get nodes, get experiments and get points is called", done => {
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
-        sinon.assert.calledTwice(getMockExperiments)
-        sinon.assert.calledOnce(getMockPoints)
-        sinon.assert.calledOnce(getMockNodes)
+        sinon.assert.calledTwice(getExperimentsStub)
+        sinon.assert.calledOnce(getPointsStub)
+        sinon.assert.calledOnce(getNodesStub)
         expect(app.state("show")).to.equal("experiments")
         const nodesTab = app.find(Tab).filterWhere(tab => tab.text() === "NodePositions")
         nodesTab.simulate("click")
         setImmediate(() => {
           expect(app.state("show")).to.equal("nodePositions")
-          sinon.assert.calledThrice(getMockExperiments)
-          sinon.assert.calledTwice(getMockPoints)
-          sinon.assert.calledTwice(getMockNodes)
+          sinon.assert.calledThrice(getExperimentsStub)
+          sinon.assert.calledTwice(getPointsStub)
+          sinon.assert.calledTwice(getNodesStub)
           done()
         })
       })
@@ -262,7 +262,7 @@ describe("App NodePositions", () => {
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
         app.setState({ show: "nodePositions", selectedExperiment: "fake-experiment1" })
-        sinon.assert.calledOnce(getMockNodePositions)
+        sinon.assert.calledOnce(getNodePositionsStub)
         const data = {
           nodeName: "Node2",
           pointName: "point2",
@@ -277,9 +277,9 @@ describe("App NodePositions", () => {
             data
           })
           setImmediate(() => {
-            sinon.assert.calledOnce(setMockNodePosition)
+            sinon.assert.calledOnce(setNodePositionStub)
             sinon.assert.calledWith(
-              setMockNodePosition,
+              setNodePositionStub,
               { backend, experimentName: "fake-experiment1", nodePosition: data }
             )
             done()
@@ -292,7 +292,7 @@ describe("App NodePositions", () => {
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
         app.setState({ show: "nodePositions", selectedExperiment: "fake-experiment1" })
-        sinon.assert.calledOnce(getMockNodePositions)
+        sinon.assert.calledOnce(getNodePositionsStub)
         const data = {
           nodeName: "Node2",
           pointName: "point2",
@@ -307,9 +307,9 @@ describe("App NodePositions", () => {
             data
           })
           setImmediate(() => {
-            sinon.assert.calledTwice(getMockNodePositions)
+            sinon.assert.calledTwice(getNodePositionsStub)
             sinon.assert.calledWith(
-              getMockNodePositions,
+              getNodePositionsStub,
               { backend, experimentName: "fake-experiment1" }
             )
             done()
@@ -337,8 +337,8 @@ describe("App NodePositions", () => {
         const param1Row = dataTable.find("tbody").find("tr").at(0)
         findButtonByName(param1Row, "Delete").simulate("click")
         setImmediate(() => {
-          sinon.assert.calledOnce(deleteMockNodePosition)
-          sinon.assert.calledWith(deleteMockNodePosition, callArgs)
+          sinon.assert.calledOnce(deleteNodePositionStub)
+          sinon.assert.calledWith(deleteNodePositionStub, callArgs)
           done()
         })
       })
@@ -358,10 +358,10 @@ describe("App NodePositions", () => {
         const param1Row = dataTable.find("tbody").find("tr").at(0)
         findButtonByName(param1Row, "Delete").simulate("click")
         setImmediate(() => {
-          sinon.assert.calledTwice(getMockNodePositions)
+          sinon.assert.calledTwice(getNodePositionsStub)
           sinon.assert.callOrder(
-            getMockNodePositions.withArgs(callArgs),
-            getMockNodePositions.withArgs(callArgs)
+            getNodePositionsStub.withArgs(callArgs),
+            getNodePositionsStub.withArgs(callArgs)
           )
           done()
         })

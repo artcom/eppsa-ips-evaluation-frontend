@@ -21,42 +21,42 @@ const zoneSetsActions = require("../../../../src/setUp/actions/zoneSetsActions")
 
 describe("App", () => {
   const backend = config.backend
-  let getMockExperiments
-  let getMockZoneSets
-  let getMockNodes
-  let getMockPoints
+  let getExperimentsStub
+  let getZoneSetsStub
+  let getNodesStub
+  let getPointsStub
 
   beforeEach(() => {
-    getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
+    getExperimentsStub = sinon.stub(experimentsActions, "getExperiments")
       .resolves(experimentsData)
     proxyquire(
       "../../../../src/setUp/containers/app",
-      { getExperiments: getMockExperiments }
+      { getExperiments: getExperimentsStub }
     )
-    getMockZoneSets = sinon.stub(zoneSetsActions, "getZoneSets").resolves(zoneSets)
+    getZoneSetsStub = sinon.stub(zoneSetsActions, "getZoneSets").resolves(zoneSets)
     proxyquire(
       "../../../../src/setUp/containers/app",
-      { getZoneSets: getMockZoneSets }
+      { getZoneSets: getZoneSetsStub }
     )
-    getMockNodes = sinon.stub(nodesActions, "getNodes")
+    getNodesStub = sinon.stub(nodesActions, "getNodes")
       .resolves(nodesData)
     proxyquire(
       "../../../../src/setUp/containers/app",
-      { getNodes: getMockNodes }
+      { getNodes: getNodesStub }
     )
-    getMockPoints = sinon.stub(pointsActions, "getPoints")
+    getPointsStub = sinon.stub(pointsActions, "getPoints")
       .resolves(pointsData)
     proxyquire(
       "../../../../src/setUp/containers/app",
-      { getPoints: getMockPoints }
+      { getPoints: getPointsStub }
     )
   })
 
   afterEach(() => {
-    getMockExperiments.restore()
-    getMockZoneSets.restore()
-    getMockNodes.restore()
-    getMockPoints.restore()
+    getExperimentsStub.restore()
+    getZoneSetsStub.restore()
+    getNodesStub.restore()
+    getPointsStub.restore()
   })
 
   describe("contains", () => {
@@ -76,7 +76,7 @@ describe("App", () => {
   describe("loads", () => {
     it("experiments into state on mount", done => {
       const app = mount(<App backend={ backend } />)
-      sinon.assert.calledTwice(getMockExperiments)
+      sinon.assert.calledTwice(getExperimentsStub)
       setImmediate(() => {
         expect(app.state("experiments")).to.deep.equal(experimentsData)
         done()
@@ -85,7 +85,7 @@ describe("App", () => {
 
     it("nodes into state on mount", done => {
       const app = mount(<App backend={ backend } />)
-      sinon.assert.calledOnce(getMockNodes)
+      sinon.assert.calledOnce(getNodesStub)
       setImmediate(() => {
         expect(app.state("nodes")).to.deep.equal(nodesData)
         done()
@@ -94,7 +94,7 @@ describe("App", () => {
 
     it("points into state on mount", done => {
       const app = mount(<App backend={ backend } />)
-      sinon.assert.calledOnce(getMockPoints)
+      sinon.assert.calledOnce(getPointsStub)
       setImmediate(() => {
         expect(app.state("points")).to.deep.equal(pointsData)
         done()
@@ -103,21 +103,21 @@ describe("App", () => {
   })
 
   describe("activates", () => {
-    let setMockExperiment
+    let setExperimentStub
 
     beforeEach(() => {
-      setMockExperiment = sinon.stub(experimentsActions, "setExperiment")
+      setExperimentStub = sinon.stub(experimentsActions, "setExperiment")
         .resolves({
           name: "fake-experiment3"
         })
       proxyquire(
         "../../../../src/setUp/containers/app",
-        { setExperiment: setMockExperiment }
+        { setExperiment: setExperimentStub }
       )
     })
 
     afterEach(() => {
-      setMockExperiment.restore()
+      setExperimentStub.restore()
     })
 
     it("Points when points tab is clicked", done => {

@@ -9,14 +9,14 @@ import App from "../../../../src/setUp/containers/app"
 import config from "../../../../src/constants"
 import experimentsData from "../../../testData/experiments.json"
 import Form from "../../../../src/setUp/components/form"
-import inputData from "../../helpers/inputData"
+import inputData from "../../../helpers/inputData"
 import nodesData from "../../../testData/nodes.json"
 import pointsData from "../../../testData/pointsFrontend.json"
 import Run from "../../../../src/setUp/containers/run"
-import SelectCategory from "../../../../src/setUp/components/selectCategory"
+import SelectCategory from "../../../../src/shared/components/selectCategory"
 import zoneSets from "../../../testData/zoneSets.json"
-import { findButtonByName } from "../../helpers/findElements"
-import { checkProps } from "../../helpers/propsHelpers"
+import { findButtonByName } from "../../../helpers/findElements"
+import { checkProps } from "../../../helpers/propsHelpers"
 const experimentsActions = require("../../../../src/setUp/actions/experimentsActions")
 const nodesActions = require("../../../../src/setUp/actions/nodesActions")
 const pointsActions = require("../../../../src/setUp/actions/pointsActions")
@@ -25,42 +25,42 @@ const zoneSetsActions = require("../../../../src/setUp/actions/zoneSetsActions")
 
 describe("App Run", () => {
   const backend = config.backend
-  let getMockExperiments
-  let getMockZoneSets
-  let getMockNodes
-  let getMockPoints
+  let getExperimentsStub
+  let getZoneSetsStub
+  let getNodesStub
+  let getPointsStub
 
   beforeEach(() => {
-    getMockExperiments = sinon.stub(experimentsActions, "getExperiments")
+    getExperimentsStub = sinon.stub(experimentsActions, "getExperiments")
       .resolves(experimentsData)
     proxyquire(
       "../../../../src/setUp/containers/app",
-      { getExperiments: getMockExperiments }
+      { getExperiments: getExperimentsStub }
     )
-    getMockZoneSets = sinon.stub(zoneSetsActions, "getZoneSets").resolves(zoneSets)
+    getZoneSetsStub = sinon.stub(zoneSetsActions, "getZoneSets").resolves(zoneSets)
     proxyquire(
       "../../../../src/setUp/containers/app",
-      { getZoneSets: getMockZoneSets }
+      { getZoneSets: getZoneSetsStub }
     )
-    getMockNodes = sinon.stub(nodesActions, "getNodes")
+    getNodesStub = sinon.stub(nodesActions, "getNodes")
       .resolves(nodesData)
     proxyquire(
       "../../../../src/setUp/containers/app",
-      { getNodes: getMockNodes }
+      { getNodes: getNodesStub }
     )
-    getMockPoints = sinon.stub(pointsActions, "getPoints")
+    getPointsStub = sinon.stub(pointsActions, "getPoints")
       .resolves(pointsData)
     proxyquire(
       "../../../../src/setUp/containers/app",
-      { getPoints: getMockPoints }
+      { getPoints: getPointsStub }
     )
   })
 
   afterEach(() => {
-    getMockExperiments.restore()
-    getMockZoneSets.restore()
-    getMockNodes.restore()
-    getMockPoints.restore()
+    getExperimentsStub.restore()
+    getZoneSetsStub.restore()
+    getNodesStub.restore()
+    getPointsStub.restore()
   })
 
   describe("contains", () => {
@@ -149,7 +149,7 @@ describe("App Run", () => {
     })
 
     it("sends expected props to selectExperiment", done => {
-      const props = { categories: experimentsData }
+      const props = { categories: experimentsData, title: "Select Experiment:" }
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
         app.setState({ show: "run" })

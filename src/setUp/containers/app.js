@@ -6,7 +6,7 @@ import { assignIn, zipObject } from "lodash"
 import Button from "../components/button"
 import Params from "./params"
 import Run from "./run"
-import SelectCategory from "../components/selectCategory"
+import SelectCategory from "../../shared/components/selectCategory"
 import TabBar from "../components/tabBar"
 import {
   deleteExperiment,
@@ -200,6 +200,7 @@ export default class App extends React.Component {
           !this.state.selectedExperiment &&
           <SelectCategory
             categories={ this.state.experiments }
+            title="Select Experiment:"
             onSelect={ this.onSelectExperiment } />
         }
         {
@@ -226,6 +227,7 @@ export default class App extends React.Component {
           !this.state.selectedExperiment &&
           <SelectCategory
             categories={ this.state.experiments }
+            title="Select Experiment:"
             onSelect={ this.onSelectExperiment } />
         }
       </Container>

@@ -6,7 +6,7 @@ import { slice } from "lodash"
 import { shallow, mount } from "enzyme"
 import Button from "../../../src/setUp/components/button"
 import DataTable from "../../../src/setUp/components/dataTable"
-import { findButtonByName } from "../helpers/findElements"
+import { findButtonByName } from "../../helpers/findElements"
 
 
 describe("DataTable component", () => {

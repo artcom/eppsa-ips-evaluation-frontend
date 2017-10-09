@@ -24,8 +24,8 @@ import {
   showForm,
   storeDataInState,
   submitData
-} from "../helpers/paramsHelpers"
-import { checkProps } from "../helpers/propsHelpers"
+} from "../../helpers/paramsHelpers"
+import { checkProps } from "../../helpers/propsHelpers"
 
 describe("Params", () => {
   const backend = config.backend

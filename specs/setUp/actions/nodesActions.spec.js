@@ -13,35 +13,35 @@ describe("nodesActions", () => {
   const backend = config.backend
 
   describe("actions", () => {
-    let delMock
-    let getMock
-    let postMock
+    let delStub
+    let getStub
+    let postStub
 
     beforeEach(() => {
-      delMock = sinon.stub(rest, "del")
-      getMock = sinon.stub(rest, "get")
-      postMock = sinon.stub(rest, "post")
-      proxyquire("../../../src/setUp/actions/nodesActions", { rest: { del: delMock } })
-      proxyquire("../../../src/setUp/actions/nodesActions", { rest: { get: getMock } })
-      proxyquire("../../../src/setUp/actions/nodesActions", { rest: { post: postMock } })
+      delStub = sinon.stub(rest, "del")
+      getStub = sinon.stub(rest, "get")
+      postStub = sinon.stub(rest, "post")
+      proxyquire("../../../src/setUp/actions/nodesActions", { rest: { del: delStub } })
+      proxyquire("../../../src/setUp/actions/nodesActions", { rest: { get: getStub } })
+      proxyquire("../../../src/setUp/actions/nodesActions", { rest: { post: postStub } })
     })
 
     afterEach(() => {
-      delMock.restore()
-      getMock.restore()
-      postMock.restore()
+      delStub.restore()
+      getStub.restore()
+      postStub.restore()
     })
 
     describe("getNodes", () => {
       beforeEach(() => {
-        getMock.resolves({ data: nodes })
+        getStub.resolves({ data: nodes })
       })
 
       it("should send a GET request to the expected URL", async () => {
         const url = `http://${backend}/nodes`
         await getNodes({ backend })
-        sinon.assert.calledOnce(getMock)
-        sinon.assert.calledWith(getMock, url)
+        sinon.assert.calledOnce(getStub)
+        sinon.assert.calledWith(getStub, url)
       })
 
       it("should return the experiments it got from the backend", async () => {
@@ -52,15 +52,15 @@ describe("nodesActions", () => {
 
     describe("setNode", () => {
       beforeEach(() => {
-        postMock.resolves({ data: nodes[0].name })
+        postStub.resolves({ data: nodes[0].name })
       })
 
       it("should POST the expected data to the expected URL", async () => {
         const url = `http://${backend}/nodes`
         const node = nodes[0]
         await setNode({ backend, node })
-        sinon.assert.calledOnce(postMock)
-        sinon.assert.calledWith(postMock, url, { data: nodes[0] })
+        sinon.assert.calledOnce(postStub)
+        sinon.assert.calledWith(postStub, url, { data: nodes[0] })
       })
 
       it("should return the server response data", async () => {
@@ -72,15 +72,15 @@ describe("nodesActions", () => {
 
     describe("deleteNode", () => {
       beforeEach(() => {
-        delMock.resolves({ data: nodes[0].name })
+        delStub.resolves({ data: nodes[0].name })
       })
 
       it("should send a DELETE request to the expected URL", async () => {
         const url = `http://${backend}/nodes/${nodes[0].name}`
         const node = nodes[0]
         await deleteNode({ backend, node })
-        sinon.assert.calledOnce(delMock)
-        sinon.assert.calledWith(delMock, url)
+        sinon.assert.calledOnce(delStub)
+        sinon.assert.calledWith(delStub, url)
       })
 
       it("should return the server response data", async () => {

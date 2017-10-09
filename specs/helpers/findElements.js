@@ -1,6 +1,6 @@
-import Button from "../../../src/setUp/components/button"
-import { InputField, InputLabel } from "../../../src/setUp/components/input"
-import Select from "../../../src/setUp/components/select"
+import Button from "../../src/setUp/components/button"
+import { InputField, InputLabel } from "../../src/setUp/components/input"
+import Select from "../../src/setUp/components/select"
 
 
 export function findInputField(form, fieldName) {

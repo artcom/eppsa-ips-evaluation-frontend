@@ -10,8 +10,8 @@ import {
   hasSubmit,
   isAForm,
   storeInput
-} from "../helpers/formHelpers"
-import { findInputField } from "../helpers/findElements"
+} from "../../helpers/formHelpers"
+import { findInputField } from "../../helpers/findElements"
 import Form, { setInitialValues } from "../../../src/setUp/components/form"
 import { StyledSelect } from "../../../src/setUp/components/select"
 

@@ -15,35 +15,35 @@ describe("zonesActions", () => {
   const zoneSetName = "set1"
 
   describe("actions", () => {
-    let delMock
-    let getMock
-    let postMock
+    let delStub
+    let getStub
+    let postStub
 
     beforeEach(() => {
-      delMock = sinon.stub(rest, "del")
-      getMock = sinon.stub(rest, "get")
-      postMock = sinon.stub(rest, "post")
-      proxyquire("../../../src/setUp/actions/zonesActions", { rest: { del: delMock } })
-      proxyquire("../../../src/setUp/actions/zonesActions", { rest: { get: getMock } })
-      proxyquire("../../../src/setUp/actions/zonesActions", { rest: { post: postMock } })
+      delStub = sinon.stub(rest, "del")
+      getStub = sinon.stub(rest, "get")
+      postStub = sinon.stub(rest, "post")
+      proxyquire("../../../src/setUp/actions/zonesActions", { rest: { del: delStub } })
+      proxyquire("../../../src/setUp/actions/zonesActions", { rest: { get: getStub } })
+      proxyquire("../../../src/setUp/actions/zonesActions", { rest: { post: postStub } })
     })
 
     afterEach(() => {
-      delMock.restore()
-      getMock.restore()
-      postMock.restore()
+      delStub.restore()
+      getStub.restore()
+      postStub.restore()
     })
 
     describe("getZones", () => {
       beforeEach(() => {
-        getMock.resolves({ data: zoneSets[0] })
+        getStub.resolves({ data: zoneSets[0] })
       })
 
       it("should send a GET request to the expected URL", async () => {
         const url = `http://${backend}/zone-sets/${zoneSetName}`
         await getZones({ backend, zoneSetName })
-        sinon.assert.calledOnce(getMock)
-        sinon.assert.calledWith(getMock, url)
+        sinon.assert.calledOnce(getStub)
+        sinon.assert.calledWith(getStub, url)
       })
 
       it("should return the zones it got from the backend", async () => {
@@ -54,8 +54,8 @@ describe("zonesActions", () => {
 
     describe("setZone", () => {
       beforeEach(() => {
-        postMock.onFirstCall().resolves({ data: zones[0].name })
-        postMock.onSecondCall().resolves({ data: { zoneSetName, zoneName: zones[0].name } })
+        postStub.onFirstCall().resolves({ data: zones[0].name })
+        postStub.onSecondCall().resolves({ data: { zoneSetName, zoneName: zones[0].name } })
       })
 
       it("should POST the expected data to the expected URL", async () => {
@@ -63,10 +63,10 @@ describe("zonesActions", () => {
         const zoneSetsUrl = `http://${backend}/zone-sets/${zoneSetName}`
         const zone = zones[0]
         await setZone({ backend, zone, zoneSetName })
-        sinon.assert.calledTwice(postMock)
+        sinon.assert.calledTwice(postStub)
         sinon.assert.callOrder(
-          postMock.withArgs(zonesUrl, { data: zones[0] }),
-          postMock.withArgs(zoneSetsUrl, { data: { zoneName: zones[0].name } })
+          postStub.withArgs(zonesUrl, { data: zones[0] }),
+          postStub.withArgs(zoneSetsUrl, { data: { zoneName: zones[0].name } })
         )
       })
 
@@ -79,8 +79,8 @@ describe("zonesActions", () => {
 
     describe("deleteZone", () => {
       beforeEach(() => {
-        delMock.onFirstCall().resolves({ data: { zoneSetName, zoneName: zones[0].name } })
-        delMock.onSecondCall().resolves({ data: zones[0].name })
+        delStub.onFirstCall().resolves({ data: { zoneSetName, zoneName: zones[0].name } })
+        delStub.onSecondCall().resolves({ data: zones[0].name })
       })
 
       it("should send a DELETE request to the expected URL", async () => {
@@ -88,12 +88,12 @@ describe("zonesActions", () => {
         const zoneSetsUrl = `http://${backend}/zone-sets/${zoneSetName}/${zones[0].name}`
         const zone = zones[0]
         await deleteZone({ backend, zone, zoneSetName })
-        sinon.assert.calledTwice(delMock)
+        sinon.assert.calledTwice(delStub)
         sinon.assert.callOrder(
-          delMock.withArgs(zoneSetsUrl),
-          delMock.withArgs(zonesUrl)
+          delStub.withArgs(zoneSetsUrl),
+          delStub.withArgs(zonesUrl)
         )
-        sinon.assert.calledWith(delMock, zonesUrl)
+        sinon.assert.calledWith(delStub, zonesUrl)
       })
 
       it("should return the server response data", async () => {
