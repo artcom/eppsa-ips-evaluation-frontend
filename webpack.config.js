@@ -9,7 +9,8 @@ module.exports = [
   {
     target: "web",
     entry: {
-      setUp: "./src/setUp/main.js"
+      setUp: "./src/setUp/main.js",
+      analyze: "./src/analyze/main.js"
     }
   }
 ].map(({ target, entry }) => {
