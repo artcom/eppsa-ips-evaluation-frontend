@@ -30,7 +30,7 @@ describe("positionDataActions", () => {
     })
 
     it("should send a GET request to the expected URL", async () => {
-      const url = `http://${backend}/${experimentName}/position-data`
+      const url = `http://${backend}/experiments/${experimentName}/position-data`
       await getPositionData({ backend, experimentName })
       sinon.assert.calledOnce(getMock)
       sinon.assert.calledWith(getMock, url)

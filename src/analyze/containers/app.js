@@ -4,6 +4,7 @@ import React from "react"
 import Button from "../../shared/components/button"
 import SelectCategory from "../../shared/components/selectCategory"
 import { getExperiments } from "../../shared/actions/experimentsActions"
+import { getPositionData } from "../actions/positionDataActions"
 
 
 export default class App extends React.Component {
@@ -12,6 +13,7 @@ export default class App extends React.Component {
     autoBind(this)
     this.state = {
       experiments: [],
+      positionData: [],
       selectedExperiment: null,
       loaded: false
     }
@@ -37,7 +39,7 @@ export default class App extends React.Component {
           this.state.loaded &&
           this.state.selectedExperiment &&
           <Button
-            onClick={ () => this.onSelectExperiment({ name: null }) }>
+            onClick={ async () => await this.onSelectExperiment({ name: null }) }>
             Select Other Experiment
           </Button>
         }
@@ -45,7 +47,12 @@ export default class App extends React.Component {
     )
   }
 
-  onSelectExperiment(experiment) {
-    this.setState({ selectedExperiment: experiment.name })
+  async onSelectExperiment(experiment) {
+    const experimentName = experiment.name
+    if (experimentName != null) {
+      const positionData = await getPositionData({ backend: this.props.backend, experimentName })
+      this.setState({ selectedExperiment: experimentName, positionData })
+    }
+    this.setState({ selectedExperiment: experimentName })
   }
 }

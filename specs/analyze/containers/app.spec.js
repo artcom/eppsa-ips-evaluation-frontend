@@ -93,18 +93,48 @@ describe("App NodePositions", () => {
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
         const selectExperiment = app.find(SelectCategory)
-        findButtonByName(selectExperiment, "fake-experiment1").simulate("click")
-        expect(app.state("selectedExperiment")).to.equal("fake-experiment1")
+        findButtonByName(selectExperiment, experiments[0].name).simulate("click")
+        setImmediate(() => {
+          expect(app.state("selectedExperiment")).to.equal(experiments[0].name)
+          done()
+        })
+      })
+    })
+
+    it("calls getPositionData for the experiment when an experiment is selected", done => {
+      const app = mount(<App backend={ backend } />)
+      setImmediate(() => {
+        const selectExperiment = app.find(SelectCategory)
+        findButtonByName(selectExperiment, experiments[0].name).simulate("click")
+        sinon.assert.calledOnce(getPositionDataStub)
+        sinon.assert.calledWith(
+          getPositionDataStub,
+          { backend, experimentName: experiments[0].name }
+        )
         done()
       })
     })
 
-    it("sets selectedExperiment state to null when select other experiment button is pushed",
+    it("load the position data in state for the experiment when an experiment is selected",
       done => {
         const app = mount(<App backend={ backend } />)
         setImmediate(() => {
-          app.setState({ selectedExperiment: "fake-experiment1" })
-          expect(app.state("selectedExperiment")).to.equal("fake-experiment1")
+          const selectExperiment = app.find(SelectCategory)
+          findButtonByName(selectExperiment, experiments[0].name).simulate("click")
+          setImmediate(() => {
+            expect(app.state("positionData")).to.deep.equal(positionData)
+            done()
+          })
+        })
+      }
+    )
+
+    it("set selectedExperiment state to null when select other experiment button is pushed",
+      done => {
+        const app = mount(<App backend={ backend } />)
+        setImmediate(() => {
+          app.setState({ selectedExperiment: experiments[0].name })
+          expect(app.state("selectedExperiment")).to.equal(experiments[0].name)
           findButtonByName(app, "Select Other Experiment").simulate("click")
           expect(app.state("selectedExperiment")).to.equal(null)
           done()
