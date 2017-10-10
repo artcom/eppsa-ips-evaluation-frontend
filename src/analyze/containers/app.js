@@ -106,6 +106,7 @@ export default class App extends React.Component {
         <TabBar tabs={ tabs } highlight={ this.state.show } onActivate={ this.onActivate } />
         {
           this.state.loaded &&
+          this.state.show === "pointErrors" &&
           !this.state.selectedExperiment &&
           <SelectCategory
             title="Select Experiment:"
@@ -114,6 +115,7 @@ export default class App extends React.Component {
         }
         {
           this.state.loaded &&
+          this.state.show === "pointErrors" &&
           this.state.selectedExperiment &&
           <div>
             <ChartContainer>

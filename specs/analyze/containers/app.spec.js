@@ -59,7 +59,7 @@ describe("App Analyze", () => {
     it("an experiment selection component when loaded and no experiment is selected", done => {
       const app = shallow(<App />)
       setImmediate(() => {
-        app.setState({ loaded: true, selectedExperiment: false })
+        app.setState({ loaded: true, selectedExperiment: false, show: "pointErrors" })
         expect(
           app.find(SelectCategory)
             .filterWhere(select => select.props().title === "Select Experiment:")
@@ -71,7 +71,7 @@ describe("App Analyze", () => {
     it("no experiment selection component when loaded and an experiment is selected", done => {
       const app = shallow(<App />)
       setImmediate(() => {
-        app.setState({ loaded: true, selectedExperiment: true })
+        app.setState({ loaded: true, selectedExperiment: true, show: "pointErrors" })
         expect(
           app.find(SelectCategory)
             .filterWhere(select => select.props().title === "Select Experiment:")
@@ -79,6 +79,21 @@ describe("App Analyze", () => {
         done()
       })
     })
+
+    it("no experiment selection component when loaded no experiment is selected " +
+      "and show is not pointErrors",
+      done => {
+        const app = shallow(<App />)
+        setImmediate(() => {
+          app.setState({ loaded: true, selectedExperiment: false, show: "other" })
+          expect(
+            app.find(SelectCategory)
+              .filterWhere(select => select.props().title === "Select Experiment:")
+          ).to.have.length(0)
+          done()
+        })
+      }
+    )
   })
 
   describe("activates", () => {
