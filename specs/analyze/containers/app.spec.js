@@ -10,6 +10,7 @@ import config from "../../../src/constants"
 import experiments from "../../testData/experiments.json"
 import Form from "../../../src/shared/components/form"
 import { findButtonByName } from "../../helpers/findElements"
+import inputData from "../../helpers/inputData"
 import { checkProps } from "../../helpers/propsHelpers"
 import positionData from "../../testData/positionData.json"
 import SelectCategory from "../../../src/shared/components/selectCategory"
@@ -155,6 +156,25 @@ describe("App Analyze", () => {
           .filterWhere(select => select.props().submitName === "Compare")
         expect(form).to.have.length(1)
         checkProps({ mountedComponent: form, props, copy: true })
+        done()
+      })
+    })
+
+    it("set the selected experiments in compareExperiments state when experiment selection form " +
+      "is submitted", done => {
+      const data = {}
+      data["fake-experiment1"] = true
+      data["fake-experiment2"] = true
+      const app = mount(<App backend={ backend } />)
+      app.setState({ loaded: true, compareExperiments: [], show: "experimentMetrics" })
+      setImmediate(() => {
+        const form = app.find(Form)
+          .filterWhere(select => select.props().submitName === "Compare")
+        inputData(form, data)
+        form.simulate("submit")
+        console.log(app.state("compareExperiments"))
+        expect(app.state("compareExperiments"))
+          .to.deep.equal(["fake-experiment1", "fake-experiment2"])
         done()
       })
     })

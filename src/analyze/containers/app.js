@@ -142,7 +142,8 @@ export default class App extends React.Component {
           this.state.compareExperiments &&
           <Form
             submitName="Compare"
-            fields={ compareExperimentsFields } />
+            fields={ compareExperimentsFields }
+            set={ (args) => this.setState({ compareExperiments: args }) } />
         }
       </div>
     )
