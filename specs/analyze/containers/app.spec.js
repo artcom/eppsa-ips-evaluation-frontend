@@ -12,11 +12,13 @@ import { findButtonByName } from "../../helpers/findElements"
 import { checkProps } from "../../helpers/propsHelpers"
 import positionData from "../../testData/positionData.json"
 import SelectCategory from "../../../src/shared/components/selectCategory"
+import Tab from "../../../src/shared/components/tab"
+import TabBar from "../../../src/shared/components/tabBar"
 const experimentsActions = require("../../../src/shared/actions/experimentsActions")
 const positionDataActions = require("../../../src/analyze/actions/positionDataActions")
 
 
-describe("App NodePositions", () => {
+describe("App Analyze", () => {
   const backend = config.backend
   let getExperimentsStub
   let getPositionDataStub
@@ -42,6 +44,18 @@ describe("App NodePositions", () => {
   })
 
   describe("contains", () => {
+    it("tab bar", () => {
+      const app = shallow(<App />)
+      expect(app.find(TabBar)).to.have.length(1)
+    })
+
+    it("tabs", () => {
+      const tabs = ["PointErrors", "ExperimentMetrics"]
+      const app = mount(<App />)
+      expect(app.find(TabBar).find(Tab)).to.have.length(tabs.length)
+      expect(app.find(TabBar).find(Tab).map(tab => tab.text())).to.deep.equal(tabs)
+    })
+
     it("an experiment selection component when loaded and no experiment is selected", done => {
       const app = shallow(<App />)
       setImmediate(() => {
