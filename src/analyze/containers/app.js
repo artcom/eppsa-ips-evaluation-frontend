@@ -6,6 +6,7 @@ import React from "react"
 import styled from "styled-components"
 import Button from "../../shared/components/button"
 import SelectCategory from "../../shared/components/selectCategory"
+import TabBar from "../../shared/components/tabBar"
 import { getExperiments } from "../../shared/actions/experimentsActions"
 import { getPositionData } from "../actions/positionDataActions"
 import { positionData3D } from "../processData"
@@ -23,6 +24,7 @@ export default class App extends React.Component {
     super(props)
     autoBind(this)
     this.state = {
+      show: "pointErrors",
       experiments: [],
       positionData: [],
       selectedExperiment: null,
@@ -36,6 +38,7 @@ export default class App extends React.Component {
   }
 
   render() {
+    const tabs = ["pointErrors", "experimentMetrics"]
     const scenes = ["scene1", "scene2"]
     const data = this.state.positionData.length > 0 ? scenes.map(scene =>
       [{
@@ -100,6 +103,7 @@ export default class App extends React.Component {
     }
     return (
       <div>
+        <TabBar tabs={ tabs } highlight={ this.state.show } onActivate={ this.onActivate } />
         {
           this.state.loaded &&
           !this.state.selectedExperiment &&
@@ -127,6 +131,10 @@ export default class App extends React.Component {
         }
       </div>
     )
+  }
+
+  onActivate(tab) {
+    this.setState({ show: tab })
   }
 
   async onSelectExperiment(experiment) {

@@ -81,6 +81,20 @@ describe("App Analyze", () => {
     })
   })
 
+  describe("activates", () => {
+    it("ExperimentMetrics when experimentMetrics tab is clicked", done => {
+      const app = mount(<App backend={ backend } />)
+      setImmediate(() => {
+        expect(app.state("show")).to.equal("pointErrors")
+        const pointsTab = app.find(Tab).filterWhere(tab => tab.text() === "ExperimentMetrics")
+        pointsTab.simulate("click")
+        expect(pointsTab.props().highlight).to.equal(true)
+        expect(app.state("show")).to.equal("experimentMetrics")
+        done()
+      })
+    })
+  })
+
   describe("loads", () => {
     it("experiments into state on mount", done => {
       const app = mount(<App backend={ backend } />)
