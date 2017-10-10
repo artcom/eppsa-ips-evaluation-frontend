@@ -1,5 +1,5 @@
 import Button from "../../src/shared/components/button"
-import { InputField, InputLabel } from "../../src/setUp/components/input"
+import { InputField, InputLabel } from "../../src/shared/components/input"
 import Select from "../../src/setUp/components/select"
 
 

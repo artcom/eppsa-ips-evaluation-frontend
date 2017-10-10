@@ -1,7 +1,7 @@
 import { expect } from "chai"
 import sinon from "sinon"
 import { findInputField } from "./findElements"
-import Input, { InputField, InputLabel } from "../../src/setUp/components/input"
+import Input, { InputField, InputLabel } from "../../src/shared/components/input"
 import Select from "../../src/setUp/components/select"
 
 

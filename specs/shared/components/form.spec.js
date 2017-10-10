@@ -12,7 +12,7 @@ import {
   storeInput
 } from "../../helpers/formHelpers"
 import { findInputField } from "../../helpers/findElements"
-import Form, { setInitialValues } from "../../../src/setUp/components/form"
+import Form, { setInitialValues } from "../../../src/shared/components/form"
 import { StyledSelect } from "../../../src/setUp/components/select"
 
 

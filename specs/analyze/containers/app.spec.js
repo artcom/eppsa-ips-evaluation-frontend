@@ -8,6 +8,7 @@ import { shallow, mount } from "enzyme"
 import App from "../../../src/analyze/containers/app"
 import config from "../../../src/constants"
 import experiments from "../../testData/experiments.json"
+import Form from "../../../src/shared/components/form"
 import { findButtonByName } from "../../helpers/findElements"
 import { checkProps } from "../../helpers/propsHelpers"
 import positionData from "../../testData/positionData.json"
@@ -94,6 +95,15 @@ describe("App Analyze", () => {
         })
       }
     )
+
+    it("an experiment selection checkbox for selecting experiments to compare", done => {
+      const app = shallow(<App />)
+      setImmediate(() => {
+        app.setState({ loaded: true, compareExperiments: [], show: "experimentMetrics" })
+        expect(app.find(Form)).to.have.length(1)
+        done()
+      })
+    })
   })
 
   describe("activates", () => {
@@ -128,6 +138,23 @@ describe("App Analyze", () => {
       setImmediate(() => {
         const selectExperiment = app.find(SelectCategory)
         checkProps({ mountedComponent: selectExperiment, props })
+        done()
+      })
+    })
+
+    it("send expected props to experiment selection form", done => {
+      const fields = [
+        { name: "fake-experiment1", type: "checkBox" },
+        { name: "fake-experiment2", type: "checkBox" }
+      ]
+      const props = { fields }
+      const app = mount(<App backend={ backend } />)
+      app.setState({ loaded: true, compareExperiments: [], show: "experimentMetrics" })
+      setImmediate(() => {
+        const form = app.find(Form)
+          .filterWhere(select => select.props().submitName === "Compare")
+        expect(form).to.have.length(1)
+        checkProps({ mountedComponent: form, props, copy: true })
         done()
       })
     })

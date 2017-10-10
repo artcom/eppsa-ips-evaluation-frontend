@@ -5,6 +5,7 @@ import Plotly from "plotly.js/dist/plotly-gl3d"
 import React from "react"
 import styled from "styled-components"
 import Button from "../../shared/components/button"
+import Form from "../../shared/components/form"
 import SelectCategory from "../../shared/components/selectCategory"
 import TabBar from "../../shared/components/tabBar"
 import { getExperiments } from "../../shared/actions/experimentsActions"
@@ -28,6 +29,7 @@ export default class App extends React.Component {
       experiments: [],
       positionData: [],
       selectedExperiment: null,
+      compareExperiments: [],
       loaded: false
     }
   }
@@ -39,6 +41,9 @@ export default class App extends React.Component {
 
   render() {
     const tabs = ["pointErrors", "experimentMetrics"]
+    const compareExperimentsFields = this.state.experiments.map(experiment =>
+      ({ ...experiment, type: "checkBox" })
+    )
     const scenes = ["scene1", "scene2"]
     const data = this.state.positionData.length > 0 ? scenes.map(scene =>
       [{
@@ -130,6 +135,14 @@ export default class App extends React.Component {
               Select Other Experiment
             </Button>
           </div>
+        }
+        {
+          this.state.loaded &&
+          this.state.show === "experimentMetrics" &&
+          this.state.compareExperiments &&
+          <Form
+            submitName="Compare"
+            fields={ compareExperimentsFields } />
         }
       </div>
     )

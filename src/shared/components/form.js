@@ -2,7 +2,7 @@ import React from "react"
 import autoBind from "react-autobind"
 import { find, zipObject } from "lodash"
 import styled from "styled-components"
-import Input, { InputField } from "../components/input"
+import Input, { InputField } from "./input"
 
 
 const StyledForm = styled.form`

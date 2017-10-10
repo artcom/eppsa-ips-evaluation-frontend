@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components"
-import Select from "./select"
+import Select from "../../setUp/components/select"
 
 
 const Container = styled.div`

@@ -1,4 +1,4 @@
-import Form from "../../src/setUp/components/form"
+import Form from "../../src/shared/components/form"
 import Params from "../../src/setUp/containers/params"
 import { findButtonByName } from "./findElements"
 import inputData from "./inputData"

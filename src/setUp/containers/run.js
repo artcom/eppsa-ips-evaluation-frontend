@@ -1,7 +1,7 @@
 import React from "react"
 import autoBind from "react-autobind"
 import Button from "../../shared/components/button"
-import Form from "../components/form"
+import Form from "../../shared/components/form"
 import Title from "../components/title"
 
 
