@@ -10,8 +10,8 @@ import config from "../../../../src/constants"
 import experimentsData from "../../../testData/experiments.json"
 import nodesData from "../../../testData/nodes.json"
 import pointsData from "../../../testData/pointsFrontend.json"
-import Tab from "../../../../src/setUp/components/tab"
-import TabBar from "../../../../src/setUp/components/tabBar"
+import Tab from "../../../../src/shared/components/tab"
+import TabBar from "../../../../src/shared/components/tabBar"
 import zoneSets from "../../../testData/zoneSets.json"
 const experimentsActions = require("../../../../src/shared/actions/experimentsActions")
 const nodesActions = require("../../../../src/setUp/actions/nodesActions")

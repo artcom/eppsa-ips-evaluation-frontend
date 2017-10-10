@@ -2,7 +2,7 @@ import React from "react"
 import { describe, it } from "mocha"
 import { expect } from "chai"
 import { shallow } from "enzyme"
-import Tab from "../../../src/setUp/components/tab"
+import Tab from "../../../src/shared/components/tab"
 
 
 describe("Tab component", () => {

@@ -7,7 +7,7 @@ import Button from "../../shared/components/button"
 import Params from "./params"
 import Run from "./run"
 import SelectCategory from "../../shared/components/selectCategory"
-import TabBar from "../components/tabBar"
+import TabBar from "../../shared/components/tabBar"
 import {
   deleteExperiment,
   getExperiments,
