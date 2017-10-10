@@ -15,7 +15,7 @@ const PlotlyComponent = createPlotlyComponent(Plotly)
 
 const ChartContainer = styled.div`
   width: 1200px;
-  height: 600px;
+  height: 1200px;
 `
 
 export default class App extends React.Component {
@@ -36,58 +36,67 @@ export default class App extends React.Component {
   }
 
   render() {
-    const data = this.state.positionData.length > 0 ? [{
-      ...positionData3D(this.state.positionData),
-      type: "surface",
-      cauto: false,
-      cmin: 0,
-      cmax: 4,
-      scene: "scene1"
-    }] : []
+    const scenes = ["scene1", "scene2"]
+    const data = this.state.positionData.length > 0 ? scenes.map(scene =>
+      [{
+        ...positionData3D(this.state.positionData),
+        type: "surface",
+        cauto: false,
+        cmin: 0,
+        cmax: 4,
+        colorbar: {
+          title: "2D Error (m)",
+          titleside: "right",
+          lenmode: "fraction",
+          len: 0.75,
+          x: 0.8
+        },
+        scene
+      }]) : [[], []]
+    const defaultScene = {
+      aspectratio: { x: 1, y: 9 / 11.5, z: 5 / 11.5 },
+      xaxis: {
+        range: [0, 11.5],
+        tickvals: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+        gridcolor: "rgb(0, 0, 0)",
+        zerolinecolor: "rgb(0, 0, 0)"
+      },
+      yaxis: {
+        range: [0, 9],
+        tickvals: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+        gridcolor: "rgb(0, 0, 0)",
+        zerolinecolor: "rgb(0, 0, 0)"
+      },
+      zaxis: {
+        range: [0, 5],
+        nticks: 10,
+        backgroundcolor: "rgb(200, 200, 200)",
+        gridcolor: "rgb(0, 0, 0)",
+        showbackground: true,
+        zerolinecolor: "rgb(0, 0, 0)"
+      }
+    }
+    const cameras = [
+      {
+        center: { x: 0, y: 0, z: 0 },
+        eye: { x: 0, y: 0, z: 1.5 },
+        up: { x: 1, y: 0, z: 1 }
+      },
+      {
+        center: { x: 0, y: 0, z: 0 },
+        eye: { x: 0.5, y: -1.5, z: 0.5 },
+        up: { x: 1, y: 0, z: 1 }
+      }
+    ]
     const layout = {
+      title: this.state.selectedExperiment,
       autosize: false,
       width: 1200,
       height: 600,
-      margin: {
-        l: 0,
-        r: 0,
-        b: 20,
-        t: 20,
-      },
-      scene1: {
-        aspectratio: { x: 1, y: 9 / 11.5, z: 5 / 11.5 },
-        camera: {
-          center: {
-            x: 0, y: 0, z: 0
-          },
-          eye: {
-            x: 0, y: 0, z: 1.5
-          },
-          up: {
-            x: 1, y: 0, z: 1
-          }
-        },
-        xaxis: {
-          range: [0, 11.5],
-          tickvals: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-          gridcolor: "rgb(0, 0, 0)",
-          zerolinecolor: "rgb(0, 0, 0)"
-        },
-        yaxis: {
-          range: [0, 9],
-          tickvals: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-          gridcolor: "rgb(0, 0, 0)",
-          zerolinecolor: "rgb(0, 0, 0)"
-        },
-        zaxis: {
-          range: [0, 5],
-          nticks: 6,
-          backgroundcolor: "rgb(200, 200, 200)",
-          gridcolor: "rgb(0, 0, 0)",
-          showbackground: true,
-          zerolinecolor: "rgb(0, 0, 0)"
-        }
-      }
+      margin: { l: 0, r: 0, b: 20, t: 40 },
+    }
+    for (const scene of scenes) {
+      layout[scene] = Object.assign({}, { ...defaultScene, camera: cameras[scenes.indexOf(scene)] })
     }
     return (
       <div>
@@ -104,7 +113,11 @@ export default class App extends React.Component {
           this.state.selectedExperiment &&
           <div>
             <ChartContainer>
-              <PlotlyComponent data={ data } layout={ layout } />
+              {
+                data.map((datum, i) =>
+                  <PlotlyComponent key={ i } data={ datum } layout={ layout } />
+                )
+              }
             </ChartContainer>
             <Button
               onClick={ async () => await this.onSelectExperiment({ name: null }) }>

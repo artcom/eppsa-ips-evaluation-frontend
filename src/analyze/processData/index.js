@@ -3,10 +3,10 @@ import { filter, find, mean } from "lodash"
 
 export function positionData3D(data) {
   const points = [
-    ["A", "B", "C", "D"],
-    ["E", "F", "G", "H"],
-    ["I", "J", "K", "L"],
-    ["M", "N", "O", "P"]
+    ["A", "B", "C", "D", "D"],
+    ["E", "F", "G", "H", "H"],
+    ["I", "J", "K", "L", "R"],
+    ["M", "N", "O", "P", "Q"]
   ]
   const x = points
     .map(row =>
