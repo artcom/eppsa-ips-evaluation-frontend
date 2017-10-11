@@ -190,7 +190,7 @@ describe("App Analyze", () => {
       })
     })
 
-    it("calls getPositionData for the experiment when an experiment is selected", done => {
+    it("call getPositionData for the experiment when an experiment is selected", done => {
       const app = mount(<App backend={ backend } />)
       setImmediate(() => {
         const selectExperiment = app.find(SelectCategory)

@@ -36,7 +36,7 @@ describe("positionDataActions", () => {
       sinon.assert.calledWith(getMock, url)
     })
 
-    it("should return the experiments it got from the backend", async () => {
+    it("should return the position Data it got from the backend", async () => {
       const result = await getPositionData({ backend, experimentName })
       expect(isEqual(result, positionData)).to.equal(true)
     })
