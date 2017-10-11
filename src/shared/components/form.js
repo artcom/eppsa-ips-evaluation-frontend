@@ -47,7 +47,9 @@ export default class Form extends React.Component {
     const setArgs = getSetArgs(this.props)
     setArgs[this.props.paramName] = this.state
     await this.props.set(setArgs)
-    this.props.onSubmitted()
+    if (this.props.onSubmitted) {
+      this.props.onSubmitted()
+    }
   }
 }
 

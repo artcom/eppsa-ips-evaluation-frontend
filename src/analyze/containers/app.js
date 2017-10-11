@@ -1,4 +1,5 @@
 /* eslint-disable react/no-did-mount-set-state */
+import { keys, pickBy } from "lodash"
 import autoBind from "react-autobind"
 import createPlotlyComponent from "react-plotlyjs"
 import Plotly from "plotly.js/dist/plotly-gl3d"
@@ -143,7 +144,10 @@ export default class App extends React.Component {
           <Form
             submitName="Compare"
             fields={ compareExperimentsFields }
-            set={ (args) => this.setState({ compareExperiments: args }) } />
+            paramName="compareExperiments"
+            set={ (args) =>
+              this.setState({ compareExperiments: keys(pickBy(args.compareExperiments)) })
+            } />
         }
       </div>
     )

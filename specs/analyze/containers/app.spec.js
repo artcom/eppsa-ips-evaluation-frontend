@@ -163,7 +163,7 @@ describe("App Analyze", () => {
     it("set the selected experiments in compareExperiments state when experiment selection form " +
       "is submitted", done => {
       const data = {}
-      data["fake-experiment1"] = true
+      data["fake-experiment1"] = false
       data["fake-experiment2"] = true
       const app = mount(<App backend={ backend } />)
       app.setState({ loaded: true, compareExperiments: [], show: "experimentMetrics" })
@@ -172,9 +172,8 @@ describe("App Analyze", () => {
           .filterWhere(select => select.props().submitName === "Compare")
         inputData(form, data)
         form.simulate("submit")
-        console.log(app.state("compareExperiments"))
         expect(app.state("compareExperiments"))
-          .to.deep.equal(["fake-experiment1", "fake-experiment2"])
+          .to.deep.equal(["fake-experiment2"])
         done()
       })
     })
