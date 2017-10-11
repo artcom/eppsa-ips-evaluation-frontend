@@ -71,22 +71,22 @@ export default class App extends React.Component {
       xaxis: {
         range: [0, 11.5],
         tickvals: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-        gridcolor: "rgb(0, 0, 0)",
-        zerolinecolor: "rgb(0, 0, 0)"
+        gridcolor: "#000000",
+        zerolinecolor: "#000000"
       },
       yaxis: {
         range: [0, 9],
         tickvals: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-        gridcolor: "rgb(0, 0, 0)",
-        zerolinecolor: "rgb(0, 0, 0)"
+        gridcolor: "#000000",
+        zerolinecolor: "#000000"
       },
       zaxis: {
         range: [0, 5],
         nticks: 10,
-        backgroundcolor: "rgb(200, 200, 200)",
-        gridcolor: "rgb(0, 0, 0)",
+        backgroundcolor: "#C8C8C8",
+        gridcolor: "#000000",
         showbackground: true,
-        zerolinecolor: "rgb(0, 0, 0)"
+        zerolinecolor: "#000000"
       }
     }
     const cameras = [
@@ -102,21 +102,41 @@ export default class App extends React.Component {
       }
     ]
     const layout = {
-      title: this.state.selectedExperiment,
+      title: getDisplayName(this.state.selectedExperiment),
       autosize: false,
       width: 1200,
       height: 600,
-      margin: { l: 0, r: 0, b: 20, t: 40 },
+      margin: { l: 0, r: 0, b: 20, t: 40 }
     }
     for (const scene of scenes) {
       layout[scene] = Object.assign({}, { ...defaultScene, camera: cameras[scenes.indexOf(scene)] })
     }
+    const barLayout = {
+      title: "2D Accuracy",
+      font: { size: 20 },
+      autosize: false,
+      width: 600,
+      height: 600,
+      margin: { l: 50, r: 0, b: 20, t: 50 },
+      yaxis: {
+        title: "Average 2D error (m)",
+        titlefont: { size: 16 },
+        tickfont: { size: 12 }
+      },
+      xaxis: { tickfont: { size: 16 } }
+    }
     const barData = [{
-      x: this.state.experimentMetrics.map(metric => metric.experimentName),
+      x: this.state.experimentMetrics.map(metric => getDisplayName(metric.experimentName)),
       y: this.state.experimentMetrics.map(metric => metric.error2dAverage),
+      error_y: {
+        type: "data",
+        array: this.state.experimentMetrics.map(metric => Math.sqrt(metric.error2dVariance)),
+        visible: true,
+        thickness: 3
+      },
+      marker: { color: "#7c7c7c" },
       type: "bar"
     }]
-    console.log(barData)
     return (
       <div>
         <TabBar tabs={ tabs } highlight={ this.state.show } onActivate={ this.onActivate } />
@@ -162,7 +182,7 @@ export default class App extends React.Component {
           this.state.show === "experimentMetrics" &&
           this.state.compareExperiments.length !== 0 &&
           <ChartContainer>
-            <PlotlyComponentBasic data={ barData } />
+            <PlotlyComponentBasic data={ barData } layout={ barLayout } />
           </ChartContainer>
         }
       </div>
@@ -190,5 +210,15 @@ export default class App extends React.Component {
       )
     )
     this.setState({ compareExperiments, experimentMetrics })
+  }
+}
+
+function getDisplayName(name) {
+  if (name === "Quuppa_S7_1") {
+    return "Quuppa"
+  } else if (name === "GoIndoor_1") {
+    return "GoIndoor"
+  } else {
+    return ""
   }
 }
