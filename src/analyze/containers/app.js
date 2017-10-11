@@ -2,7 +2,8 @@
 import { keys, pickBy } from "lodash"
 import autoBind from "react-autobind"
 import createPlotlyComponent from "react-plotlyjs"
-import Plotly from "plotly.js/dist/plotly-gl3d"
+import PlotlyBasic from "plotly.js/dist/plotly-basic"
+import PlotlyGl3D from "plotly.js/dist/plotly-gl3d"
 import React from "react"
 import styled from "styled-components"
 import Button from "../../shared/components/button"
@@ -15,7 +16,8 @@ import { getExperimentMetrics } from "../actions/experimentMetricsActions"
 import { positionData3D } from "../processData"
 
 
-const PlotlyComponent = createPlotlyComponent(Plotly)
+const PlotlyComponentBasic = createPlotlyComponent(PlotlyBasic)
+const PlotlyComponent3D = createPlotlyComponent(PlotlyGl3D)
 
 const ChartContainer = styled.div`
   width: 1200px;
@@ -109,6 +111,12 @@ export default class App extends React.Component {
     for (const scene of scenes) {
       layout[scene] = Object.assign({}, { ...defaultScene, camera: cameras[scenes.indexOf(scene)] })
     }
+    const barData = [{
+      x: this.state.experimentMetrics.map(metric => metric.experimentName),
+      y: this.state.experimentMetrics.map(metric => metric.error2dAverage),
+      type: "bar"
+    }]
+    console.log(barData)
     return (
       <div>
         <TabBar tabs={ tabs } highlight={ this.state.show } onActivate={ this.onActivate } />
@@ -129,7 +137,7 @@ export default class App extends React.Component {
             <ChartContainer>
               {
                 data.map((datum, i) =>
-                  <PlotlyComponent key={ i } data={ datum } layout={ layout } />
+                  <PlotlyComponent3D key={ i } data={ datum } layout={ layout } />
                 )
               }
             </ChartContainer>
@@ -142,12 +150,20 @@ export default class App extends React.Component {
         {
           this.state.loaded &&
           this.state.show === "experimentMetrics" &&
-          this.state.compareExperiments &&
+          this.state.compareExperiments.length === 0 &&
           <Form
             submitName="Compare"
             fields={ compareExperimentsFields }
             paramName="compareExperiments"
             set={ async args => await this.retrieveExperimentMetrics(args) } />
+        }
+        {
+          this.state.loaded &&
+          this.state.show === "experimentMetrics" &&
+          this.state.compareExperiments.length !== 0 &&
+          <ChartContainer>
+            <PlotlyComponentBasic data={ barData } />
+          </ChartContainer>
         }
       </div>
     )
