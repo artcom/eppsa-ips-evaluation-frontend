@@ -8,6 +8,7 @@ import { shallow, mount } from "enzyme"
 import App from "../../../src/analyze/containers/app"
 import config from "../../../src/constants"
 import experiments from "../../testData/experiments.json"
+import experimentMetrics from "../../testData/experimentMetrics.json"
 import Form from "../../../src/shared/components/form"
 import { findButtonByName } from "../../helpers/findElements"
 import inputData from "../../helpers/inputData"
@@ -17,6 +18,7 @@ import SelectCategory from "../../../src/shared/components/selectCategory"
 import Tab from "../../../src/shared/components/tab"
 import TabBar from "../../../src/shared/components/tabBar"
 const experimentsActions = require("../../../src/shared/actions/experimentsActions")
+const experimentMetricsActions = require("../../../src/analyze/actions/experimentMetricsActions")
 const positionDataActions = require("../../../src/analyze/actions/positionDataActions")
 
 
@@ -133,6 +135,21 @@ describe("App Analyze", () => {
   })
 
   describe("does", () => {
+    let getExperimentMetricsStub
+
+    beforeEach(() => {
+      getExperimentMetricsStub = sinon.stub(experimentMetricsActions, "getExperimentMetrics")
+        .resolves(experimentMetrics)
+      proxyquire(
+        "../../../src/analyze/containers/app",
+        { getExperimentMetrics: getExperimentMetricsStub }
+      )
+    })
+
+    afterEach(() => {
+      getExperimentMetricsStub.restore()
+    })
+
     it("send expected props to selectCategory", done => {
       const props = { categories: experiments, title: "Select Experiment:" }
       const app = mount(<App backend={ backend } />)
@@ -172,9 +189,11 @@ describe("App Analyze", () => {
           .filterWhere(select => select.props().submitName === "Compare")
         inputData(form, data)
         form.simulate("submit")
-        expect(app.state("compareExperiments"))
-          .to.deep.equal(["fake-experiment2"])
-        done()
+        setImmediate(() => {
+          expect(app.state("compareExperiments"))
+            .to.deep.equal(["fake-experiment2"])
+          done()
+        })
       })
     })
 
@@ -217,5 +236,50 @@ describe("App Analyze", () => {
         })
       }
     )
+
+    it("call getExperimentMetrics for the selected experiments when Compare button is pushed",
+      done => {
+        const data = {}
+        data["fake-experiment1"] = false
+        data["fake-experiment2"] = true
+        const app = mount(<App backend={ backend } />)
+        app.setState({ loaded: true, compareExperiments: [], show: "experimentMetrics" })
+        setImmediate(() => {
+          const form = app.find(Form)
+            .filterWhere(select => select.props().submitName === "Compare")
+          inputData(form, data)
+          form.simulate("submit")
+          setImmediate(() => {
+            sinon.assert.calledOnce(getExperimentMetricsStub)
+            sinon.assert.calledWith(
+              getExperimentMetricsStub,
+              { backend, experimentName: "fake-experiment2" }
+            )
+            done()
+          })
+        })
+      }
+    )
+
+    it("stores experiment metrics in state when Compare button is pushed", done => {
+      const data = {}
+      data["fake-experiment1"] = false
+      data["fake-experiment2"] = true
+      const app = mount(<App backend={ backend } />)
+      app.setState({ loaded: true, compareExperiments: [], show: "experimentMetrics" })
+      setImmediate(() => {
+        const form = app.find(Form)
+          .filterWhere(select => select.props().submitName === "Compare")
+        inputData(form, data)
+        form.simulate("submit")
+        setImmediate(() => {
+          setImmediate(() => {
+            expect(app.state("experimentMetrics"))
+              .to.deep.equal([experimentMetrics])
+            done()
+          })
+        })
+      })
+    })
   })
 })

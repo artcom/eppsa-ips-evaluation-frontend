@@ -11,6 +11,7 @@ import SelectCategory from "../../shared/components/selectCategory"
 import TabBar from "../../shared/components/tabBar"
 import { getExperiments } from "../../shared/actions/experimentsActions"
 import { getPositionData } from "../actions/positionDataActions"
+import { getExperimentMetrics } from "../actions/experimentMetricsActions"
 import { positionData3D } from "../processData"
 
 
@@ -31,6 +32,7 @@ export default class App extends React.Component {
       positionData: [],
       selectedExperiment: null,
       compareExperiments: [],
+      experimentMetrics: [],
       loaded: false
     }
   }
@@ -145,9 +147,7 @@ export default class App extends React.Component {
             submitName="Compare"
             fields={ compareExperimentsFields }
             paramName="compareExperiments"
-            set={ (args) =>
-              this.setState({ compareExperiments: keys(pickBy(args.compareExperiments)) })
-            } />
+            set={ async args => await this.retrieveExperimentMetrics(args) } />
         }
       </div>
     )
@@ -164,5 +164,15 @@ export default class App extends React.Component {
       this.setState({ selectedExperiment: experimentName, positionData })
     }
     this.setState({ selectedExperiment: experimentName })
+  }
+
+  async retrieveExperimentMetrics(args) {
+    const compareExperiments = keys(pickBy(args.compareExperiments))
+    const experimentMetrics = await Promise.all(
+      compareExperiments.map(async experimentName =>
+        await getExperimentMetrics({ backend: this.props.backend, experimentName })
+      )
+    )
+    this.setState({ compareExperiments, experimentMetrics })
   }
 }
