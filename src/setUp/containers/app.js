@@ -4,6 +4,7 @@ import autoBind from "react-autobind"
 import styled from "styled-components"
 import { assignIn, zipObject } from "lodash"
 import Button from "../../shared/components/button"
+import { navigate } from "../../shared/actions/navigate"
 import Params from "./params"
 import Run from "./run"
 import SelectCategory from "../../shared/components/selectCategory"
@@ -58,7 +59,16 @@ export default class App extends React.Component {
   }
 
   render() {
-    const tabs = ["experiments", "points", "zoneSets", "zones", "nodes", "nodePositions", "run"]
+    const tabs = [
+      "experiments",
+      "points",
+      "zoneSets",
+      "zones",
+      "nodes",
+      "nodePositions",
+      "run",
+      "analyze"
+    ]
     const experimentFields = [{ name: "name", type: "text" }]
     const pointFields = [
       { name: "name", type: "text" },
@@ -249,6 +259,8 @@ export default class App extends React.Component {
     } else if (tab === "zones" && this.state.show !== tab) {
       const data = await getZoneSets({ backend: this.props.backend })
       this.setState({ zoneSets: data, show: tab })
+    } else if (tab === "analyze" && this.state.show !== tab) {
+      await navigate("/analyze")
     } else {
       this.setState({ show: tab })
     }

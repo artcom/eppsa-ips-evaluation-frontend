@@ -14,6 +14,7 @@ import Tab from "../../../../src/shared/components/tab"
 import TabBar from "../../../../src/shared/components/tabBar"
 import zoneSets from "../../../testData/zoneSets.json"
 const experimentsActions = require("../../../../src/shared/actions/experimentsActions")
+const navigate = require("../../../../src/shared/actions/navigate")
 const nodesActions = require("../../../../src/setUp/actions/nodesActions")
 const pointsActions = require("../../../../src/setUp/actions/pointsActions")
 const zoneSetsActions = require("../../../../src/setUp/actions/zoneSetsActions")
@@ -66,7 +67,16 @@ describe("App", () => {
     })
 
     it("tabs", () => {
-      const tabs = ["Experiments", "Points", "ZoneSets", "Zones", "Nodes", "NodePositions", "Run"]
+      const tabs = [
+        "Experiments",
+        "Points",
+        "ZoneSets",
+        "Zones",
+        "Nodes",
+        "NodePositions",
+        "Run",
+        "Analyze"
+      ]
       const app = mount(<App />)
       expect(app.find(TabBar).find(Tab)).to.have.length(tabs.length)
       expect(app.find(TabBar).find(Tab).map(tab => tab.text())).to.deep.equal(tabs)
@@ -104,6 +114,7 @@ describe("App", () => {
 
   describe("activates", () => {
     let setExperimentStub
+    let navigateStub
 
     beforeEach(() => {
       setExperimentStub = sinon.stub(experimentsActions, "setExperiment")
@@ -114,10 +125,13 @@ describe("App", () => {
         "../../../../src/setUp/containers/app",
         { setExperiment: setExperimentStub }
       )
+      navigateStub = sinon.stub(navigate, "navigate")
+      proxyquire("../../../../src/shared/actions/navigate", { navigate: navigateStub })
     })
 
     afterEach(() => {
       setExperimentStub.restore()
+      navigateStub.restore()
     })
 
     it("Points when points tab is clicked", done => {
@@ -195,6 +209,20 @@ describe("App", () => {
           expect(app.state("show")).to.equal("run")
           done()
         })
+      })
+    })
+
+    it("Analyze when analyze tab is clicked and navigates to /analyze", done => {
+      const app = mount(<App backend={ backend } />)
+      setImmediate(() => {
+        expect(app.state("show")).to.equal("experiments")
+        const analyzeButton = app.find(Tab).filterWhere(tab => tab.text() === "Analyze")
+        analyzeButton.simulate("click")
+        setTimeout(() => {
+          sinon.assert.calledOnce(navigateStub)
+          sinon.assert.calledWith(navigateStub, "/analyze")
+          done()
+        }, 200)
       })
     })
   })
