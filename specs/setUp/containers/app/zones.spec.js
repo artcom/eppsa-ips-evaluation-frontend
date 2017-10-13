@@ -3,7 +3,6 @@ import React from "react"
 import { describe, it, beforeEach, afterEach } from "mocha"
 import { expect } from "chai"
 import sinon from "sinon"
-import proxyquire from "proxyquire"
 import { shallow, mount } from "enzyme"
 import App from "../../../../src/setUp/containers/app"
 import config from "../../../../src/constants"
@@ -38,33 +37,13 @@ describe("App Zones", () => {
   beforeEach(() => {
     getExperimentsStub = sinon.stub(experimentsActions, "getExperiments")
       .resolves(experimentsData)
-    proxyquire(
-      "../../../../src/setUp/containers/app",
-      { getExperiments: getExperimentsStub }
-    )
     getZoneSetsStub = sinon.stub(zoneSetsActions, "getZoneSets")
-    proxyquire(
-      "../../../../src/setUp/containers/app",
-      { getZoneSets: getZoneSetsStub }
-    )
     getNodesStub = sinon.stub(nodesActions, "getNodes")
       .resolves(nodesData)
-    proxyquire(
-      "../../../../src/setUp/containers/app",
-      { getNodes: getNodesStub }
-    )
     getPointsStub = sinon.stub(pointsActions, "getPoints")
       .resolves(pointsData)
-    proxyquire(
-      "../../../../src/setUp/containers/app",
-      { getPoints: getPointsStub }
-    )
     getZonesStub = sinon.stub(zonesActions, "getZones")
       .resolves(zonesData)
-    proxyquire(
-      "../../../../src/setUp/containers/app",
-      { getZones: getZonesStub }
-    )
   })
 
   afterEach(() => {
@@ -140,15 +119,7 @@ describe("App Zones", () => {
           zMin: 2,
           zMax: 4
         })
-      proxyquire(
-        "../../../../src/setUp/containers/app",
-        { setZone: setZoneStub }
-      )
       deleteZoneStub = sinon.stub(zonesActions, "deleteZone").resolves("zone1")
-      proxyquire(
-        "../../../../src/setUp/containers/app",
-        { deleteZone: deleteZoneStub }
-      )
     })
 
     afterEach(() => {

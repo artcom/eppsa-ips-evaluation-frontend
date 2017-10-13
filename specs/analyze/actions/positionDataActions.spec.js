@@ -3,7 +3,6 @@ import { expect } from "chai"
 import { isEqual } from "lodash"
 import rest from "restling"
 import sinon from "sinon"
-import proxyquire from "proxyquire"
 import config from "../../../src/constants"
 import positionData from "../../testData/positionData.json"
 import { getPositionData } from "../../../src/analyze/actions/positionDataActions"
@@ -17,7 +16,6 @@ describe("positionDataActions", () => {
 
   beforeEach(() => {
     getMock = sinon.stub(rest, "get")
-    proxyquire("../../../src/analyze/actions/positionDataActions", { rest: { get: getMock } })
   })
 
   afterEach(() => {

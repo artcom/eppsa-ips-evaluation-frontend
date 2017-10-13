@@ -3,7 +3,6 @@ import React from "react"
 import { describe, it, beforeEach, afterEach } from "mocha"
 import { expect } from "chai"
 import sinon from "sinon"
-import proxyquire from "proxyquire"
 import { shallow, mount } from "enzyme"
 import App from "../../../../src/setUp/containers/app"
 import config from "../../../../src/constants"
@@ -41,33 +40,13 @@ describe("App NodePositions", () => {
   beforeEach(() => {
     getExperimentsStub = sinon.stub(experimentsActions, "getExperiments")
       .resolves(experimentsData)
-    proxyquire(
-      "../../../../src/setUp/containers/app",
-      { getExperiments: getExperimentsStub }
-    )
     getZoneSetsStub = sinon.stub(zoneSetsActions, "getZoneSets").resolves(zoneSets)
-    proxyquire(
-      "../../../../src/setUp/containers/app",
-      { getZoneSets: getZoneSetsStub }
-    )
     getNodesStub = sinon.stub(nodesActions, "getNodes")
       .resolves(nodesData)
-    proxyquire(
-      "../../../../src/setUp/containers/app",
-      { getNodes: getNodesStub }
-    )
     getPointsStub = sinon.stub(pointsActions, "getPoints")
       .resolves(pointsData)
-    proxyquire(
-      "../../../../src/setUp/containers/app",
-      { getPoints: getPointsStub }
-    )
     getNodePositionsStub = sinon.stub(nodePositionsActions, "getNodePositions")
       .resolves(nodePositionsData)
-    proxyquire(
-      "../../../../src/setUp/containers/app",
-      { getNodePositions: getNodePositionsStub }
-    )
   })
 
   afterEach(() => {
@@ -141,16 +120,8 @@ describe("App NodePositions", () => {
           pointName: "point3",
           experimentName: "fake-experiment1"
         })
-      proxyquire(
-        "../../../../src/setUp/containers/app",
-        { setNodePosition: setNodePositionStub }
-      )
       deleteNodePositionStub = sinon.stub(nodePositionsActions, "deleteNodePosition")
         .resolves("Node1")
-      proxyquire(
-        "../../../../src/setUp/containers/app",
-        { deleteNodePosition: deleteNodePositionStub }
-      )
     })
 
     afterEach(() => {

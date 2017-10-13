@@ -3,7 +3,6 @@ import React from "react"
 import { describe, it, beforeEach, afterEach } from "mocha"
 import { expect } from "chai"
 import sinon from "sinon"
-import proxyquire from "proxyquire"
 import { shallow, mount } from "enzyme"
 import App from "../../../../src/setUp/containers/app"
 import config from "../../../../src/constants"
@@ -30,22 +29,10 @@ describe("App Points", () => {
   beforeEach(() => {
     getExperimentsStub = sinon.stub(experimentsActions, "getExperiments")
       .resolves(experimentsData)
-    proxyquire(
-      "../../../../src/setUp/containers/app",
-      { getExperiments: getExperimentsStub }
-    )
     getNodesStub = sinon.stub(nodesActions, "getNodes")
       .resolves(nodesData)
-    proxyquire(
-      "../../../../src/setUp/containers/app",
-      { getNodes: getNodesStub }
-    )
     getPointsStub = sinon.stub(pointsActions, "getPoints")
       .resolves(pointsData)
-    proxyquire(
-      "../../../../src/setUp/containers/app",
-      { getPoints: getPointsStub }
-    )
   })
 
   afterEach(() => {
@@ -83,9 +70,7 @@ describe("App Points", () => {
           Y: 4,
           Z: 5
         })
-      proxyquire("../../../../src/setUp/containers/app", { setPoint: setPointStub })
       deletePointStub = sinon.stub(pointsActions, "deletePoint").resolves("point1")
-      proxyquire("../../../../src/setUp/containers/app", { deletePoint: deletePointStub })
     })
 
     afterEach(() => {

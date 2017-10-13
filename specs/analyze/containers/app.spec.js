@@ -3,7 +3,6 @@ import React from "react"
 import { describe, it, beforeEach, afterEach } from "mocha"
 import { expect } from "chai"
 import sinon from "sinon"
-import proxyquire from "proxyquire"
 import { shallow, mount } from "enzyme"
 import App from "../../../src/analyze/containers/app"
 import config from "../../../src/constants"
@@ -32,18 +31,9 @@ describe("App Analyze", () => {
   beforeEach(() => {
     getExperimentsStub = sinon.stub(experimentsActions, "getExperiments")
       .resolves(experiments)
-    proxyquire(
-      "../../../src/analyze/containers/app",
-      { getExperiments: getExperimentsStub }
-    )
     getPositionDataStub = sinon.stub(positionDataActions, "getPositionData")
       .resolves(positionData)
-    proxyquire(
-      "../../../src/analyze/containers/app",
-      { getPositionData: getPositionDataStub }
-    )
     navigateStub = sinon.stub(navigate, "navigate")
-    proxyquire("../../../src/analyze/containers/app", { navigate: navigateStub })
   })
 
   afterEach(() => {
@@ -159,10 +149,6 @@ describe("App Analyze", () => {
     beforeEach(() => {
       getExperimentMetricsStub = sinon.stub(experimentMetricsActions, "getExperimentMetrics")
         .resolves(experimentMetrics)
-      proxyquire(
-        "../../../src/analyze/containers/app",
-        { getExperimentMetrics: getExperimentMetricsStub }
-      )
     })
 
     afterEach(() => {

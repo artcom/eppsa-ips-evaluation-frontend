@@ -3,7 +3,6 @@ import { expect } from "chai"
 import { isEqual } from "lodash"
 import rest from "restling"
 import sinon from "sinon"
-import proxyquire from "proxyquire"
 import config from "../../../src/constants"
 import zones from "../../testData/zones.json"
 import zoneSets from "../../testData/zoneSets.json"
@@ -23,9 +22,6 @@ describe("zonesActions", () => {
       delStub = sinon.stub(rest, "del")
       getStub = sinon.stub(rest, "get")
       postStub = sinon.stub(rest, "post")
-      proxyquire("../../../src/setUp/actions/zonesActions", { rest: { del: delStub } })
-      proxyquire("../../../src/setUp/actions/zonesActions", { rest: { get: getStub } })
-      proxyquire("../../../src/setUp/actions/zonesActions", { rest: { post: postStub } })
     })
 
     afterEach(() => {

@@ -3,7 +3,6 @@ import React from "react"
 import { expect } from "chai"
 import { mount, shallow } from "enzyme"
 import { describe, it, beforeEach, afterEach } from "mocha"
-import proxyquire from "proxyquire"
 import sinon from "sinon"
 import App from "../../../../src/setUp/containers/app"
 import config from "../../../../src/constants"
@@ -34,22 +33,10 @@ describe("App Experiment", () => {
   beforeEach(() => {
     getExperimentsStub = sinon.stub(experimentsActions, "getExperiments")
       .resolves(experimentsData)
-    proxyquire(
-      "../../../../src/setUp/containers/app",
-      { getExperiments: getExperimentsStub }
-    )
     getNodesStub = sinon.stub(nodesActions, "getNodes")
       .resolves(nodesData)
-    proxyquire(
-      "../../../../src/setUp/containers/app",
-      { getNodes: getNodesStub }
-    )
     getPointsStub = sinon.stub(pointsActions, "getPoints")
       .resolves(pointsData)
-    proxyquire(
-      "../../../../src/setUp/containers/app",
-      { getPoints: getPointsStub }
-    )
   })
 
   afterEach(() => {
@@ -84,13 +71,8 @@ describe("App Experiment", () => {
         .resolves({
           name: "fake-experiment3"
         })
-      proxyquire(
-        "../../../../src/setUp/containers/app",
-        { setExperiment: setExperimentStub }
-      )
       deleteExperimentStub = sinon.stub(experimentsActions, "deleteExperiment")
         .resolves("fake-experiment1")
-      proxyquire("../../../../src/setUp/containers/app", { deleteExperiment: deleteExperimentStub })
     })
 
     afterEach(() => {

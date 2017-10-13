@@ -3,7 +3,6 @@ import { expect } from "chai"
 import { isEqual } from "lodash"
 import rest from "restling"
 import sinon from "sinon"
-import proxyquire from "proxyquire"
 import config from "../../../src/constants"
 import nodePositionsBackend from "../../testData/nodePositionsBackend.json"
 import nodePositionsFrontend from "../../testData/nodePositionsFrontend.json"
@@ -43,9 +42,6 @@ describe("nodesActions", () => {
       delStub = sinon.stub(rest, "del")
       getStub = sinon.stub(rest, "get")
       postStub = sinon.stub(rest, "post")
-      proxyquire("../../../src/setUp/actions/nodePositionsActions", { rest: { del: delStub } })
-      proxyquire("../../../src/setUp/actions/nodePositionsActions", { rest: { get: getStub } })
-      proxyquire("../../../src/setUp/actions/nodePositionsActions", { rest: { post: postStub } })
     })
 
     afterEach(() => {
