@@ -42,7 +42,7 @@ describe("App Zones", () => {
       "../../../../src/setUp/containers/app",
       { getExperiments: getExperimentsStub }
     )
-    getZoneSetsStub = sinon.stub(zoneSetsActions, "getZoneSets").resolves(zoneSets)
+    getZoneSetsStub = sinon.stub(zoneSetsActions, "getZoneSets")
     proxyquire(
       "../../../../src/setUp/containers/app",
       { getZoneSets: getZoneSetsStub }
@@ -128,6 +128,8 @@ describe("App Zones", () => {
     let deleteZoneStub
 
     beforeEach(() => {
+      getZoneSetsStub.onFirstCall().resolves(zoneSets)
+      getZoneSetsStub.onSecondCall().resolves([zoneSets[0]])
       setZoneStub = sinon.stub(zonesActions, "setZone")
         .resolves({
           name: "zone3",
@@ -211,6 +213,19 @@ describe("App Zones", () => {
         zonesTab.simulate("click")
         setImmediate(() => {
           sinon.assert.calledTwice(getZoneSetsStub)
+          done()
+        })
+      })
+    })
+
+    it("zoneSets are stored in state", done => {
+      const app = mount(<App backend={ backend } />)
+      setImmediate(() => {
+        expect(app.state("show")).to.equal("experiments")
+        const zonesTab = app.find(Tab).filterWhere(tab => tab.text() === "Zones")
+        zonesTab.simulate("click")
+        setImmediate(() => {
+          expect(app.state("zoneSets")).to.deep.equal([zoneSets[0]])
           done()
         })
       })

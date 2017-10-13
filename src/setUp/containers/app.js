@@ -248,7 +248,7 @@ export default class App extends React.Component {
       this.setState({ experiments: data, show: tab })
     } else if (tab === "zones" && this.state.show !== tab) {
       const data = await getZoneSets({ backend: this.props.backend })
-      this.setState({ experiments: data, show: tab })
+      this.setState({ zoneSets: data, show: tab })
     } else {
       this.setState({ show: tab })
     }
