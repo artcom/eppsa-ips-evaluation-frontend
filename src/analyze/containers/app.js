@@ -8,6 +8,7 @@ import React from "react"
 import styled from "styled-components"
 import Button from "../../shared/components/button"
 import Form from "../../shared/components/form"
+import { navigate } from "../../shared/actions/navigate"
 import SelectCategory from "../../shared/components/selectCategory"
 import TabBar from "../../shared/components/tabBar"
 import { getExperiments } from "../../shared/actions/experimentsActions"
@@ -45,7 +46,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    const tabs = ["pointErrors", "experimentMetrics"]
+    const tabs = ["pointErrors", "experimentMetrics", "setUp"]
     const compareExperimentsFields = this.state.experiments.map(experiment =>
       ({ ...experiment, type: "checkBox" })
     )
@@ -189,8 +190,12 @@ export default class App extends React.Component {
     )
   }
 
-  onActivate(tab) {
-    this.setState({ show: tab })
+  async onActivate(tab) {
+    if (tab === "setUp") {
+      await navigate("/set-up")
+    } else {
+      this.setState({ show: tab })
+    }
   }
 
   async onSelectExperiment(experiment) {

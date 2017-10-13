@@ -19,6 +19,7 @@ import Tab from "../../../src/shared/components/tab"
 import TabBar from "../../../src/shared/components/tabBar"
 const experimentsActions = require("../../../src/shared/actions/experimentsActions")
 const experimentMetricsActions = require("../../../src/analyze/actions/experimentMetricsActions")
+const navigate = require("../../../src/shared/actions/navigate")
 const positionDataActions = require("../../../src/analyze/actions/positionDataActions")
 
 
@@ -26,6 +27,7 @@ describe("App Analyze", () => {
   const backend = config.backend
   let getExperimentsStub
   let getPositionDataStub
+  let navigateStub
 
   beforeEach(() => {
     getExperimentsStub = sinon.stub(experimentsActions, "getExperiments")
@@ -40,11 +42,14 @@ describe("App Analyze", () => {
       "../../../src/analyze/containers/app",
       { getPositionData: getPositionDataStub }
     )
+    navigateStub = sinon.stub(navigate, "navigate")
+    proxyquire("../../../src/analyze/containers/app", { navigate: navigateStub })
   })
 
   afterEach(() => {
     getExperimentsStub.restore()
     getPositionDataStub.restore()
+    navigateStub.restore()
   })
 
   describe("contains", () => {
@@ -54,7 +59,7 @@ describe("App Analyze", () => {
     })
 
     it("tabs", () => {
-      const tabs = ["PointErrors", "ExperimentMetrics"]
+      const tabs = ["PointErrors", "ExperimentMetrics", "SetUp"]
       const app = mount(<App />)
       expect(app.find(TabBar).find(Tab)).to.have.length(tabs.length)
       expect(app.find(TabBar).find(Tab).map(tab => tab.text())).to.deep.equal(tabs)
@@ -119,6 +124,20 @@ describe("App Analyze", () => {
         expect(pointsTab.props().highlight).to.equal(true)
         expect(app.state("show")).to.equal("experimentMetrics")
         done()
+      })
+    })
+
+    it("SetUp when setUp tab is clicked and navigates to /set-up", done => {
+      const app = mount(<App backend={ backend } />)
+      setImmediate(() => {
+        expect(app.state("show")).to.equal("pointErrors")
+        const analyzeButton = app.find(Tab).filterWhere(tab => tab.text() === "SetUp")
+        analyzeButton.simulate("click")
+        setTimeout(() => {
+          sinon.assert.calledOnce(navigateStub)
+          sinon.assert.calledWith(navigateStub, "/set-up")
+          done()
+        }, 200)
       })
     })
   })
