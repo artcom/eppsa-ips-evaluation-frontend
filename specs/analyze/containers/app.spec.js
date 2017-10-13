@@ -24,6 +24,7 @@ const positionDataActions = require("../../../src/analyze/actions/positionDataAc
 
 describe("App Analyze", () => {
   const backend = config.backend
+  const frontend = config.frontend
   let getExperimentsStub
   let getPositionDataStub
   let navigateStub
@@ -118,14 +119,14 @@ describe("App Analyze", () => {
     })
 
     it("SetUp when setUp tab is clicked and navigates to /set-up", done => {
-      const app = mount(<App backend={ backend } />)
+      const app = mount(<App backend={ backend } frontend={ frontend } />)
       setImmediate(() => {
         expect(app.state("show")).to.equal("pointErrors")
         const analyzeButton = app.find(Tab).filterWhere(tab => tab.text() === "SetUp")
         analyzeButton.simulate("click")
         setTimeout(() => {
           sinon.assert.calledOnce(navigateStub)
-          sinon.assert.calledWith(navigateStub, "/set-up")
+          sinon.assert.calledWith(navigateStub, `${frontend}/set-up`)
           done()
         }, 200)
       })

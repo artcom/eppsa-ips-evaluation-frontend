@@ -1,3 +1,4 @@
 {
-  "backend": "backend_location"
+  "backend": "backend_location",
+  "frontend": "frontend_url"
 }

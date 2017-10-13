@@ -192,7 +192,7 @@ export default class App extends React.Component {
 
   async onActivate(tab) {
     if (tab === "setUp") {
-      await navigate("/set-up")
+      await navigate(`${this.props.frontend}/set-up`)
     } else {
       this.setState({ show: tab })
     }

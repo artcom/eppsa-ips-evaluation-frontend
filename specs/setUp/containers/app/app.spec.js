@@ -21,6 +21,7 @@ const zoneSetsActions = require("../../../../src/setUp/actions/zoneSetsActions")
 
 describe("App", () => {
   const backend = config.backend
+  const frontend = config.frontend
   let getExperimentsStub
   let getZoneSetsStub
   let getNodesStub
@@ -191,14 +192,14 @@ describe("App", () => {
     })
 
     it("Analyze when analyze tab is clicked and navigates to /analyze", done => {
-      const app = mount(<App backend={ backend } />)
+      const app = mount(<App backend={ backend } frontend={ frontend } />)
       setImmediate(() => {
         expect(app.state("show")).to.equal("experiments")
         const analyzeButton = app.find(Tab).filterWhere(tab => tab.text() === "Analyze")
         analyzeButton.simulate("click")
         setTimeout(() => {
           sinon.assert.calledOnce(navigateStub)
-          sinon.assert.calledWith(navigateStub, "/analyze")
+          sinon.assert.calledWith(navigateStub, `${frontend}/analyze`)
           done()
         }, 200)
       })

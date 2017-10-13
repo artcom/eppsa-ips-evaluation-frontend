@@ -260,7 +260,7 @@ export default class App extends React.Component {
       const data = await getZoneSets({ backend: this.props.backend })
       this.setState({ zoneSets: data, show: tab })
     } else if (tab === "analyze" && this.state.show !== tab) {
-      await navigate("/analyze")
+      await navigate(`${this.props.frontend}/analyze`)
     } else {
       this.setState({ show: tab })
     }
